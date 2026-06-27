@@ -1,0 +1,13 @@
+<form [formGroup]="loanForm" (ngSubmit)="onSubmitLoan()">
+  
+  <select formControlName="loanType">
+    <option value="PERSONAL">Personal Loan</option>
+    <option value="RETAIL">Retail SaaS Credit</option>
+  </select>
+
+  <input type="number" formControlName="requestedAmount" />
+
+  <button type="submit" [disabled]="loanForm.invalid">
+    Initiate Application Draft
+  </button>
+</form>

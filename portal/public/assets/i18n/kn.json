@@ -1,0 +1,140 @@
+{
+  "NAV": {
+    "DASHBOARD": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್",
+    "CUSTOMERS": "ಗ್ರಾಹಕರು",
+    "LOANS": "ಸಾಲಗಳು",
+    "ACCOUNTING": "ಲೆಕ್ಕಪತ್ರ",
+    "BRANCHES": "ಶಾಖೆಗಳು"
+  },
+  "HEADER": {
+    "TENANT": "ಟೆನೆಂಟ್: ಸಾಂಗಾ ಬ್ಯಾಂಕ್",
+    "PROFILE": "ನನ್ನ ಪ್ರೊಫೈಲ್",
+    "SETTINGS": "ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+    "PRIVACY": "ಗೌಪ್ಯತೆ ಮತ್ತು ಭದ್ರತೆ",
+    "LOGOUT": "ಲಾಗ್ ಔಟ್"
+  },
+  "DASHBOARD": {
+    "WELCOME": "ಪುನಃ ಸ್ವಾಗತ!",
+    "SUBTITLE": "ಇಂದು ನಿಮ್ಮ ಶಾಖೆಯಲ್ಲಿ ಏನಾಗುತ್ತಿದೆ ಎಂದು ಇಲ್ಲಿ ನೋಡಿ.",
+    "STATS": {
+      "TOTAL_CUSTOMERS": "ಒಟ್ಟು ಗ್ರಾಹಕರು",
+      "ACTIVE_LOANS": "ಸಕ್ರಿಯ ಸಾಲಗಳು",
+      "REVENUE": "ಆದಾಯ",
+      "VS_LAST_MONTH": "ಕಳೆದ ತಿಂಗಳಿಗೆ ಹೋಲಿಸಿದರೆ"
+    },
+    "GRAPH_COMING_SOON": "ವಹಿವಾಟಿನ ಗ್ರಾಫ್ ಶೀಘ್ರದಲ್ಲೇ ಬರಲಿದೆ..."
+  },
+  "SYSTEM": {
+    "NAME": "ಬ್ಯಾಂಕಿಂಗ್",
+    "SUFFIX": "OS",
+    "FULL_NAME": "ಬ್ಯಾಂಕಿಂಗ್ OS",
+    "TAGLINE": "ಮುಂದಿನ ಪೀಳಿಗೆಯ ಮಲ್ಟಿ-ಟೆನೆಂಟ್ ಬ್ಯಾಂಕಿಂಗ್ ಕಮಾಂಡ್ ಸೆಂಟರ್. ಸುರಕ್ಷಿತ ಮತ್ತು ಭಾರತಕ್ಕಾಗಿ ಸ್ಥಳೀಯಗೊಳಿಸಲಾಗಿದೆ.",
+    "FOOTER": "ಮೈಂಡ್ ಸ್ಪಾರ್ಕ್ ಟೆಕ್ನಾಲಜೀಸ್ © 2026",
+    "PORTAL_TYPE": "ಸೂಪರ್ ಅಡ್ಮಿನ್ ಪೋರ್ಟಲ್",
+    "TRUSTED_MESSAGE": "ವಿಶ್ವಾದ್ಯಂತ <strong class='text-white'>ಸಾವಿರಾರು</strong> ಬ್ಯಾಂಕಿಂಗ್ ಸಂಸ್ಥೆಗಳಿಂದ ನಂಬಿಕಸ್ತವಾಗಿದೆ."
+  },
+  "LOGIN": {
+    "TRUSTED_MESSAGE": "ವಿಶ್ವಾದ್ಯಂತ <strong class='text-white'>ಸಾವಿರಾರು</strong> ಬ್ಯಾಂಕಿಂಗ್ ಸಂಸ್ಥೆಗಳಿಂದ ನಂಬಿಕಸ್ತವಾಗಿದೆ.",
+    "WELCOME_BACK": "ಪುನಃ ಸ್ವಾಗತ",
+    "SUBTITLE": "ಕಮಾಂಡ್ ಸೆಂಟರ್ ಪ್ರವೇಶಿಸಲು ನಿಮ್ಮ ವಿವರಗಳನ್ನು ನಮೂದಿಸಿ.",
+    "IDENTIFIER_LABEL": "ಇಮೇಲ್ ಅಥವಾ ಬಳಕೆದಾರಹೆಸರು",
+    "IDENTIFIER_PLACEHOLDER": "admin@bank.com ಅಥವಾ admin_user",
+    "PASSWORD_LABEL": "ಪಾಸ್‌ವರ್ಡ್",
+    "SIGN_IN_BUTTON": "ಸೈನ್ ಇನ್",
+    "FORGOT_PASSWORD": "ಪಾಸ್‌ವರ್ಡ್ ಮರೆತಿರುವಿರಾ?",
+    "NO_ACCOUNT": "ಖಾತೆ ಇಲ್ಲವೇ?",
+    "SIGN_UP_LINK": "ಇಲ್ಲಿ ಸೈನ್ ಅಪ್ ಮಾಡಿ",
+    "FOOTER_TEXT": "© 2026 ಬ್ಯಾಂಕಿಂಗ್ ಪ್ಲಾಟ್‌ಫಾರ್ಮ್",
+    "HERO_DESCRIPTION": "ಮುಂದಿನ ಪೀಳಿಗೆಯ ಮಲ್ಟಿ-ಟೆನೆಂಟ್ ಬ್ಯಾಂಕಿಂಗ್ ಕಮಾಂಡ್ ಸೆಂಟರ್. ಸುರಕ್ಷಿತ ಮತ್ತು ಭಾರತಕ್ಕಾಗಿ ಸ್ಥಳೀಯಗೊಳಿಸಲಾಗಿದೆ.",
+    "PORTAL_TYPE": "ಸೂಪರ್ ಅಡ್ಮಿನ್ ಪೋರ್ಟಲ್",
+    "AVATAR_1": "SB",
+    "AVATAR_2": "MB",
+    "AVATAR_COUNT": "+5k",
+    "TENANT_LABEL": "ಟೆನೆಂಟ್ ಐಡಿ",
+    "TENANT_PLACEHOLDER": "ಉದಾ: SangaBank",
+    "PASSWORD_PLACEHOLDER": "••••••••"
+  },
+  "SIGNUP": {
+    "CREATE_ACCOUNT": "ಸೂಪರ್ ಅಡ್ಮಿನ್ ರಚಿಸಿ",
+    "SUBTITLE": "ಮೈಂಡ್ ಸ್ಪಾರ್ಕ್ OS ಗಾಗಿ ಸಿಸ್ಟಮ್ ಅಡ್ಮಿನಿಸ್ಟ್ರೇಟರ್ ಅನ್ನು ನೋಂದಾಯಿಸಿ.",
+    "FIRST_NAME_LABEL": "ಮೊದಲ ಹೆಸರು",
+    "FIRST_NAME_PLACEHOLDER": "ಉದಾ: Sanga",
+    "LAST_NAME_LABEL": "ಕೊನೆಯ ಹೆಸರು",
+    "LAST_NAME_PLACEHOLDER": "ಉದಾ: Platform",
+    "EMAIL_LABEL": "ಇಮೇಲ್ ವಿಳಾಸ",
+    "EMAIL_PLACEHOLDER": "admin@sa-market.com",
+    "MOBILE_LABEL": "ಮೊಬೈಲ್ ಸಂಖ್ಯೆ",
+    "MOBILE_PLACEHOLDER": "ಉದಾ: 9876543210",
+    "CONFIRM_PASSWORD_LABEL": "ಪಾಸ್‌ವರ್ಡ್ ದೃಢೀಕರಿಸಿ",
+    "TERMS_AGREE": "ನಾನು ಸಿಸ್ಟಮ್‌ನ ಸೇವಾ ನಿಯಮಗಳನ್ನು ಒಪ್ಪುತ್ತೇನೆ",
+    "REGISTER_BUTTON": "ಸಿಸ್ಟಮ್ ಅಡ್ಮಿನ್ ಪ್ರಾರಂಭಿಸಿ",
+    "HAS_ACCOUNT": "ಈಗಾಗಲೇ ನೋಂದಾಯಿಸಲಾಗಿದೆಯೇ?",
+    "SIGN_IN_LINK": "ಇಲ್ಲಿ ಸೈನ್ ಇನ್ ಮಾಡಿ"
+  },
+  "COMMON": {
+    "SAVING": "ಉಳಿಸಲಾಗುತ್ತಿದೆ...",
+    "SYSTEM_ERROR_TITLE": "ಸಿಸ್ಟಮ್ ದೋಷ",
+    "SYSTEM_ERROR_DETAIL": "ಅನಿರೀಕ್ಷಿತ ದೋಷ ಸಂಭವಿಸಿದೆ. ದಯವಿಟ್ಟು ಬೆಂಬಲ ತಂಡವನ್ನು ಸಂಪರ್ಕಿಸಿ."
+  },
+  "PROFILE": {
+    "TITLE": "ಖಾತೆ ಸೆಟ್ಟಿಂಗ್‌ಗಳು",
+    "SUBTITLE": "ನಿಮ್ಮ ವೈಯಕ್ತಿಕ ಮಾಹಿತಿ ಮತ್ತು ಸಿಸ್ಟಮ್ ಆದ್ಯತೆಗಳನ್ನು ನಿರ್ವಹಿಸಿ",
+    "INFO": {
+      "USERNAME": "ಬಳಕೆದಾರಹೆಸರು",
+      "EMAIL": "ಇಮೇಲ್ ವಿಳಾಸ",
+      "TENANT": "ಸಂಬಂಧಿತ ಟೆನೆಂಟ್"
+    },
+    "TABS": {
+      "PROFILE_INFO": "ಪ್ರೊಫೈಲ್ ಮಾಹಿತಿ",
+      "SECURITY": "ಭದ್ರತೆ"
+    },
+    "SECTIONS": {
+      "PERSONAL": "ವೈಯಕ್ತಿಕ ಮಾಹಿತಿ",
+      "SYSTEM": "ಸಿಸ್ಟಮ್ ಆದ್ಯತೆಗಳು",
+      "NOTIFICATIONS": "ಅಧಿಸೂಚನೆಗಳು"
+    },
+    "FIELDS": {
+      "FIRST_NAME": "ಮೊದಲ ಹೆಸರು",
+      "LAST_NAME": "ಕೊನೆಯ ಹೆಸರು",
+      "PHONE_NUMBER": "ಫೋನ್ ಸಂಖ್ಯೆ",
+      "LANGUAGE": "ಭಾಷೆ",
+      "LAYOUT": "ಡ್ಯಾಶ್‌ಬೋರ್ಡ್ ವಿನ್ಯಾಸ"
+    },
+    "PLACEHOLDERS": {
+      "FIRST_NAME": "ಮೊದಲ ಹೆಸರನ್ನು ನಮೂದಿಸಿ",
+      "LAST_NAME": "ಕೊನೆಯ ಹೆಸರನ್ನು ನಮೂದಿಸಿ",
+      "PHONE_NUMBER": "10 ಅಂಕಿಗಳ ಸಂಖ್ಯೆಯನ್ನು ನಮೂದಿಸಿ"
+    },
+    "COUNTRIES": {
+      "IN": "ಭಾರತ (+91)",
+      "US": "ಅಮೇರಿಕಾ (+1)",
+      "UK": "ಯುಕೆ (+44)",
+      "AU": "ಆಸ್ಟ್ರೇಲಿಯಾ (+61)",
+      "AE": "ಯುಎಇ (+971)"
+    },
+    "LANGUAGES": {
+      "EN": "English",
+      "KN": "ಕನ್ನಡ",
+      "HI": "ಹಿಂದಿ"
+    },
+    "LAYOUTS": {
+      "STANDARD": "ಸಾಮಾನ್ಯ (Standard)",
+      "COMPACT": "ಅಡಕವಾದ (Compact)"
+    },
+    "TOGGLES": {
+      "DARK_MODE": "ಡಾರ್ಕ್ ಮೋಡ್",
+      "SIDEBAR": "ಸೈಡ್‌ಬಾರ್ ಮರೆಮಾಡಿ",
+      "EMAIL_ALERTS": "ಇಮೇಲ್ ಎಚ್ಚರಿಕೆಗಳು",
+      "SMS_ALERTS": "SMS ಎಚ್ಚರಿಕೆಗಳು"
+    },
+    "BUTTONS": {
+      "UPDATE": "ಪ್ರೊಫೈಲ್ ನವೀಕರಿಸಿ"
+    },
+    "MESSAGES": {
+      "SUCCESS_TITLE": "ಯಶಸ್ಸು",
+      "ERROR_TITLE": "ನವೀಕರಣ ವಿಫಲವಾಗಿದೆ",
+      "UPDATE_SUCCESS": "ನಿಮ್ಮ ಪ್ರೊಫೈಲ್ ಅನ್ನು ಯಶಸ್ವಿಯಾಗಿ ನವೀಕರಿಸಲಾಗಿದೆ.",
+      "UPDATE_ERROR": "ಪ್ರೊಫೈಲ್ ನವೀಕರಿಸಲು ಸಾಧ್ಯವಾಗಲಿಲ್ಲ. ದಯವಿಟ್ಟು ಇಂಟರ್ನೆಟ್ ಸಂಪರ್ಕವನ್ನು ಪರೀಕ್ಷಿಸಿ."
+    }
+  }
+}

@@ -1,0 +1,24 @@
+<button 
+  [type]="type"
+  [class]="computedClasses"
+  [disabled]="disabled || loading"
+  (click)="handleClick($event)">
+  
+  <ng-container *ngIf="loading">
+    <i class="pi pi-spinner pi-spin" [ngClass]="size === 'sm' ? 'text-[10px]' : 'text-xs'"></i>
+  </ng-container>
+  
+  <ng-container *ngIf="!loading && icon && iconPos === 'left'">
+    <i class="pi {{ icon }}" [ngClass]="size === 'sm' ? 'text-[10px]' : 'text-xs'"></i>
+  </ng-container>
+
+  <span>
+    {{ label }}
+    <ng-content></ng-content>
+  </span>
+
+  <ng-container *ngIf="!loading && icon && iconPos === 'right'">
+    <i class="pi {{ icon }}" [ngClass]="size === 'sm' ? 'text-[10px]' : 'text-xs'"></i>
+  </ng-container>
+
+</button>

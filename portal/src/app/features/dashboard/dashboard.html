@@ -1,0 +1,68 @@
+<p-toast position="top-right"></p-toast>
+
+<div class="space-y-6">
+  <header>
+    <h1 class="text-2xl font-bold text-gray-800 dark:text-white">
+      {{ 'DASHBOARD.WELCOME' | translate }}
+    </h1>
+    <p class="text-gray-500 dark:text-gray-400">
+      {{ 'DASHBOARD.SUBTITLE' | translate }}
+    </p>
+  </header>
+
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+    <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">{{ 'DASHBOARD.STATS.TOTAL_CUSTOMERS' | translate }}</p>
+          <h3 class="text-2xl font-bold mt-1 text-gray-900 dark:text-white">1,284</h3>
+        </div>
+        <div class="p-3 bg-blue-50 dark:bg-blue-900/30 rounded-lg">
+          <i class="pi pi-users text-blue-600 dark:text-blue-400 text-xl"></i>
+        </div>
+      </div>
+      <div class="mt-4 flex items-center text-sm">
+        <span class="text-green-500 font-bold">↑ 12%</span>
+        <span class="ml-2 text-gray-400">{{ 'DASHBOARD.STATS.VS_LAST_MONTH' | translate }}</span>
+      </div>
+    </div>
+
+    <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">{{ 'DASHBOARD.STATS.ACTIVE_LOANS' | translate }}</p>
+          <h3 class="text-2xl font-bold mt-1 text-gray-900 dark:text-white">452</h3>
+        </div>
+        <div class="p-3 bg-orange-50 dark:bg-orange-900/30 rounded-lg">
+          <i class="pi pi-wallet text-orange-600 dark:text-orange-400 text-xl"></i>
+        </div>
+      </div>
+      <div class="mt-4 flex items-center text-sm">
+        <span class="text-green-500 font-bold">↑ 5%</span>
+        <span class="ml-2 text-gray-400">{{ 'DASHBOARD.STATS.VS_LAST_MONTH' | translate }}</span>
+      </div>
+    </div>
+
+    <div class="p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-100 dark:border-gray-700">
+      <div class="flex items-center justify-between">
+        <div>
+          <p class="text-sm text-gray-500 dark:text-gray-400 font-medium">{{ 'DASHBOARD.STATS.REVENUE' | translate }}</p>
+          <h3 class="text-2xl font-bold mt-1 text-gray-900 dark:text-white">₹ 8.4L</h3>
+        </div>
+        <div class="p-3 bg-green-50 dark:bg-green-900/30 rounded-lg">
+          <i class="pi pi-chart-line text-green-600 dark:text-green-400 text-xl"></i>
+        </div>
+      </div>
+      <div class="mt-4 flex items-center text-sm">
+        <span class="text-red-500 font-bold">↓ 2%</span>
+        <span class="ml-2 text-gray-400">{{ 'DASHBOARD.STATS.VS_LAST_MONTH' | translate }}</span>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="h-64 border-2 border-dashed border-gray-200 dark:border-gray-700 rounded-2xl flex items-center justify-center text-gray-400">
+    {{ 'DASHBOARD.GRAPH_COMING_SOON' | translate }}
+  </div>
+</div>

@@ -1,0 +1,14 @@
+<div class="app-wrapper">
+  <header class="bank-header">
+    <!-- <img src="assets/logo.png" alt="S-Market Bank Logo"> -->
+    <span>Secure Operational Console</span>
+  </header>
+
+  <main class="content-area">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="security-footer">
+    Verified Session: {{ userRole }} | Encryption: AES-256
+  </footer>
+</div>

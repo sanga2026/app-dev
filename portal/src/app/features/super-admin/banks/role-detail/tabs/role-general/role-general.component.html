@@ -1,0 +1,106 @@
+<p-toast position="top-right"></p-toast>
+
+<form [formGroup]="roleForm" class="space-y-6">
+  <div class="flex justify-between items-start border-b border-gray-100 dark:border-gray-800 pb-6">
+    <div class="flex-1">
+      <ng-container *ngIf="!isEditing">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white">{{ role.name }}</h2>
+        <p class="text-sm font-mono text-gray-500 mt-1">{{ role.role }}</p>
+        <p class="text-sm text-gray-600 dark:text-gray-400 mt-2">{{ role.description }}</p>
+      </ng-container>
+
+      <ng-container *ngIf="isEditing">
+        <input formControlName="name" class="w-full text-xl font-bold bg-gray-50 dark:bg-gray-900 p-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500" />
+        <textarea formControlName="description" class="w-full mt-3 text-sm bg-gray-50 dark:bg-gray-900 p-3 rounded-xl border border-gray-200 dark:border-gray-700 focus:ring-2 focus:ring-blue-500"></textarea>
+      </ng-container>
+    </div>
+    
+    <div class="flex items-center gap-3">
+      <ng-container *appHasPermission="['roles', 'delete']">
+        <app-button *ngIf="!isEditing && !role.isSystemRole && role.bankId !== null" 
+                    variant="danger-light" icon="pi-trash" label="Delete Role" 
+                    (onClick)="showDeleteModal = true"></app-button>
+      </ng-container>
+
+      <ng-container *appHasPermission="['roles', 'update']">
+        <app-button *ngIf="!isEditing" variant="primary" icon="pi-pencil" label="Edit Role" (onClick)="toggleEdit()"></app-button>
+        <app-button *ngIf="isEditing" variant="secondary" label="Cancel" [disabled]="isSaving" (onClick)="toggleEdit()"></app-button>
+        <app-button *ngIf="isEditing" variant="success" icon="pi-check" label="Save Changes" [loading]="isSaving" (onClick)="saveChanges()"></app-button>
+      </ng-container>
+    </div>
+  </div>
+
+  <div formGroupName="permissions" class="space-y-8">
+    
+    <div>
+      <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+        <i class="pi pi-compass text-blue-500"></i> Sidebar Visibility
+      </h3>
+      <div formGroupName="navigation" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4 p-5 bg-gray-50/50 dark:bg-gray-800/30 rounded-xl border border-gray-100 dark:border-gray-800">
+        
+        <label *ngFor="let nav of navigationResources" class="flex items-center justify-between p-3 bg-white dark:bg-[#1a1f29] rounded-lg border border-gray-200 dark:border-gray-700 shadow-sm transition-all has-[:disabled]:opacity-40 has-[:disabled]:cursor-not-allowed cursor-pointer">
+          <span class="text-xs font-semibold text-gray-700 dark:text-gray-300">{{ nav.label }}</span>
+          
+          <ng-container *ngIf="!isEditing">
+             <i class="pi" [ngClass]="role.permissions?.navigation?.[nav.key] ? 'pi-check-circle text-green-500' : 'pi-times-circle text-gray-300 dark:text-gray-600'"></i>
+          </ng-container>
+          
+          <input *ngIf="isEditing" type="checkbox" [formControlName]="nav.key" class="h-4 w-4 accent-blue-600 rounded disabled:bg-gray-200 cursor-inherit">
+        </label>
+
+      </div>
+    </div>
+
+    <div>
+      <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+        <i class="pi pi-shield text-blue-500"></i> Data Access Privileges
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div *ngFor="let res of systemResources" [formGroupName]="res.key" class="p-4 border border-gray-100 dark:border-gray-700 rounded-xl bg-gray-50/50 dark:bg-gray-900/30">
+          <h4 class="font-semibold text-sm mb-3 text-gray-800 dark:text-white">{{ res.label }}</h4>
+          
+          <div class="flex flex-col gap-2.5 text-sm">
+            
+            <label class="flex justify-between items-center cursor-pointer has-[:disabled]:opacity-40 has-[:disabled]:cursor-not-allowed">
+              <span class="text-gray-500">Read</span>
+              <ng-container *ngIf="!isEditing">
+                 <i class="pi" [ngClass]="role.permissions?.[res.key]?.read ? 'pi-check-circle text-green-500' : 'pi-times-circle text-gray-300 dark:text-gray-700'"></i>
+              </ng-container>
+              <input *ngIf="isEditing" type="checkbox" formControlName="read" class="h-4 w-4 accent-blue-600 rounded disabled:bg-gray-200 cursor-inherit">
+            </label>
+
+            <label class="flex justify-between items-center cursor-pointer has-[:disabled]:opacity-40 has-[:disabled]:cursor-not-allowed">
+              <span class="text-gray-500">Create</span>
+              <ng-container *ngIf="!isEditing">
+                 <i class="pi" [ngClass]="role.permissions?.[res.key]?.create ? 'pi-check-circle text-green-500' : 'pi-times-circle text-gray-300 dark:text-gray-700'"></i>
+              </ng-container>
+              <input *ngIf="isEditing" type="checkbox" formControlName="create" class="h-4 w-4 accent-blue-600 rounded disabled:bg-gray-200 cursor-inherit">
+            </label>
+
+            <label class="flex justify-between items-center cursor-pointer has-[:disabled]:opacity-40 has-[:disabled]:cursor-not-allowed">
+              <span class="text-gray-500">Update</span>
+              <ng-container *ngIf="!isEditing">
+                 <i class="pi" [ngClass]="role.permissions?.[res.key]?.update ? 'pi-check-circle text-green-500' : 'pi-times-circle text-gray-300 dark:text-gray-700'"></i>
+              </ng-container>
+              <input *ngIf="isEditing" type="checkbox" formControlName="update" class="h-4 w-4 accent-blue-600 rounded disabled:bg-gray-200 cursor-inherit">
+            </label>
+
+            <label class="flex justify-between items-center cursor-pointer has-[:disabled]:opacity-40 has-[:disabled]:cursor-not-allowed">
+              <span class="text-gray-500">Delete</span>
+              <ng-container *ngIf="!isEditing">
+                 <i class="pi" [ngClass]="role.permissions?.[res.key]?.delete ? 'pi-check-circle text-red-500' : 'pi-times-circle text-gray-300 dark:text-gray-700'"></i>
+              </ng-container>
+              <input *ngIf="isEditing" type="checkbox" formControlName="delete" class="h-4 w-4 accent-red-600 rounded disabled:bg-gray-200 cursor-inherit">
+            </label>
+
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</form>
+
+<app-confirm-modal [(visible)]="showDeleteModal" [isProcessing]="isDeleting" title="Delete Role?" (confirm)="executeDelete()">
+  Are you sure you want to permanently delete <strong>{{ role.name }}</strong>?
+</app-confirm-modal>

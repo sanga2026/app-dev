@@ -1,0 +1,436 @@
+<p-toast position="top-right" [style]="{ 'z-index': '99999' }"></p-toast>
+
+<div class="max-w-6xl mx-auto space-y-4 animate-in fade-in slide-in-from-bottom-4 duration-500">
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+        {{ 'PROFILE.TITLE' | translate }}
+      </h1>
+      <p class="text-sm text-gray-500">{{ 'PROFILE.SUBTITLE' | translate }}</p>
+    </div>
+    <button
+      (click)="onLogout()"
+      class="px-4 py-2 bg-red-50 text-red-600 border border-red-100 rounded-xl hover:bg-red-600 hover:text-white transition-all font-bold flex items-center gap-2 shadow-sm whitespace-nowrap text-sm"
+    >
+      <i class="pi pi-sign-out"></i> {{ 'HEADER.LOGOUT' | translate }}
+    </button>
+  </div>
+
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 items-start">
+    
+    <div class="lg:col-span-1">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl p-5 shadow-sm border border-gray-100 dark:border-gray-700 text-center relative overflow-hidden h-full flex flex-col">
+        <div class="absolute -top-12 -right-12 h-32 w-32 bg-blue-50 dark:bg-blue-900/20 rounded-full opacity-50"></div>
+        <div class="relative h-20 w-20 bg-blue-600 rounded-full mx-auto flex items-center justify-center text-2xl text-white font-bold mb-3 shadow-xl border-4 border-white dark:border-gray-700 mt-2">
+          {{ userInitials }}
+        </div>
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+          {{ user.firstName }} {{ user.lastName }}
+        </h2>
+        <div class="mt-1">
+          <span class="inline-block px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-900/40 text-blue-600 dark:text-blue-400 text-[10px] font-bold uppercase tracking-wider">
+            {{ user.role }}
+          </span>
+        </div>
+        <div class="mt-5 pt-5 border-t border-gray-50 dark:border-gray-700 space-y-3 text-left w-full flex-1">
+          <div class="flex items-center gap-3 text-sm">
+            <div class="h-7 w-7 shrink-0 rounded-lg bg-gray-50 dark:bg-gray-900 flex items-center justify-center text-gray-400">
+              <i class="pi pi-user text-xs"></i>
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="text-[10px] uppercase font-bold text-gray-400">
+                {{ 'PROFILE.INFO.USERNAME' | translate }}
+              </p>
+              <p class="text-gray-700 dark:text-gray-200 font-medium truncate">
+                {{ user.username }}
+              </p>
+            </div>
+          </div>
+          <div class="flex items-center gap-3 text-sm">
+            <div class="h-7 w-7 shrink-0 rounded-lg bg-gray-50 dark:bg-gray-900 flex items-center justify-center text-gray-400">
+              <i class="pi pi-envelope text-xs"></i>
+            </div>
+            <div class="min-w-0 flex-1">
+              <p class="text-[10px] uppercase font-bold text-gray-400">
+                {{ 'PROFILE.INFO.EMAIL' | translate }}
+              </p>
+              <p class="text-gray-700 dark:text-gray-200 font-medium truncate">{{ user.email }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="lg:col-span-2">
+      <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-sm border border-gray-100 dark:border-gray-700 h-full flex flex-col">
+        
+        <div class="flex border-b border-gray-50 dark:border-gray-700 px-6 gap-4 overflow-x-auto no-scrollbar">
+          <button (click)="setTab('profile')" class="py-4 px-2 border-b-2 font-bold text-sm transition-all flex items-center gap-2 whitespace-nowrap" [ngClass]="activeTab === 'profile' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-400 hover:text-gray-600'">
+            <i class="pi pi-user-edit"></i> {{ 'PROFILE.TABS.PROFILE_INFO' | translate }}
+          </button>
+          <button (click)="setTab('security')" class="py-4 px-2 border-b-2 font-bold text-sm transition-all flex items-center gap-2 whitespace-nowrap" [ngClass]="activeTab === 'security' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-400 hover:text-gray-600'">
+            <i class="pi pi-lock"></i> {{ 'PROFILE.TABS.SECURITY' | translate }}
+          </button>
+          <button (click)="setTab('sessions')" class="py-4 px-2 border-b-2 font-bold text-sm transition-all flex items-center gap-2 whitespace-nowrap" [ngClass]="activeTab === 'sessions' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-400 hover:text-gray-600'">
+            <i class="pi pi-desktop"></i> {{ 'PROFILE.TABS.SESSIONS' | translate }}
+          </button>
+          <button (click)="setTab('logs')" class="py-4 px-2 border-b-2 font-bold text-sm transition-all flex items-center gap-2 whitespace-nowrap" [ngClass]="activeTab === 'logs' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-400 hover:text-gray-600'">
+            <i class="pi pi-list"></i> {{ 'PROFILE.TABS.ACCESS_LOGS' | translate }}
+          </button>
+          <button (click)="setTab('about')" class="py-4 px-2 border-b-2 font-bold text-sm transition-all flex items-center gap-2 whitespace-nowrap" [ngClass]="activeTab === 'about' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-400 hover:text-gray-600'">
+            <i class="pi pi-info-circle"></i> {{ 'PROFILE.TABS.ABOUT' | translate }}
+          </button>
+          <button (click)="setTab('help')" class="py-4 px-2 border-b-2 font-bold text-sm transition-all flex items-center gap-2 whitespace-nowrap" [ngClass]="activeTab === 'help' ? 'border-blue-600 text-blue-600' : 'border-transparent text-gray-400 hover:text-gray-600'">
+            <i class="pi pi-question-circle"></i> {{ 'PROFILE.TABS.HELP' | translate }}
+          </button>
+        </div>
+
+        <div class="p-6 flex-1">
+          
+          <div *ngIf="activeTab === 'profile'" class="space-y-5 animate-in fade-in duration-300">
+            <section>
+              <div class="flex items-center gap-2 mb-4">
+                <div class="h-1.5 w-1.5 bg-blue-600 rounded-full"></div>
+                <h3 class="font-bold text-gray-800 dark:text-white text-sm">{{ 'PROFILE.SECTIONS.PERSONAL' | translate }}</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-1">
+                  <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1 uppercase tracking-wider">{{ 'PROFILE.FIELDS.FIRST_NAME' | translate }}</label>
+                  <input type="text" [(ngModel)]="user.firstName" (ngModelChange)="updateInitials()" name="firstName" maxlength="50"
+                    class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-700 rounded-xl p-2.5 text-sm outline-none transition-all dark:text-white focus:ring-2 focus:ring-blue-500/20"
+                    [ngClass]="{ 'border-red-500 focus:ring-red-500/20': errors['firstName'] }" />
+                  <p *ngIf="errors['firstName']" class="text-[10px] text-red-500 font-medium">{{ errors['firstName'] | translate }}</p>
+                </div>
+                <div class="space-y-1">
+                  <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1 uppercase tracking-wider">{{ 'PROFILE.FIELDS.LAST_NAME' | translate }}</label>
+                  <input type="text" [(ngModel)]="user.lastName" (ngModelChange)="updateInitials()" name="lastName" maxlength="50"
+                    class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-700 rounded-xl p-2.5 text-sm outline-none transition-all dark:text-white focus:ring-2 focus:ring-blue-500/20"
+                    [ngClass]="{ 'border-red-500 focus:ring-red-500/20': errors['lastName'] }" />
+                  <p *ngIf="errors['lastName']" class="text-[10px] text-red-500 font-medium">{{ errors['lastName'] | translate }}</p>
+                </div>
+                <div class="space-y-1 md:col-span-2">
+                  <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1 uppercase tracking-wider">{{ 'PROFILE.FIELDS.PHONE_NUMBER' | translate }}</label>
+                  <div class="flex gap-2">
+                    <select [(ngModel)]="user.countryCode" name="countryCode" class="w-24 bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-700 rounded-xl p-2.5 text-sm dark:text-white outline-none cursor-pointer">
+                      <option value="+91">IN (+91)</option>
+                      <option value="+1">US (+1)</option>
+                    </select>
+                    <input type="text" [(ngModel)]="user.phoneNumber" name="phoneNumber" maxlength="10"
+                      class="flex-1 bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-700 rounded-xl p-2.5 text-sm outline-none dark:text-white focus:ring-2 focus:ring-blue-500/20"
+                      [ngClass]="{ 'border-red-500 focus:ring-red-500/20': errors['phoneNumber'] }" />
+                  </div>
+                  <p *ngIf="errors['phoneNumber']" class="text-[10px] text-red-500 font-medium">{{ errors['phoneNumber'] | translate }}</p>
+                </div>
+              </div>
+            </section>
+
+            <section class="pt-5 border-t border-gray-50 dark:border-gray-700">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="h-1.5 w-1.5 bg-purple-500 rounded-full"></div>
+                <h3 class="font-bold text-gray-800 dark:text-white text-sm">{{ 'PROFILE.SECTIONS.SYSTEM' | translate }}</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="space-y-1">
+                  <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1 uppercase tracking-wider">{{ 'PROFILE.FIELDS.LANGUAGE' | translate }}</label>
+                  <select [(ngModel)]="user.language" (ngModelChange)="onLanguageChange($event)" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-700 rounded-xl p-2.5 text-sm outline-none dark:text-white cursor-pointer">
+                    <option value="en">English</option>
+                    <option value="kn">ಕನ್ನಡ</option>
+                    <option value="hi">हिन्दी</option>
+                  </select>
+                </div>
+                <div class="space-y-1">
+                  <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1 uppercase tracking-wider">{{ 'PROFILE.FIELDS.LAYOUT' | translate }}</label>
+                  <select [(ngModel)]="user.dashboardLayout" (ngModelChange)="onLayoutChange($event)" class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-700 rounded-xl p-2.5 text-sm outline-none dark:text-white cursor-pointer">
+                    <option value="standard">Standard</option>
+                    <option value="compact">Compact</option>
+                  </select>
+                </div>
+
+                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
+                  <div class="flex gap-3 items-center">
+                    <div class="h-7 w-7 shrink-0 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm"><i class="pi pi-moon text-blue-600 text-xs"></i></div>
+                    <span class="font-bold text-xs text-gray-900 dark:text-white">{{ 'PROFILE.TOGGLES.DARK_MODE' | translate }}</span>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" [(ngModel)]="user.isDarkMode" (ngModelChange)="onThemeChange($event)" class="sr-only peer" />
+                    <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
+
+                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
+                  <div class="flex gap-3 items-center">
+                    <div class="h-7 w-7 shrink-0 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm"><i class="pi pi-bars text-blue-600 text-xs"></i></div>
+                    <span class="font-bold text-xs text-gray-900 dark:text-white">{{ 'PROFILE.TOGGLES.SIDEBAR' | translate }}</span>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" [(ngModel)]="user.isSidebarCollapsed" (ngModelChange)="onSidebarChange($event)" class="sr-only peer" />
+                    <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-blue-600"></div>
+                  </label>
+                </div>
+              </div>
+            </section>
+
+            <section class="pt-5 border-t border-gray-50 dark:border-gray-700">
+              <div class="flex items-center gap-2 mb-3">
+                <div class="h-1.5 w-1.5 bg-green-500 rounded-full"></div>
+                <h3 class="font-bold text-gray-800 dark:text-white text-sm">{{ 'PROFILE.SECTIONS.NOTIFICATIONS' | translate }}</h3>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
+                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
+                  <div class="flex gap-3 items-center">
+                    <div class="h-7 w-7 shrink-0 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm"><i class="pi pi-envelope text-green-600 text-xs"></i></div>
+                    <span class="font-bold text-xs text-gray-900 dark:text-white">{{ 'PROFILE.TOGGLES.EMAIL_ALERTS' | translate }}</span>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" [(ngModel)]="user.emailAlerts" (ngModelChange)="onEmailAlertsChange($event)" class="sr-only peer" />
+                    <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
+                  </label>
+                </div>
+                <div class="flex items-center justify-between p-3 bg-gray-50 dark:bg-gray-900/50 rounded-xl border border-dashed border-gray-200 dark:border-gray-700">
+                  <div class="flex gap-3 items-center">
+                    <div class="h-7 w-7 shrink-0 rounded-full bg-white dark:bg-gray-800 flex items-center justify-center shadow-sm"><i class="pi pi-mobile text-green-600 text-xs"></i></div>
+                    <span class="font-bold text-xs text-gray-900 dark:text-white">{{ 'PROFILE.TOGGLES.SMS_ALERTS' | translate }}</span>
+                  </div>
+                  <label class="relative inline-flex items-center cursor-pointer">
+                    <input type="checkbox" [(ngModel)]="user.smsAlerts" (ngModelChange)="onSmsAlertsChange($event)" class="sr-only peer" />
+                    <div class="w-9 h-5 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-green-600"></div>
+                  </label>
+                </div>
+              </div>
+            </section>
+
+            <div class="pt-4 flex justify-end">
+              <button (click)="onUpdateProfile()" [disabled]="isSaving"
+                class="px-8 py-2.5 bg-blue-600 text-white text-sm rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-500/20 transition-all flex items-center gap-2">
+                <i *ngIf="isSaving" class="pi pi-spin pi-spinner"></i>
+                {{ (isSaving ? 'COMMON.MISC.SAVING' : 'PROFILE.BUTTONS.UPDATE') | translate }}
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="activeTab === 'security'" class="space-y-6 animate-in fade-in duration-300">
+            <section class="space-y-5">
+              <div class="flex items-center gap-2 mb-4">
+                <div class="h-1.5 w-1.5 bg-red-500 rounded-full"></div>
+                <h3 class="font-bold text-gray-800 dark:text-white text-sm">{{ 'PROFILE.SECURITY.PASSWORD_TITLE' | translate }}</h3>
+              </div>
+
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-1 md:col-span-2">
+                  <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1 uppercase tracking-wider">{{ 'PROFILE.SECURITY.CURRENT_PASSWORD' | translate }}</label>
+                  <div class="relative">
+                    <input [type]="showCurrentPassword ? 'text' : 'password'" [(ngModel)]="securityForm.currentPassword" name="currentPassword" maxlength="25" autocomplete="current-password"
+                      class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-700 rounded-xl p-2.5 pr-10 text-sm outline-none transition-all dark:text-white focus:ring-2 focus:ring-blue-500/20"
+                      [ngClass]="{ 'border-red-500 focus:ring-red-500/20': securityErrors['currentPassword'] }" placeholder="••••••••" />
+                    <i class="pi absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-blue-500 transition-colors"
+                      [ngClass]="showCurrentPassword ? 'pi-eye' : 'pi-eye-slash'" (click)="showCurrentPassword = !showCurrentPassword"></i>
+                  </div>
+                  <p *ngIf="securityErrors['currentPassword']" class="text-[10px] text-red-500 font-medium">{{ securityErrors['currentPassword'] | translate }}</p>
+                </div>
+
+                <div class="space-y-1">
+                  <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1 uppercase tracking-wider">{{ 'PROFILE.SECURITY.NEW_PASSWORD' | translate }}</label>
+                  <div class="relative">
+                    <input [type]="showNewPassword ? 'text' : 'password'" [(ngModel)]="securityForm.newPassword" name="newPassword" maxlength="25" autocomplete="new-password"
+                      class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-700 rounded-xl p-2.5 pr-10 text-sm outline-none transition-all dark:text-white focus:ring-2 focus:ring-blue-500/20"
+                      [ngClass]="{ 'border-red-500 focus:ring-red-500/20': securityErrors['newPassword'] }" placeholder="••••••••" />
+                    <i class="pi absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-blue-500 transition-colors"
+                      [ngClass]="showNewPassword ? 'pi-eye' : 'pi-eye-slash'" (click)="showNewPassword = !showNewPassword"></i>
+                  </div>
+                  <p *ngIf="securityErrors['newPassword']" class="text-[10px] text-red-500 font-medium">{{ securityErrors['newPassword'] | translate }}</p>
+                </div>
+
+                <div class="space-y-1">
+                  <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1 uppercase tracking-wider">{{ 'PROFILE.SECURITY.CONFIRM_PASSWORD' | translate }}</label>
+                  <div class="relative">
+                    <input [type]="showConfirmPassword ? 'text' : 'password'" [(ngModel)]="securityForm.confirmPassword" name="confirmPassword" maxlength="25" autocomplete="new-password"
+                      class="w-full bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-700 rounded-xl p-2.5 pr-10 text-sm outline-none transition-all dark:text-white focus:ring-2 focus:ring-blue-500/20"
+                      [ngClass]="{ 'border-red-500 focus:ring-red-500/20': securityErrors['confirmPassword'] }" placeholder="••••••••" />
+                    <i class="pi absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 cursor-pointer hover:text-blue-500 transition-colors"
+                      [ngClass]="showConfirmPassword ? 'pi-eye' : 'pi-eye-slash'" (click)="showConfirmPassword = !showConfirmPassword"></i>
+                  </div>
+                  <p *ngIf="securityErrors['confirmPassword']" class="text-[10px] text-red-500 font-medium">{{ securityErrors['confirmPassword'] | translate }}</p>
+                </div>
+              </div>
+
+              <div class="pt-2 flex justify-end">
+                <button (click)="onUpdatePassword()" [disabled]="isSavingPassword"
+                  class="w-full sm:w-auto px-8 py-2.5 bg-blue-600 text-white text-sm rounded-xl font-bold hover:bg-blue-700 shadow-lg shadow-blue-500/20 transition-all active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed flex justify-center items-center gap-2">
+                  <i *ngIf="!isSavingPassword" class="pi pi-shield"></i>
+                  <i *ngIf="isSavingPassword" class="pi pi-spin pi-spinner"></i>
+                  {{ (isSavingPassword ? 'COMMON.MISC.SAVING' : 'PROFILE.BUTTONS.UPDATE_PASSWORD') | translate }}
+                </button>
+              </div>
+            </section>
+
+            <hr class="border-gray-50 dark:border-gray-700" />
+
+            <section class="p-5 bg-blue-50/50 dark:bg-blue-900/10 rounded-2xl border border-blue-100 dark:border-blue-800/30 flex flex-col md:flex-row items-center justify-between gap-4">
+              <div class="flex gap-4 items-center">
+                <div class="h-12 w-12 bg-blue-600 rounded-2xl flex items-center justify-center text-white shadow-lg"><i class="pi pi-verified text-xl"></i></div>
+                <div>
+                  <h4 class="font-bold text-sm dark:text-white">{{ 'PROFILE.SECURITY.2FA_TITLE' | translate }}</h4>
+                  <p class="text-[11px] text-gray-500">{{ 'PROFILE.SECURITY.2FA_DESC' | translate }}</p>
+                </div>
+              </div>
+              <button class="w-full md:w-auto px-6 py-2 bg-blue-600 text-white text-xs font-bold rounded-xl hover:bg-blue-700 transition-all shadow-md">
+                {{ 'PROFILE.SECURITY.2FA_BTN' | translate }}
+              </button>
+            </section>
+          </div>
+
+          <div *ngIf="activeTab === 'sessions'" class="space-y-4 animate-in fade-in duration-300">
+            <div class="flex items-center justify-between mb-2">
+              <div>
+                <h3 class="font-bold text-gray-800 dark:text-white text-sm">{{ 'PROFILE.SESSIONS.TITLE' | translate }}</h3>
+                <p class="text-[11px] text-gray-500">{{ 'PROFILE.SESSIONS.SUB_TITLE' | translate }}</p>
+              </div>
+              <button (click)="fetchSessions()" class="p-2 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors">
+                <i class="pi pi-refresh text-xs" [ngClass]="{'pi-spin': isLoadingSessions}"></i>
+              </button>
+            </div>
+
+            <div class="grid gap-3">
+              <div *ngFor="let session of sessions" class="p-4 rounded-xl border border-gray-100 dark:border-gray-700 bg-gray-50/30 dark:bg-gray-900/20 flex items-center justify-between shadow-sm">
+                <div class="flex items-center gap-4">
+                  <div class="h-10 w-10 rounded-xl bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600">
+                    <i [class]="session.device.toLowerCase().includes('mobile') ? 'pi pi-mobile' : 'pi pi-desktop'"></i>
+                  </div>
+                  <div>
+                    <div class="flex items-center gap-2">
+                      <span class="font-bold text-sm dark:text-white">{{ session.device }}</span>
+                      <div *ngIf="session.isCurrent" class="flex items-center gap-1.5 px-2 py-0.5 bg-green-100 dark:bg-green-900/30 text-green-600 rounded-full">
+                        <span class="relative flex h-1.5 w-1.5">
+                          <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                          <span class="relative inline-flex rounded-full h-1.5 w-1.5 bg-green-500"></span>
+                        </span>
+                        <span class="text-[9px] font-bold uppercase tracking-wider">{{ 'PROFILE.SESSIONS.ACTIVE_NOW' | translate }}</span>
+                      </div>
+                    </div>
+                    <p class="text-[10px] text-gray-500 font-mono">
+                      {{ session.ipAddress }} • {{ 'PROFILE.SESSIONS.LAST_ACTIVE' | translate }} {{ session.lastActive | date:'short' }}
+                    </p>
+                  </div>
+                </div>
+
+                <button *ngIf="!session.isCurrent" (click)="onRevokeSession(session.id)"
+                  class="flex items-center gap-2 px-4 py-2 bg-white dark:bg-gray-800 border border-red-100 dark:border-red-900/30 text-red-600 rounded-xl transition-all duration-200 hover:bg-red-600 hover:text-white hover:shadow-lg hover:shadow-red-500/20 active:scale-95 text-xs font-bold uppercase tracking-tight">
+                  <i class="pi pi-sign-out text-[10px]"></i> {{ 'PROFILE.SESSIONS.SIGN_OUT' | translate }}
+                </button>
+
+                <div *ngIf="session.isCurrent" class="text-gray-400 opacity-50 px-4 py-2">
+                  <i class="pi pi-lock text-sm"></i>
+                </div>
+              </div>
+
+              <div *ngIf="sessions.length === 0 && !isLoadingSessions" class="text-center py-10 text-gray-400">
+                <i class="pi pi-shield text-3xl mb-2 opacity-20"></i>
+                <p class="text-xs">{{ 'PROFILE.SESSIONS.NO_OTHER_SESSIONS' | translate }}</p>
+              </div>
+            </div>
+          </div>
+          
+          <div *ngIf="activeTab === 'logs'" class="space-y-4 animate-in fade-in duration-300">
+            <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-2">
+              <div class="flex items-center gap-3">
+                <h3 class="font-bold text-gray-800 dark:text-white text-sm">{{ 'PROFILE.LOGS.TITLE' | translate }}</h3>
+                <button (click)="refreshLogs()" [disabled]="isLoadingLogs" class="p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-500 transition-all active:rotate-180 duration-500">
+                  <i class="pi pi-refresh text-xs" [ngClass]="{ 'pi-spin': isLoadingLogs }"></i>
+                </button>
+                <span *ngIf="accessLogs?.length" class="text-[10px] text-blue-600 font-bold bg-blue-50 dark:bg-blue-900/30 px-2 py-1 rounded">
+                  {{ 'PROFILE.LOGS.LAST_ACTIVITIES' | translate: { count: accessLogs.length } }}
+                </span>
+              </div>
+              <div class="relative w-full sm:w-64">
+                <i class="pi pi-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 text-sm"></i>
+                <input type="text" [(ngModel)]="searchTerm" (input)="applyLogFilter()" [placeholder]="'PROFILE.LOGS.SEARCH_PLACEHOLDER' | translate"
+                  class="w-full pl-9 pr-4 py-2 bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-700 rounded-lg text-xs outline-none focus:ring-2 focus:ring-blue-500/20 dark:text-white transition-all" />
+              </div>
+            </div>
+
+            <div class="border border-gray-100 dark:border-gray-700 rounded-xl overflow-hidden relative">
+              <div *ngIf="isLoadingLogs && accessLogs.length === 0" class="absolute inset-0 bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm flex items-center justify-center z-10">
+                <i class="pi pi-spin pi-spinner text-blue-600 text-2xl"></i>
+              </div>
+              <table class="w-full text-left text-sm">
+                <thead class="bg-gray-50 dark:bg-gray-900/50 text-gray-500 uppercase font-bold text-xs">
+                  <tr>
+                    <th class="px-4 py-3">{{ 'PROFILE.LOGS.TABLE.EVENT' | translate }}</th>
+                    <th class="px-4 py-3">{{ 'PROFILE.LOGS.TABLE.IP_ADDRESS' | translate }}</th>
+                    <th class="px-4 py-3">{{ 'PROFILE.LOGS.TABLE.DEVICE' | translate }}</th>
+                    <th class="px-4 py-3">{{ 'PROFILE.LOGS.TABLE.DATE' | translate }}</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-50 dark:divide-gray-700">
+                  <tr *ngIf="!isLoadingLogs && (!filteredLogs || filteredLogs.length === 0)">
+                    <td colspan="4" class="px-4 py-10 text-center text-gray-400 text-xs">
+                      <i class="pi pi-info-circle text-2xl mb-2 opacity-50 block"></i>
+                      {{ searchTerm ? ('PROFILE.LOGS.NO_MATCH' | translate) : ('PROFILE.LOGS.NO_LOGS' | translate) }}
+                    </td>
+                  </tr>
+                  <tr *ngFor="let log of filteredLogs" class="dark:text-gray-300 hover:bg-gray-50/50 dark:hover:bg-gray-700/30 transition-colors text-xs">
+                    <td class="px-4 py-3 font-medium">{{ log.event }}</td>
+                    <td class="px-4 py-3 text-gray-500 font-mono">{{ log.ipAddress || ('PROFILE.LOGS.UNKNOWN' | translate) }}</td>
+                    <td class="px-4 py-3 text-gray-500">{{ log.device || ('PROFILE.LOGS.UNKNOWN' | translate) }}</td>
+                    <td class="px-4 py-3 text-gray-400">{{ log.createdAt | date: 'medium' }}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div class="flex justify-center mt-4 pt-2" *ngIf="hasMoreLogs && filteredLogs.length > 0">
+              <button (click)="fetchLogs()" [disabled]="isLoadingLogs"
+                class="px-5 py-2 text-xs font-bold text-blue-600 hover:bg-blue-50 dark:text-blue-400 dark:hover:bg-blue-900/20 rounded-lg transition-all flex items-center gap-2 disabled:opacity-50 border border-transparent hover:border-blue-100 dark:hover:border-blue-900/50">
+                <i class="pi pi-spin pi-spinner" *ngIf="isLoadingLogs"></i>
+                {{ (isLoadingLogs ? 'COMMON.MISC.LOADING' : 'PROFILE.LOGS.LOAD_MORE') | translate }}
+              </button>
+            </div>
+          </div>
+
+          <div *ngIf="activeTab === 'about'" class="space-y-4 animate-in fade-in duration-300">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="h-1.5 w-1.5 bg-blue-600 rounded-full"></div>
+              <h3 class="font-bold text-gray-800 dark:text-white text-sm">{{ 'PROFILE.ABOUT.TITLE' | translate }}</h3>
+            </div>
+            <div class="p-6 rounded-2xl bg-gray-50/50 dark:bg-gray-900/30 border border-gray-100 dark:border-gray-700">
+              <p class="text-sm leading-relaxed text-gray-700 dark:text-gray-300 whitespace-pre-line">
+                {{ globalSettings?.['ABOUT_US'] || ('PROFILE.ABOUT.DEFAULT_TEXT' | translate) }}
+              </p>
+            </div>
+          </div>
+
+          <div *ngIf="activeTab === 'help'" class="space-y-4 animate-in fade-in duration-300">
+            <div class="flex items-center gap-2 mb-4">
+              <div class="h-1.5 w-1.5 bg-green-500 rounded-full"></div>
+              <h3 class="font-bold text-gray-800 dark:text-white text-sm">{{ 'PROFILE.HELP.TITLE' | translate }}</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="p-5 rounded-2xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-md transition-shadow flex items-start gap-4">
+                <div class="h-10 w-10 shrink-0 rounded-full bg-blue-50 dark:bg-blue-900/30 flex items-center justify-center text-blue-600"><i class="pi pi-envelope text-lg"></i></div>
+                <div>
+                  <h4 class="font-bold text-sm text-gray-900 dark:text-white mb-1">{{ 'PROFILE.HELP.EMAIL_TITLE' | translate }}</h4>
+                  <p class="text-[11px] text-gray-500 mb-2">{{ 'PROFILE.HELP.EMAIL_DESC' | translate }}</p>
+                  <a [href]="'mailto:' + (globalSettings?.['SUPPORT_EMAIL'] || 'support@s-market.com')" class="text-sm font-bold text-blue-600 hover:underline">
+                    {{ globalSettings?.['SUPPORT_EMAIL'] || 'support@s-market.com' }}
+                  </a>
+                </div>
+              </div>
+
+              <div class="p-5 rounded-2xl border border-gray-100 dark:border-gray-700 bg-white dark:bg-gray-800 hover:shadow-md transition-shadow flex items-start gap-4">
+                <div class="h-10 w-10 shrink-0 rounded-full bg-green-50 dark:bg-green-900/30 flex items-center justify-center text-green-600"><i class="pi pi-phone text-lg"></i></div>
+                <div>
+                  <h4 class="font-bold text-sm text-gray-900 dark:text-white mb-1">{{ 'PROFILE.HELP.PHONE_TITLE' | translate }}</h4>
+                  <p class="text-[11px] text-gray-500 mb-2">{{ 'PROFILE.HELP.PHONE_DESC' | translate }}</p>
+                  <a [href]="'tel:' + (globalSettings?.['SUPPORT_PHONE'] || '+918045678900')" class="text-sm font-bold text-green-600 hover:underline">
+                    {{ globalSettings?.['SUPPORT_PHONE'] || '+91 80 4567 8900' }}
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,140 @@
+{
+  "NAV": {
+    "DASHBOARD": "डैशबोर्ड",
+    "CUSTOMERS": "ग्राहक",
+    "LOANS": "ऋण",
+    "ACCOUNTING": "लेखांकन",
+    "BRANCHES": "शाखाएं"
+  },
+  "HEADER": {
+    "TENANT": "टिनेंट: सांगा बैंक",
+    "PROFILE": "मेरी प्रोफाइल",
+    "SETTINGS": "सेटिंग्स",
+    "PRIVACY": "गोपनीयता और सुरक्षा",
+    "LOGOUT": "लॉग आउट"
+  },
+  "DASHBOARD": {
+    "WELCOME": "वापसी पर स्वागत है!",
+    "SUBTITLE": "आज आपकी शाखा में क्या हो रहा है, यहाँ देखें।",
+    "STATS": {
+      "TOTAL_CUSTOMERS": "कुल ग्राहक",
+      "ACTIVE_LOANS": "सक्रिय ऋण",
+      "REVENUE": "राजस्व",
+      "VS_LAST_MONTH": "पिछले महीने की तुलना में"
+    },
+    "GRAPH_COMING_SOON": "लेनदेन ग्राफ जल्द ही आ रहा है..."
+  },
+  "SYSTEM": {
+    "NAME": "बैंकिंग",
+    "SUFFIX": "OS",
+    "FULL_NAME": "बैंकिंग OS",
+    "TAGLINE": "अगली पीढ़ी का मल्टी-टिनेंट बैंकिंग कमांड सेंटर। सुरक्षित, स्केलेबल और भारत के लिए स्थानीयकृत।",
+    "FOOTER": "माइंडस्पार्क टेक्नोलॉजीज © 2026",
+    "PORTAL_TYPE": "सुपर एडमिन पोर्टल",
+    "TRUSTED_MESSAGE": "दुनिया भर के <strong class='text-white'>हजारों</strong> बैंकिंग संस्थानों द्वारा भरोसेमंद।"
+  },
+  "LOGIN": {
+    "TRUSTED_MESSAGE": "दुनिया भर के <strong class='text-white'>हजारों</strong> बैंकिंग संस्थानों द्वारा भरोसेमंद।",
+    "WELCOME_BACK": "वापसी पर स्वागत है",
+    "SUBTITLE": "कमांड सेंटर तक पहुँचने के लिए अपनी क्रेडेंशियल दर्ज करें।",
+    "IDENTIFIER_LABEL": "ईमेल या यूजरनेम",
+    "IDENTIFIER_PLACEHOLDER": "admin@bank.com या admin_user",
+    "PASSWORD_LABEL": "पासवर्ड",
+    "SIGN_IN_BUTTON": "साइन इन करें",
+    "FORGOT_PASSWORD": "पासवर्ड भूल गए?",
+    "NO_ACCOUNT": "खाता नहीं है?",
+    "SIGN_UP_LINK": "यहाँ साइन अप करें",
+    "FOOTER_TEXT": "© 2026 बैंकिंग प्लेटफॉर्म",
+    "HERO_DESCRIPTION": "अगली पीढ़ी का मल्टी-टिनेंट बैंकिंग कमांड सेंटर। सुरक्षित, स्केलेबल और भारत के लिए स्थानीयकृत।",
+    "PORTAL_TYPE": "सुपर एडमिन पोर्टल",
+    "AVATAR_1": "SB",
+    "AVATAR_2": "MB",
+    "AVATAR_COUNT": "+5k",
+    "TENANT_LABEL": "टिनेंट आईडी",
+    "TENANT_PLACEHOLDER": "जैसे SangaBank",
+    "PASSWORD_PLACEHOLDER": "••••••••"
+  },
+  "SIGNUP": {
+    "CREATE_ACCOUNT": "सुपर एडमिन बनाएं",
+    "SUBTITLE": "माइंडस्पार्क OS के लिए मुख्य सिस्टम एडमिनिस्ट्रेटर पंजीकृत करें।",
+    "FIRST_NAME_LABEL": "पहला नाम",
+    "FIRST_NAME_PLACEHOLDER": "जैसे Sanga",
+    "LAST_NAME_LABEL": "अंतिम नाम",
+    "LAST_NAME_PLACEHOLDER": "जैसे Platform",
+    "EMAIL_LABEL": "ईमेल पता",
+    "EMAIL_PLACEHOLDER": "admin@sa-market.com",
+    "MOBILE_LABEL": "मोबाइल नंबर",
+    "MOBILE_PLACEHOLDER": "जैसे 9876543210",
+    "CONFIRM_PASSWORD_LABEL": "पासवर्ड की पुष्टि करें",
+    "TERMS_AGREE": "मैं सिस्टम की सेवा शर्तों से सहमत हूँ",
+    "REGISTER_BUTTON": "सिस्टम एडमिन शुरू करें",
+    "HAS_ACCOUNT": "पहले से शुरू किया गया है?",
+    "SIGN_IN_LINK": "यहाँ साइन इन करें"
+  },
+  "COMMON": {
+    "SAVING": "सहेजा जा रहा है...",
+    "SYSTEM_ERROR_TITLE": "सिस्टम त्रुटि",
+    "SYSTEM_ERROR_DETAIL": "एक अप्रत्याशित त्रुटि हुई। कृपया सहायता के लिए संपर्क करें।"
+  },
+  "PROFILE": {
+    "TITLE": "खाता सेटिंग",
+    "SUBTITLE": "अपनी व्यक्तिगत जानकारी और सिस्टम प्राथमिकताओं को प्रबंधित करें",
+    "INFO": {
+      "USERNAME": "यूजरनेम",
+      "EMAIL": "ईमेल पता",
+      "TENANT": "जुड़ा हुआ टिनेंट"
+    },
+    "TABS": {
+      "PROFILE_INFO": "प्रोफ़ाइल जानकारी",
+      "SECURITY": "सुरक्षा"
+    },
+    "SECTIONS": {
+      "PERSONAL": "व्यक्तिगत जानकारी",
+      "SYSTEM": "सिस्टम प्राथमिकताएं",
+      "NOTIFICATIONS": "सूचनाएं"
+    },
+    "FIELDS": {
+      "FIRST_NAME": "पहला नाम",
+      "LAST_NAME": "अंतिम नाम",
+      "PHONE_NUMBER": "फ़ोन नंबर",
+      "LANGUAGE": "भाषा",
+      "LAYOUT": "डैशबोर्ड लेआउट"
+    },
+    "PLACEHOLDERS": {
+      "FIRST_NAME": "पहला नाम दर्ज करें",
+      "LAST_NAME": "अंतिम नाम दर्ज करें",
+      "PHONE_NUMBER": "10 अंकों का नंबर दर्ज करें"
+    },
+    "COUNTRIES": {
+      "IN": "भारत (+91)",
+      "US": "अमेरिका (+1)",
+      "UK": "यूके (+44)",
+      "AU": "ऑस्ट्रेलिया (+61)",
+      "AE": "यूएई (+971)"
+    },
+    "LANGUAGES": {
+      "EN": "English",
+      "KN": "ಕನ್ನಡ",
+      "HI": "हिन्दी"
+    },
+    "LAYOUTS": {
+      "STANDARD": "मानक (Standard)",
+      "COMPACT": "सघन (Compact)"
+    },
+    "TOGGLES": {
+      "DARK_MODE": "डार्क मोड",
+      "SIDEBAR": "साइडबार समेटें",
+      "EMAIL_ALERTS": "ईमेल अलर्ट",
+      "SMS_ALERTS": "SMS अलर्ट"
+    },
+    "BUTTONS": {
+      "UPDATE": "प्रोफ़ाइल अपडेट करें"
+    },
+    "MESSAGES": {
+      "SUCCESS_TITLE": "सफलता",
+      "ERROR_TITLE": "अपडेट विफल",
+      "UPDATE_SUCCESS": "आपकी प्रोफ़ाइल सफलतापूर्वक अपडेट कर दी गई है।",
+      "UPDATE_ERROR": "प्रोफ़ाइल अपडेट नहीं की जा सकी। कृपया अपना कनेक्शन जांचें।"
+    }
+  }
+}

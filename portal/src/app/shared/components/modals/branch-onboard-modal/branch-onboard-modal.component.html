@@ -1,0 +1,187 @@
+<p-dialog [(visible)]="visible" (onHide)="closeModal()" appendTo="body" [modal]="true" [style]="{ width: '850px' }" [showHeader]="false" contentStyleClass="p-0 bg-transparent" transitionOptions="150ms cubic-bezier(0.4, 0, 0.2, 1)">
+  <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-700 flex flex-col max-h-[90vh]">
+    
+    <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/30 shrink-0">
+      <h3 class="font-bold text-gray-900 dark:text-white text-base flex items-center gap-2">
+        <i class="pi pi-sitemap text-blue-600"></i> {{ 'BANK_DETAIL.BRANCH_MODAL.TITLE' | translate }}
+      </h3>
+      <button type="button" (click)="closeModal()" class="text-gray-400 hover:text-red-500 hover:rotate-90 transition-all duration-300 focus:outline-none"><i class="pi pi-times"></i></button>
+    </div>
+
+    <div class="overflow-y-auto p-6 custom-scrollbar flex-1">
+      <form [formGroup]="branchForm" class="space-y-8">
+        
+        <div formGroupName="identity">
+          <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-100 dark:border-gray-700 pb-2">{{ 'BANK_DETAIL.BRANCH_MODAL.STEPS.IDENTITY' | translate }}</h4>
+          
+          <div class="grid grid-cols-1 gap-4 mb-4">
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.IDENTITY.NAME_LABEL' | translate }} <span class="text-red-500">*</span></label>
+              <input pInputText formControlName="name" [placeholder]="'BANK_DETAIL.BRANCH_MODAL.IDENTITY.NAME_PLACEHOLDER' | translate" class="w-full px-3 py-2.5 text-sm rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid(branchForm, 'identity.name') ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'"/>
+              <small *ngIf="isFieldInvalid(branchForm, 'identity.name')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'BANK_DETAIL.BRANCH_MODAL.IDENTITY.NAME_ERROR' | translate }}</small>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.IDENTITY.BRANCH_TYPE' | translate }} <span class="text-red-500">*</span></label>
+              <select formControlName="branchType" class="w-full px-3 py-2.5 text-sm rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none cursor-pointer transition-all" [ngClass]="isFieldInvalid(branchForm, 'identity.branchType') ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'">
+                <option *ngFor="let type of branchTypes" [value]="type.value">{{ 'DROPDOWN_VALUES.BRANCH_TYPES.' + type.value | translate }}</option>
+              </select>
+            </div>
+
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.IDENTITY.INAUGURATION_DATE' | translate }} <span class="text-red-500">*</span></label>
+              <input type="date" formControlName="openingDate" class="w-full px-3 py-2.5 text-sm rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none cursor-pointer transition-all" [ngClass]="isFieldInvalid(branchForm, 'identity.openingDate') ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'"/>
+            </div>
+
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.IDENTITY.TIER_LABEL' | translate }} <span class="text-red-500">*</span></label>
+              <select formControlName="tier" class="w-full px-3 py-2.5 text-sm rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none cursor-pointer transition-all" [ngClass]="isFieldInvalid(branchForm, 'identity.tier') ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'">
+               <option *ngFor="let tier of tiers" [value]="tier.value">{{ 'DROPDOWN_VALUES.TIERS.' + tier.value | translate }}</option>
+              </select>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.IDENTITY.IFSC_LABEL' | translate }} <span class="text-red-500">*</span></label>
+              <input pInputText formControlName="ifsc" [placeholder]="'BANK_DETAIL.BRANCH_MODAL.IDENTITY.IFSC_PLACEHOLDER' | translate" class="w-full px-3 py-2.5 text-sm font-mono uppercase rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid(branchForm, 'identity.ifsc') ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'"/>
+              <small *ngIf="isFieldInvalid(branchForm, 'identity.ifsc')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'BANK_DETAIL.BRANCH_MODAL.IDENTITY.IFSC_ERROR' | translate }}</small>
+            </div>
+            
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.IDENTITY.MICR_CODE' | translate }} <span class="text-gray-400 font-normal text-[10px]">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span></label>
+              <input pInputText formControlName="micrCode" [placeholder]="'BANK_DETAIL.BRANCH_MODAL.IDENTITY.MICR_PLACEHOLDER' | translate" class="w-full px-3 py-2.5 text-sm font-mono uppercase rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid(branchForm, 'identity.micrCode') ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'"/>
+              <small *ngIf="isFieldInvalid(branchForm, 'identity.micrCode')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'BANK_DETAIL.BRANCH_MODAL.IDENTITY.MICR_ERROR' | translate }}</small>
+            </div>
+            
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.IDENTITY.SWIFT_CODE' | translate }} <span class="text-gray-400 font-normal text-[10px]">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span></label>
+              <input pInputText formControlName="swiftCode" [placeholder]="'BANK_DETAIL.BRANCH_MODAL.IDENTITY.SWIFT_PLACEHOLDER' | translate" class="w-full px-3 py-2.5 text-sm font-mono uppercase rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid(branchForm, 'identity.swiftCode') ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'"/>
+              <small *ngIf="isFieldInvalid(branchForm, 'identity.swiftCode')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'BANK_DETAIL.BRANCH_MODAL.IDENTITY.SWIFT_ERROR' | translate }}</small>
+            </div>
+          </div>
+        </div>
+
+        <div formGroupName="location">
+          <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-100 dark:border-gray-700 pb-2">{{ 'BANK_DETAIL.BRANCH_MODAL.STEPS.LOCATION' | translate }}</h4>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'COMMON.FORM.PHONE' | translate }} <span class="text-red-500">*</span></label>
+              <div class="flex w-full relative">
+                <select formControlName="phoneCode" class="inline-flex items-center pl-3 pr-7 py-2.5 rounded-l-xl border border-r-0 border-gray-300 dark:border-gray-600 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white text-sm font-semibold outline-none appearance-none cursor-pointer">
+                  <option *ngFor="let code of countryCodes" [value]="code.value">{{ code.label | translate }}</option>
+                </select>
+                <i class="pi pi-chevron-down absolute left-14 top-1/2 -translate-y-1/2 text-[10px] text-gray-500 pointer-events-none"></i>
+                <input type="text" formControlName="phone" placeholder="9876543210" class="flex-1 w-full px-3 py-2.5 text-sm font-mono rounded-r-xl border bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid(branchForm, 'location.phone') ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'">
+              </div>
+              <small *ngIf="isFieldInvalid(branchForm, 'location.phone')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'BANK_DETAIL.BRANCH_MODAL.LOCATION.PHONE_ERROR' | translate }}</small>
+            </div>
+
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.LOCATION.EMAIL_LABEL' | translate }} <span class="text-gray-400 font-normal text-[10px]">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span></label>
+              <input pInputText formControlName="email" [placeholder]="'BANK_DETAIL.BRANCH_MODAL.LOCATION.EMAIL_PLACEHOLDER' | translate" class="w-full px-3 py-2.5 text-sm rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid(branchForm, 'location.email') ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'"/>
+              <small *ngIf="isFieldInvalid(branchForm, 'location.email')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'BANK_DETAIL.BRANCH_MODAL.LOCATION.EMAIL_ERROR' | translate }}</small>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANKS.FORM.ADDRESS_1' | translate }} <span class="text-red-500">*</span></label>
+              <input pInputText formControlName="addressLine1" [placeholder]="'BANK_DETAIL.BRANCH_MODAL.LOCATION.ADDRESS_1_PLACEHOLDER' | translate" class="w-full px-3 py-2.5 text-sm rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none transition-all" [ngClass]="isFieldInvalid(branchForm, 'location.addressLine1') ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'"/>
+              <small *ngIf="isFieldInvalid(branchForm, 'location.addressLine1')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'BANK_DETAIL.BRANCH_MODAL.LOCATION.ADDRESS_ERROR' | translate }}</small>
+            </div>
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.LOCATION.ADDRESS_2_LABEL' | translate }} <span class="text-gray-400 font-normal text-[10px]">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span></label>
+              <input pInputText formControlName="addressLine2" [placeholder]="'BANK_DETAIL.BRANCH_MODAL.LOCATION.ADDRESS_2_PLACEHOLDER' | translate" class="w-full px-3 py-2.5 text-sm rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none transition-all border-gray-300 dark:border-gray-600"/>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.LOCATION.STATE_LABEL' | translate }} <span class="text-red-500">*</span></label>
+              <select formControlName="state" (change)="onBranchStateChange($event)" class="w-full px-3 py-2.5 text-sm rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none cursor-pointer transition-all" [ngClass]="isFieldInvalid(branchForm, 'location.state') ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'">
+                <option value="" disabled selected>{{ 'DROPDOWN_VALUES.STATES.SELECT' | translate }}</option>
+                <option *ngFor="let state of branchStates" [value]="state.code">{{ state.name | translate }}</option>
+              </select>
+              <small *ngIf="isFieldInvalid(branchForm, 'location.state')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'COMMON.FORM.REQUIRED' | translate }}</small>
+            </div>
+
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.LOCATION.CITY_LABEL' | translate }} <span class="text-red-500">*</span></label>
+              <select formControlName="city" (change)="onBranchCityChange($event)" class="w-full px-3 py-2.5 text-sm rounded-xl border text-gray-900 dark:text-white outline-none cursor-pointer transition-all" [ngClass]="filteredBranchCities.length === 0 ? 'bg-gray-100 dark:bg-gray-800 opacity-60 cursor-not-allowed border-gray-300 dark:border-gray-600' : isFieldInvalid(branchForm, 'location.city') ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-600'">
+                <option value="" disabled selected>{{ 'DROPDOWN_VALUES.CITIES.SELECT' | translate }}</option>
+                <option *ngFor="let city of filteredBranchCities" [value]="city">{{ city }}</option>
+              </select>
+              <small *ngIf="isFieldInvalid(branchForm, 'location.city')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'COMMON.FORM.REQUIRED' | translate }}</small>
+            </div>
+
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.LOCATION.VILLAGE_LABEL' | translate }} <span class="text-gray-400 font-normal text-[10px]">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span></label>
+              <select formControlName="village" class="w-full px-3 py-2.5 text-sm rounded-xl border text-gray-900 dark:text-white outline-none cursor-pointer transition-all" [ngClass]="filteredBranchVillages.length === 0 ? 'bg-gray-100 dark:bg-gray-800 opacity-60 cursor-not-allowed border-gray-300 dark:border-gray-600' : 'bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-600'">
+                <option value="" selected>{{ 'DROPDOWN_VALUES.VILLAGES.SELECT' | translate }}</option>
+                <option *ngFor="let village of filteredBranchVillages" [value]="village">{{ village }}</option>
+              </select>
+            </div>
+
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.LOCATION.PIN_LABEL' | translate }} <span class="text-red-500">*</span></label>
+              <input pInputText formControlName="postalCode" [placeholder]="'BANK_DETAIL.BRANCH_MODAL.LOCATION.PIN_PLACEHOLDER' | translate" class="w-full px-3 py-2.5 text-sm font-mono rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none transition-all focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid(branchForm, 'location.postalCode') ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'"/>
+              <small *ngIf="isFieldInvalid(branchForm, 'location.postalCode')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'BANK_DETAIL.BRANCH_MODAL.LOCATION.PIN_ERROR' | translate }}</small>
+            </div>
+          </div>
+        </div>
+
+        <div formGroupName="operations" *appHasPermission="['branches', 'manage_operations']">
+          <h4 class="text-xs font-bold text-gray-400 uppercase tracking-widest mb-4 border-b border-gray-100 dark:border-gray-700 pb-2">{{ 'BANK_DETAIL.BRANCH_MODAL.STEPS.OPERATIONS' | translate }}</h4>
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.OPERATIONS.GSTIN_LABEL' | translate }} <span class="text-gray-400 font-normal text-[10px]">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span></label>
+              <input pInputText formControlName="gstin" [placeholder]="'BANK_DETAIL.BRANCH_MODAL.OPERATIONS.GSTIN_PLACEHOLDER' | translate" class="w-full px-3 py-2.5 text-sm font-mono uppercase rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none transition-all border-gray-300 dark:border-gray-600"/>
+            </div>
+            
+            <div class="group md:col-span-2">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.OPERATIONS.VAULT_LIMIT_LABEL' | translate }} <span class="text-gray-400 font-normal text-[10px]">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span></label>
+              <input type="number" pInputText formControlName="cashRetentionLimit" [placeholder]="'BANK_DETAIL.BRANCH_MODAL.OPERATIONS.VAULT_LIMIT_PLACEHOLDER' | translate" class="w-full px-3 py-2.5 text-sm font-mono rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none transition-all border-gray-300 dark:border-gray-600"/>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.OPERATIONS.MANAGER_LABEL' | translate }} <span class="text-gray-400 font-normal text-[10px]">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span></label>
+              <input pInputText formControlName="managerName" [placeholder]="'BANK_DETAIL.BRANCH_MODAL.OPERATIONS.MANAGER_PLACEHOLDER' | translate" class="w-full px-3 py-2.5 text-sm rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none transition-all" [ngClass]="isFieldInvalid(branchForm, 'operations.managerName') ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'"/>
+            </div>
+            
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.OPERATIONS.OPENING_LABEL' | translate }} <span class="text-red-500">*</span></label>
+              <input type="time" formControlName="openingTime" class="w-full px-3 py-2.5 text-sm rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none transition-all cursor-pointer" [ngClass]="isFieldInvalid(branchForm, 'operations.openingTime') ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'"/>
+            </div>
+            
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.OPERATIONS.CLOSING_LABEL' | translate }} <span class="text-red-500">*</span></label>
+              <input type="time" formControlName="closingTime" class="w-full px-3 py-2.5 text-sm rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none transition-all cursor-pointer" [ngClass]="isFieldInvalid(branchForm, 'operations.closingTime') ? 'border-red-500 bg-red-50/50 dark:bg-red-900/10' : 'border-gray-300 dark:border-gray-600'"/>
+            </div>
+          </div>
+          
+          <div class="flex items-center justify-between mt-4 p-4 bg-blue-50/50 dark:bg-blue-900/20 rounded-xl border border-blue-100 dark:border-blue-900/30">
+            <div>
+              <label class="block text-sm font-bold text-gray-900 dark:text-white">{{ 'BANK_DETAIL.BRANCH_MODAL.OPERATIONS.ATM_LABEL' | translate }}</label>
+              <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">{{ 'BANK_DETAIL.BRANCH_MODAL.OPERATIONS.ATM_DESC' | translate }}</p>
+            </div>
+            <p-inputSwitch formControlName="isAtmAvailable" styleClass="scale-90 origin-right"></p-inputSwitch>
+          </div>
+        </div>
+
+      </form>
+    </div>
+
+    <div class="px-6 py-4 border-t border-gray-100 dark:border-gray-700 flex justify-end gap-3 shrink-0 bg-gray-50/50 dark:bg-gray-900/30">
+      <app-button variant="secondary" [label]="'COMMON.ACTIONS.CANCEL' | translate" (onClick)="closeModal()"></app-button>
+      <app-button type="button" variant="primary" [label]="'BANK_DETAIL.BRANCH_MODAL.FOOTER.FINALIZE' | translate" icon="pi-check" [loading]="isSubmitting" (onClick)="submitBranch()"></app-button>
+    </div>
+
+  </div>
+</p-dialog>

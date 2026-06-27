@@ -1,0 +1,353 @@
+<div class="animate-in fade-in slide-in-from-bottom-4 duration-500" [ngClass]="currentLayout === 'compact' ? 'space-y-6' : 'space-y-8'">
+  
+  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 border-b border-gray-100 dark:border-gray-800 pb-4">
+    <div>
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white">{{ 'BRANCH_DETAIL.GENERAL.TITLE' | translate }}</h2>
+      <p class="text-sm text-gray-500 dark:text-gray-400">{{ 'BRANCH_DETAIL.GENERAL.SUBTITLE' | translate }}</p>
+    </div>
+    <div class="flex items-center gap-3">
+      
+      <ng-container *appHasPermission="['branches', 'delete']">
+        <app-button *ngIf="!isEditing" variant="danger-light" icon="pi-trash" [label]="'COMMON.ACTIONS.DELETE' | translate" (onClick)="confirmDelete()"></app-button>
+      </ng-container>
+
+      <ng-container *appHasPermission="['branches', 'update']">
+        <app-button *ngIf="!isEditing" variant="primary" icon="pi-pencil" [label]="'COMMON.ACTIONS.EDIT' | translate" (onClick)="toggleEditMode()"></app-button>
+      </ng-container>
+
+      <app-button *ngIf="isEditing" variant="secondary" [label]="'COMMON.ACTIONS.CANCEL' | translate" [disabled]="isSaving" (onClick)="cancelEditMode()"></app-button>
+      <app-button *ngIf="isEditing" variant="success" icon="pi-check" [label]="'COMMON.ACTIONS.SAVE' | translate" [loading]="isSaving" (onClick)="saveDetails()"></app-button>
+
+    </div>
+  </div>
+
+  <form [formGroup]="editForm" class="space-y-8">
+    
+    <div class="group">
+      <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+        <i class="pi pi-id-card text-blue-500"></i> {{ 'BRANCH_DETAIL.GENERAL.SECTIONS.IDENTITY' | translate }}
+      </h3>
+      
+      <div *ngIf="!isEditing" class="grid grid-cols-1 md:grid-cols-4 gap-6 p-5 bg-gray-50/50 dark:bg-gray-800/30 rounded-xl border border-gray-100 dark:border-gray-800">
+        <div class="md:col-span-2">
+          <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">{{ 'BRANCH_DETAIL.GENERAL.LABELS.NAME' | translate }}</label>
+          <p class="text-sm font-medium text-gray-900 dark:text-white">{{ branch?.name }}</p>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">{{ 'BRANCH_DETAIL.GENERAL.LABELS.CODE' | translate }}</label>
+          <p class="text-sm font-bold text-blue-600 dark:text-blue-400 font-mono">
+            <ng-container *ngIf="branch?.branchCode">{{ branch?.branchCode }}</ng-container>
+            <ng-container *ngIf="!branch?.branchCode">{{ 'BRANCH_DETAIL.GENERAL.PLACEHOLDERS.GENERATING' | translate }}</ng-container>
+          </p>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">{{ 'BRANCH_DETAIL.GENERAL.LABELS.TYPE' | translate }}</label>
+          <p class="text-sm font-medium text-gray-900 dark:text-white">{{ getBranchTypeLabel(branch?.branchType) | translate }}</p>
+        </div>
+        
+        <div class="md:col-span-4 border-t border-gray-200 dark:border-gray-700 my-1"></div>
+        
+        <div>
+          <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">{{ 'BRANCH_DETAIL.GENERAL.LABELS.OPENING_DATE' | translate }}</label>
+          <p class="text-sm font-medium text-gray-900 dark:text-white">{{ branch?.openingDate | date: 'mediumDate' }}</p>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">{{ 'BRANCH_DETAIL.GENERAL.LABELS.IFSC' | translate }}</label>
+          <p class="text-sm font-medium text-gray-900 dark:text-white font-mono">{{ branch?.ifsc }}</p>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">{{ 'BRANCH_DETAIL.GENERAL.LABELS.MICR' | translate }}</label>
+          <p class="text-sm font-medium text-gray-900 dark:text-white font-mono">
+            <ng-container *ngIf="branch?.micrCode">{{ branch?.micrCode }}</ng-container>
+            <ng-container *ngIf="!branch?.micrCode">N/A</ng-container>
+          </p>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">{{ 'BRANCH_DETAIL.GENERAL.LABELS.SWIFT' | translate }}</label>
+          <p class="text-sm font-medium text-gray-900 dark:text-white font-mono">
+            <ng-container *ngIf="branch?.swiftCode">{{ branch?.swiftCode }}</ng-container>
+            <ng-container *ngIf="!branch?.swiftCode">N/A</ng-container>
+          </p>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">{{ 'BRANCH_DETAIL.GENERAL.LABELS.CLASSIFICATION' | translate }}</label>
+          <p class="text-sm font-medium text-gray-900 dark:text-white">
+            <ng-container *ngIf="branch?.metadata?.tier">{{ branch?.metadata?.tier }}</ng-container>
+            <ng-container *ngIf="!branch?.metadata?.tier">URBAN</ng-container>
+          </p>
+        </div>
+      </div>
+
+      <div *ngIf="isEditing" class="p-5 bg-blue-50/30 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900/30 space-y-5 animate-in fade-in zoom-in-95 duration-200">
+        <div class="grid grid-cols-1 md:grid-cols-12 gap-4">
+          <div class="group md:col-span-8">
+            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BRANCH_DETAIL.GENERAL.LABELS.NAME' | translate }} <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="name" class="w-full px-3 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid('name') ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'">
+            <small *ngIf="isFieldInvalid('name')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'COMMON.FORM.REQUIRED' | translate }}</small>
+          </div>
+          
+          <div class="group md:col-span-4">
+            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BRANCH_DETAIL.GENERAL.LABELS.TYPE' | translate }} <span class="text-red-500">*</span></label>
+            <select formControlName="branchType" class="w-full px-3 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid('branchType') ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'">
+             <option *ngFor="let type of branchTypes" [value]="type.value">{{ type.label | translate }}</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+          <div class="group">
+            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BRANCH_DETAIL.GENERAL.LABELS.OPENING_DATE' | translate }} <span class="text-red-500">*</span></label>
+            <input type="date" formControlName="openingDate" class="w-full px-3 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid('openingDate') ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'">
+          </div>
+          
+          <div class="group">
+            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BRANCH_DETAIL.GENERAL.LABELS.MICR' | translate }} <span class="text-gray-400 font-normal text-[10px]">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span></label>
+            <input type="text" formControlName="micrCode" [placeholder]="'BANK_DETAIL.BRANCH_MODAL.IDENTITY.MICR_PLACEHOLDER' | translate" class="w-full px-3 py-2 text-sm font-mono uppercase rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid('micrCode') ? 'border-red-500 bg-red-50' : 'border-gray-300 dark:border-gray-700'">
+            <small *ngIf="isFieldInvalid('micrCode')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'BANK_DETAIL.BRANCH_MODAL.IDENTITY.MICR_ERROR' | translate }}</small>
+          </div>
+          
+          <div class="group">
+            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BRANCH_DETAIL.GENERAL.LABELS.SWIFT' | translate }} <span class="text-gray-400 font-normal text-[10px]">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span></label>
+            <input type="text" formControlName="swiftCode" [placeholder]="'BANK_DETAIL.BRANCH_MODAL.IDENTITY.SWIFT_PLACEHOLDER' | translate" class="w-full px-3 py-2 text-sm font-mono uppercase rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid('swiftCode') ? 'border-red-500 bg-red-50' : 'border-gray-300 dark:border-gray-700'">
+            <small *ngIf="isFieldInvalid('swiftCode')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'BANK_DETAIL.BRANCH_MODAL.IDENTITY.SWIFT_ERROR' | translate }}</small>
+          </div>
+          
+          <div class="group">
+            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BRANCH_DETAIL.GENERAL.LABELS.CLASSIFICATION' | translate }} <span class="text-red-500">*</span></label>
+            <select formControlName="tier" class="w-full px-3 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid('tier') ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'">
+              <option *ngFor="let tier of tiers" [value]="tier.value">{{ tier.label | translate }}</option>
+            </select>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="group">
+      <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+        <i class="pi pi-map-marker text-blue-500"></i> {{ 'BRANCH_DETAIL.GENERAL.SECTIONS.LOCATION' | translate }}
+      </h3>
+      
+      <div *ngIf="!isEditing" class="grid grid-cols-1 md:grid-cols-3 gap-6 p-5 bg-gray-50/50 dark:bg-gray-800/30 rounded-xl border border-gray-100 dark:border-gray-800">
+        <div>
+          <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">{{ 'BRANCH_DETAIL.GENERAL.LABELS.EMAIL' | translate }}</label>
+          <p class="text-sm font-medium text-gray-900 dark:text-white">
+            <ng-container *ngIf="branch?.email">{{ branch?.email }}</ng-container>
+            <ng-container *ngIf="!branch?.email">N/A</ng-container>
+          </p>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">{{ 'BRANCH_DETAIL.GENERAL.LABELS.PHONE' | translate }}</label>
+          <p class="text-sm font-medium text-gray-900 dark:text-white font-mono">
+            <ng-container *ngIf="branch?.phone">{{ branch?.phone }}</ng-container>
+            <ng-container *ngIf="!branch?.phone">N/A</ng-container>
+          </p>
+        </div>
+        <div>
+          <label class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider">{{ 'BRANCH_DETAIL.GENERAL.LABELS.ADDRESS' | translate }}</label>
+          <p class="text-sm font-medium text-gray-900 dark:text-white leading-relaxed">
+            {{ branch?.addressLine1 }}<br/>
+            <span *ngIf="branch?.addressLine2">{{ branch?.addressLine2 }}<br/></span>
+            {{ branch?.city }}<span *ngIf="branch?.village"> ({{ branch?.village }})</span>, {{ branch?.state }} - {{ branch?.postalCode }}
+          </p>
+        </div>
+      </div>
+
+      <div *ngIf="isEditing" class="p-5 bg-blue-50/30 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900/30 space-y-5 animate-in fade-in zoom-in-95 duration-200">
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full">
+          <div class="group w-full min-w-0">
+            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'COMMON.FORM.PHONE' | translate }} <span class="text-red-500">*</span></label>
+            <div class="flex gap-2 relative w-full">
+              <div class="relative w-28 shrink-0">
+                <select formControlName="phoneCode" class="w-full pl-2 pr-6 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none appearance-none cursor-pointer border-gray-300 dark:border-gray-700 focus:ring-2 focus:ring-blue-500/20">
+                  <option *ngFor="let code of countryCodes" [value]="code.value">{{ code.label | translate }}</option>
+                </select>
+                <i class="pi pi-chevron-down absolute right-2 top-1/2 -translate-y-1/2 text-[10px] text-gray-500 pointer-events-none"></i>
+              </div>
+              <input type="text" formControlName="phone" class="flex-1 min-w-0 px-3 py-2 text-sm font-mono rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid('phone') ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'">
+            </div>
+            <small *ngIf="isFieldInvalid('phone')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'USER_ONBOARD_MODAL.VALIDATION.PHONE' | translate }}</small>
+          </div>
+
+          <div class="group w-full min-w-0">
+            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'COMMON.FORM.EMAIL' | translate }} <span class="text-gray-400 font-normal text-[10px]">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span></label>
+            <div class="relative w-full">
+              <i class="pi pi-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+              <input type="text" formControlName="email" class="w-full pl-9 pr-3 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid('email') ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'">
+            </div>
+            <small *ngIf="isFieldInvalid('email')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'USER_ONBOARD_MODAL.VALIDATION.EMAIL' | translate }}</small>
+          </div>
+        </div>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-5 w-full">
+          <div class="group w-full">
+            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANKS.FORM.ADDRESS_1' | translate }} <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="addressLine1" class="w-full px-3 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid('addressLine1') ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'">
+            <small *ngIf="isFieldInvalid('addressLine1')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'COMMON.FORM.REQUIRED' | translate }}</small>
+          </div>
+          <div class="group w-full">
+            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.LOCATION.ADDRESS_2_LABEL' | translate }} <span class="text-gray-400 font-normal text-[10px]">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span></label>
+            <input type="text" formControlName="addressLine2" class="w-full px-3 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20 border-gray-300 dark:border-gray-700">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-3 w-full">
+          <div class="group min-w-0">
+            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANKS.FORM.STATE' | translate }} <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <select formControlName="state" (change)="onStateChange($event)" class="w-full pl-3 pr-8 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid('state') ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'">
+                <option value="" disabled selected>{{ 'DROPDOWN_VALUES.STATES.SELECT' | translate }}</option>
+                <option *ngFor="let state of branchStates" [value]="state.code">{{ state.name | translate }}</option>
+              </select>
+              <i class="pi pi-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-500 pointer-events-none"></i>
+            </div>
+          </div>
+          
+          <div class="group min-w-0">
+            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANKS.FORM.CITY' | translate }} <span class="text-red-500">*</span></label>
+            <div class="relative">
+              <select formControlName="city" (change)="onCityChange($event)" class="w-full pl-3 pr-8 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none appearance-none cursor-pointer disabled:opacity-50 focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid('city') ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'">
+                <option value="" disabled selected>{{ 'DROPDOWN_VALUES.CITIES.SELECT' | translate }}</option>
+                <option *ngFor="let city of filteredCities" [value]="city">{{ city }}</option>
+              </select>
+              <i class="pi pi-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-500 pointer-events-none"></i>
+            </div>
+          </div>
+
+          <div class="group min-w-0">
+            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANK_DETAIL.BRANCH_MODAL.LOCATION.VILLAGE_LABEL' | translate }} <span class="text-gray-400 font-normal text-[10px]">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span></label>
+            <div class="relative">
+              <select formControlName="village" class="w-full pl-3 pr-8 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none appearance-none cursor-pointer disabled:opacity-50 focus:ring-2 focus:ring-blue-500/20 border-gray-300 dark:border-gray-700">
+                <option value="" selected>{{ 'DROPDOWN_VALUES.VILLAGES.SELECT' | translate }}</option>
+                <option *ngFor="let village of filteredVillages" [value]="village">{{ village }}</option>
+              </select>
+              <i class="pi pi-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-500 pointer-events-none"></i>
+            </div>
+          </div>
+
+          <div class="group min-w-0">
+            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BANKS.FORM.POSTAL_CODE' | translate }} <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="postalCode" class="w-full px-3 py-2 text-sm font-mono rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid('postalCode') ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'">
+            <small *ngIf="isFieldInvalid('postalCode')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'BANK_DETAIL.BRANCH_MODAL.LOCATION.PIN_ERROR' | translate }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <ng-container *appHasPermission="['branches', 'manage_operations']">
+      <div class="group">
+        <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
+          <i class="pi pi-cog text-blue-500"></i> {{ 'BRANCH_DETAIL.GENERAL.SECTIONS.OPERATIONS' | translate }}
+        </h3>
+        
+        <div *ngIf="!isEditing" class="grid grid-cols-1 md:grid-cols-4 gap-6 p-5 bg-gray-50/50 dark:bg-gray-800/30 rounded-xl border border-gray-100 dark:border-gray-800">
+          <div>
+            <label class="block text-xs font-medium text-gray-500 uppercase">{{ 'BRANCH_DETAIL.GENERAL.LABELS.MANAGER' | translate }}</label>
+            <p class="text-sm font-medium text-gray-900 dark:text-white">
+              <ng-container *ngIf="branch?.metadata?.managerName">{{ branch?.metadata?.managerName }}</ng-container>
+              <ng-container *ngIf="!branch?.metadata?.managerName">{{ 'BRANCH_DETAIL.GENERAL.MISC.UNASSIGNED' | translate }}</ng-container>
+            </p>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-500 uppercase">{{ 'BRANCH_DETAIL.GENERAL.LABELS.GSTIN' | translate }}</label>
+            <p class="text-sm font-medium text-gray-900 dark:text-white font-mono">
+              <ng-container *ngIf="branch?.metadata?.gstin">{{ branch?.metadata?.gstin }}</ng-container>
+              <ng-container *ngIf="!branch?.metadata?.gstin">N/A</ng-container>
+            </p>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-500 uppercase">{{ 'BRANCH_DETAIL.GENERAL.LABELS.VAULT_LIMIT' | translate }}</label>
+            <p class="text-sm font-medium text-gray-900 dark:text-white font-mono">
+              <ng-container *ngIf="branch?.metadata?.cashRetentionLimit">₹{{ branch.metadata.cashRetentionLimit | number }}</ng-container>
+              <ng-container *ngIf="!branch?.metadata?.cashRetentionLimit">{{ 'BRANCH_DETAIL.GENERAL.MISC.NO_LIMIT' | translate }}</ng-container>
+            </p>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-500 uppercase">{{ 'BRANCH_DETAIL.GENERAL.LABELS.ATM' | translate }}</label>
+            <p class="text-sm font-bold text-gray-900 dark:text-white" [ngClass]="branch?.metadata?.isAtmAvailable ? 'text-green-600' : 'text-gray-500'">
+              {{ (branch?.metadata?.isAtmAvailable ? 'COMMON.MISC.YES' : 'COMMON.MISC.NO') | translate }}
+            </p>
+          </div>
+          
+          <div class="md:col-span-4 border-t border-gray-200 dark:border-gray-700 my-1"></div>
+          
+          <div>
+            <label class="block text-xs font-medium text-gray-500 uppercase">{{ 'BRANCH_DETAIL.GENERAL.LABELS.OPENING_TIME' | translate }}</label>
+            <p class="text-sm font-medium text-gray-900 dark:text-white font-mono">
+              <ng-container *ngIf="branch?.metadata?.openingTime">{{ branch?.metadata?.openingTime }}</ng-container>
+              <ng-container *ngIf="!branch?.metadata?.openingTime">N/A</ng-container>
+            </p>
+          </div>
+          <div>
+            <label class="block text-xs font-medium text-gray-500 uppercase">{{ 'BRANCH_DETAIL.GENERAL.LABELS.CLOSING_TIME' | translate }}</label>
+            <p class="text-sm font-medium text-gray-900 dark:text-white font-mono">
+              <ng-container *ngIf="branch?.metadata?.closingTime">{{ branch?.metadata?.closingTime }}</ng-container>
+              <ng-container *ngIf="!branch?.metadata?.closingTime">N/A</ng-container>
+            </p>
+          </div>
+        </div>
+
+        <div *ngIf="isEditing" class="p-5 bg-blue-50/30 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900/30 space-y-5 animate-in fade-in zoom-in-95 duration-200">
+          
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BRANCH_DETAIL.GENERAL.LABELS.MANAGER' | translate }} <span class="text-gray-400 font-normal text-[10px]">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span></label>
+              <div class="relative">
+                <i class="pi pi-user absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input type="text" formControlName="managerName" [placeholder]="'BRANCH_DETAIL.GENERAL.PLACEHOLDERS.MANAGER' | translate" class="w-full pl-9 pr-3 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid('managerName') ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'">
+              </div>
+            </div>
+            
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BRANCH_DETAIL.GENERAL.LABELS.GSTIN' | translate }} <span class="text-gray-400 font-normal text-[10px]">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span></label>
+              <input type="text" formControlName="gstin" [placeholder]="'BANK_DETAIL.BRANCH_MODAL.OPERATIONS.GSTIN_PLACEHOLDER' | translate" class="w-full px-3 py-2 text-sm font-mono uppercase rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20 border-gray-300 dark:border-gray-700">
+            </div>
+            
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BRANCH_DETAIL.GENERAL.LABELS.VAULT_LIMIT' | translate }} <span class="text-gray-400 font-normal text-[10px]">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span></label>
+              <input type="number" formControlName="cashRetentionLimit" [placeholder]="'BANK_DETAIL.BRANCH_MODAL.OPERATIONS.VAULT_LIMIT_PLACEHOLDER' | translate" class="w-full px-3 py-2 text-sm font-mono rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20 border-gray-300 dark:border-gray-700">
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BRANCH_DETAIL.GENERAL.LABELS.OPENING_TIME' | translate }} <span class="text-red-500">*</span></label>
+              <div class="relative">
+                <i class="pi pi-clock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input type="time" formControlName="openingTime" class="w-full pl-9 pr-3 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer" [ngClass]="isFieldInvalid('openingTime') ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'">
+              </div>
+              <small *ngIf="isFieldInvalid('openingTime')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'COMMON.FORM.REQUIRED' | translate }}</small>
+            </div>
+            <div class="group">
+              <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'BRANCH_DETAIL.GENERAL.LABELS.CLOSING_TIME' | translate }} <span class="text-red-500">*</span></label>
+              <div class="relative">
+                <i class="pi pi-clock absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                <input type="time" formControlName="closingTime" class="w-full pl-9 pr-3 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20 cursor-pointer" [ngClass]="isFieldInvalid('closingTime') ? 'border-red-500' : 'border-gray-300 dark:border-gray-700'">
+              </div>
+              <small *ngIf="isFieldInvalid('closingTime')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'COMMON.FORM.REQUIRED' | translate }}</small>
+            </div>
+          </div>
+
+          <div class="flex items-center justify-between mt-2 p-4 bg-white dark:bg-[#1a1f29] rounded-xl border border-gray-200 dark:border-gray-700">
+            <div>
+              <label class="block text-sm font-bold text-gray-900 dark:text-white">{{ 'BRANCH_DETAIL.GENERAL.LABELS.ATM' | translate }}</label>
+              <p class="text-xs text-gray-500">{{ 'BANK_DETAIL.BRANCH_MODAL.OPERATIONS.ATM_DESC' | translate }}</p>
+            </div>
+            <p-inputSwitch formControlName="isAtmAvailable" styleClass="scale-75 origin-right"></p-inputSwitch>
+          </div>
+
+        </div>
+      </div>
+    </ng-container>
+
+  </form>
+</div>
+
+<app-confirm-modal
+  [(visible)]="showDeleteModal"
+  [isProcessing]="isDeleting"
+  [title]="'BRANCH_DETAIL.DELETE_MODAL.TITLE' | translate"
+  [confirmText]="'BRANCH_DETAIL.DELETE_MODAL.CONFIRM' | translate"
+  [processingText]="'BRANCH_DETAIL.DELETE_MODAL.PROCESSING' | translate"
+  (confirm)="executeDelete()">
+  {{ 'BRANCH_DETAIL.DELETE_MODAL.MESSAGE_P1' | translate }}<span class="font-bold text-gray-900 dark:text-white">{{ branch?.name }}</span>{{ 'BRANCH_DETAIL.DELETE_MODAL.MESSAGE_P2' | translate }}
+</app-confirm-modal>

@@ -1,0 +1,90 @@
+<p-toast position="top-right"></p-toast>
+
+<div class="min-h-screen flex bg-white dark:bg-gray-900 transition-colors duration-500">
+  <div class="hidden lg:flex flex-col w-1/2 bg-blue-600 justify-between p-12 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-64 h-64 bg-blue-500 rounded-full -translate-x-1/2 -translate-y-1/2 opacity-50"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-blue-700 rounded-full translate-x-1/3 translate-y-1/3 opacity-50"></div>
+    
+    <div class="relative z-10 text-white max-w-md mt-auto mb-auto">
+      <h1 class="text-5xl font-extrabold tracking-tight mb-6">
+        {{ 'APP.SYSTEM_NAME' | translate }} <span class="text-blue-200">{{ 'APP.SUFFIX' | translate }}</span>
+      </h1>
+      <p class="text-xl text-blue-100 mb-8">
+        {{ 'APP.TAGLINE' | translate }}
+      </p>
+      
+      <div class="flex items-center gap-4 text-sm font-semibold uppercase tracking-widest text-blue-200">
+        <span class="h-px w-8 bg-blue-200"></span>
+        {{ 'APP.PORTAL_TYPE' | translate }}
+      </div>
+    </div>
+
+    <div class="relative z-10 flex items-center gap-4 border-t border-blue-500/50 pt-8 mt-12">
+      <div class="flex -space-x-3">
+        <div class="w-10 h-10 rounded-full border-2 border-blue-600 bg-white text-blue-600 flex items-center justify-center text-xs font-bold shadow-sm">SB</div>
+        <div class="w-10 h-10 rounded-full border-2 border-blue-600 bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold shadow-sm">MB</div>
+        <div class="w-10 h-10 rounded-full border-2 border-blue-600 bg-blue-200 text-blue-800 flex items-center justify-center text-xs font-bold shadow-sm">{{ 'AUTH.LOGIN.AVATAR_COUNT' | translate }}</div>
+      </div>
+      <div class="text-sm text-blue-100 font-medium" [innerHTML]="'AUTH.LOGIN.TRUSTED_MESSAGE' | translate"></div>
+    </div>
+  </div>
+
+  <div class="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16">
+    <div class="w-full max-w-md space-y-8">
+      
+      <div class="text-center lg:text-left">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white">{{ 'AUTH.LOGIN.WELCOME_BACK' | translate }}</h2>
+        <p class="mt-2 text-gray-500 dark:text-gray-400 font-medium">{{ 'AUTH.LOGIN.SUBTITLE' | translate }}</p>
+      </div>
+
+      <form class="mt-8 space-y-6" (ngSubmit)="onLogin()">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">{{ 'AUTH.LOGIN.IDENTIFIER_LABEL' | translate }}</label>
+            <div class="relative">
+              <i class="pi pi-user absolute left-4 top-3.5 text-gray-400"></i>
+              <input type="text" id="identifier" name="identifier" [(ngModel)]="loginData.identifier" [placeholder]="'AUTH.LOGIN.IDENTIFIER_PLACEHOLDER' | translate" 
+                     class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">{{ 'COMMON.FORM.PASSWORD' | translate }}</label>
+            <div class="relative">
+              <i class="pi pi-lock absolute left-4 top-3.5 text-gray-400"></i>
+              <input [type]="showPassword ? 'text' : 'password'" id="password" name="password" [(ngModel)]="loginData.password" placeholder="••••••••" maxlength="25"
+                     class="w-full pl-11 pr-10 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+              <i class="pi absolute right-4 top-3.5 text-gray-400 z-10 cursor-pointer hover:text-blue-500 transition-colors" 
+                 [ngClass]="showPassword ? 'pi-eye' : 'pi-eye-slash'" (click)="showPassword = !showPassword"></i>
+            </div>
+          </div>
+        </div>
+
+        <button type="submit" [disabled]="isProcessing"
+                class="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-xl font-bold text-lg shadow-lg shadow-blue-200 dark:shadow-none transition-all transform active:scale-95 flex justify-center items-center">
+          <i *ngIf="isProcessing" class="pi pi-spin pi-spinner mr-2"></i>
+          {{ 'AUTH.LOGIN.SIGN_IN_BUTTON' | translate }}
+        </button>
+        
+        <div class="text-center">
+          <button type="button" 
+                  (click)="onForgotPassword()" 
+                  [disabled]="isForgotPasswordProcessing"
+                  class="text-sm font-semibold text-blue-600 hover:text-blue-500 disabled:text-gray-400 transition-colors bg-transparent border-none cursor-pointer">
+            <i *ngIf="isForgotPasswordProcessing" class="pi pi-spin pi-spinner mr-1 text-xs"></i>
+            {{ 'AUTH.LOGIN.FORGOT_PASSWORD' | translate }}
+          </button>
+        </div>
+      </form>
+
+      <div class="text-center mt-2">
+        <span class="text-sm font-medium text-gray-500 dark:text-gray-400">{{ 'AUTH.LOGIN.NO_ACCOUNT' | translate }}</span>
+        <a routerLink="/signup" class="text-sm font-bold text-blue-600 hover:text-blue-500 ml-1 transition-colors">{{ 'AUTH.LOGIN.SIGN_UP_LINK' | translate }}</a>
+      </div>
+
+      <footer class="mt-8 pt-8 border-t border-gray-100 dark:border-gray-800 text-center">
+        <p class="text-xs text-gray-400 uppercase tracking-widest font-bold">{{ 'APP.FOOTER' | translate }}</p>
+      </footer>
+    </div>
+  </div>
+</div>

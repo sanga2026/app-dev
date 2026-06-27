@@ -1,0 +1,136 @@
+<p-toast position="top-right" [style]="{'z-index': '99999'}"></p-toast>
+
+<div class="min-h-screen flex bg-white dark:bg-gray-900 transition-colors duration-500">
+  
+  <div class="hidden lg:flex flex-col w-1/2 bg-blue-600 justify-between p-12 relative overflow-hidden">
+    <div class="absolute top-0 left-0 w-64 h-64 bg-blue-500 rounded-full -translate-x-1/2 -translate-y-1/2 opacity-50"></div>
+    <div class="absolute bottom-0 right-0 w-96 h-96 bg-blue-700 rounded-full translate-x-1/3 translate-y-1/3 opacity-50"></div>
+    <div class="relative z-10 text-white max-w-md mt-auto mb-auto">
+      <h1 class="text-5xl font-extrabold tracking-tight mb-6">
+        {{ 'APP.SYSTEM_NAME' | translate }} <span class="text-blue-200">{{ 'APP.SUFFIX' | translate }}</span>
+      </h1>
+      <p class="text-xl text-blue-100 mb-8">{{ 'APP.TAGLINE' | translate }}</p>
+      <div class="flex items-center gap-4 text-sm font-semibold uppercase tracking-widest text-blue-200">
+        <span class="h-px w-8 bg-blue-200"></span>  {{ 'APP.PORTAL_TYPE' | translate }}
+      </div>
+    </div>
+    <div class="relative z-10 flex items-center gap-4 border-t border-blue-500/50 pt-8 mt-12">
+      <div class="flex -space-x-3">
+        <div class="w-10 h-10 rounded-full border-2 border-blue-600 bg-white text-blue-600 flex items-center justify-center text-xs font-bold shadow-sm">SB</div>
+        <div class="w-10 h-10 rounded-full border-2 border-blue-600 bg-blue-100 text-blue-700 flex items-center justify-center text-xs font-bold shadow-sm">MB</div>
+        <div class="w-10 h-10 rounded-full border-2 border-blue-600 bg-blue-200 text-blue-800 flex items-center justify-center text-xs font-bold shadow-sm">{{ 'AUTH.LOGIN.AVATAR_COUNT' | translate }}</div>
+      </div>
+      <div class="text-sm text-blue-100 font-medium" [innerHTML]="'AUTH.LOGIN.TRUSTED_MESSAGE' | translate"></div>
+    </div>
+  </div>
+
+  <div class="w-full lg:w-1/2 flex items-center justify-center p-8 md:p-16">
+    <div class="w-full max-w-md space-y-6">
+      
+      <div class="text-center lg:text-left">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white">{{ 'AUTH.SIGNUP.CREATE_ACCOUNT' | translate }}</h2>
+        <p class="mt-2 text-gray-500 dark:text-gray-400 font-medium">{{ 'AUTH.SIGNUP.SUBTITLE' | translate }}</p>
+      </div>
+
+      <form class="mt-6 space-y-5" (ngSubmit)="onSignup()">
+        
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">{{ 'COMMON.FORM.FIRST_NAME' | translate }}</label>
+            <div class="relative">
+              <i class="pi pi-user absolute left-4 top-3.5 text-gray-400 z-10"></i>
+              <input type="text" id="firstName" name="firstName" maxlength="50" [(ngModel)]="signupData.firstName"  
+                     class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+            </div>
+          </div>
+          <div>
+            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">{{ 'COMMON.FORM.LAST_NAME' | translate }}</label>
+            <input type="text" id="lastName" name="lastName" maxlength="50" [(ngModel)]="signupData.lastName"  
+                   class="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">{{ 'COMMON.FORM.EMAIL' | translate }}</label>
+          <div class="relative">
+            <i class="pi pi-envelope absolute left-4 top-3.5 text-gray-400 z-10"></i>
+            <input type="email" id="email" name="email" [(ngModel)]="signupData.email" 
+                   class="w-full pl-11 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">{{ 'COMMON.FORM.PHONE' | translate }}</label>
+          <div class="relative flex">
+            <select name="countryCode" [(ngModel)]="signupData.countryCode" 
+                    class="absolute left-0 top-0 h-full bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 font-bold border-r border-gray-200 dark:border-gray-600 rounded-l-xl px-2 outline-none focus:ring-2 focus:ring-blue-500 cursor-pointer z-20">
+              <option *ngFor="let code of countryCodes" [value]="code">{{ code }}</option>
+            </select>
+            <input type="text" id="phoneNumber" name="phoneNumber" [(ngModel)]="signupData.phoneNumber" maxlength="10" placeholder="9876543210" 
+                   class="w-full pl-20 pr-4 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">{{ 'COMMON.FORM.PASSWORD' | translate }}</label>
+            <div class="relative">
+              <i class="pi pi-lock absolute left-4 top-3.5 text-gray-400 z-10"></i>
+              <input [type]="showPassword ? 'text' : 'password'" id="password" name="password" [(ngModel)]="signupData.password" placeholder="••••••••" maxlength="25"
+                     class="w-full pl-11 pr-10 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+              <i class="pi absolute right-4 top-3.5 text-gray-400 z-10 cursor-pointer hover:text-blue-500 transition-colors" 
+                 [ngClass]="showPassword ? 'pi-eye' : 'pi-eye-slash'" (click)="showPassword = !showPassword"></i>
+            </div>
+          </div>
+          
+          <div>
+            <label class="block text-sm font-bold text-gray-700 dark:text-gray-300 mb-1">{{ 'AUTH.SIGNUP.CONFIRM_PASSWORD_LABEL' | translate }}</label>
+            <div class="relative">
+              <i class="pi pi-lock absolute left-4 top-3.5 text-gray-400 z-10"></i>
+              <input [type]="showConfirmPassword ? 'text' : 'password'" id="confirmPass" name="confirmPass" [(ngModel)]="signupData.confirmPassword" placeholder="••••••••" maxlength="25"
+                     class="w-full pl-11 pr-10 py-3 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-900 dark:text-white focus:ring-2 focus:ring-blue-500 outline-none transition-all">
+              <i class="pi absolute right-4 top-3.5 text-gray-400 z-10 cursor-pointer hover:text-blue-500 transition-colors" 
+                 [ngClass]="showConfirmPassword ? 'pi-eye' : 'pi-eye-slash'" (click)="showConfirmPassword = !showConfirmPassword"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="flex items-start gap-2 pt-2">
+          <input type="checkbox" id="terms" name="terms" [(ngModel)]="signupData.agreeTerms" [disabled]="!hasReadTerms" 
+                 class="mt-1 w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 disabled:opacity-50 disabled:cursor-not-allowed cursor-pointer transition-all">
+          <label for="terms" class="text-sm font-medium text-gray-600 dark:text-gray-400" [class.cursor-pointer]="hasReadTerms">
+            I agree to the 
+            <a (click)="openTerms()" class="font-bold text-blue-600 hover:text-blue-500 hover:underline cursor-pointer transition-colors">
+              System Terms of Service
+            </a>
+          </label>
+        </div>
+
+        <button type="submit" [disabled]="isProcessing"
+                class="w-full py-4 bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white rounded-xl font-bold text-lg shadow-lg shadow-blue-200 dark:shadow-none transition-all transform active:scale-95 flex justify-center items-center gap-2">
+          <i *ngIf="isProcessing" class="pi pi-spin pi-spinner"></i>
+          {{ 'AUTH.SIGNUP.REGISTER_BUTTON' | translate }}
+        </button>
+        
+        <div class="text-center mt-6">
+          <span class="text-sm text-gray-500 dark:text-gray-400">{{ 'AUTH.SIGNUP.HAS_ACCOUNT' | translate }}</span>
+          <a routerLink="/login" class="text-sm font-bold text-blue-600 hover:text-blue-500 ml-1">{{ 'AUTH.SIGNUP.SIGN_IN_LINK' | translate }}</a>
+        </div>
+      </form>
+
+      <footer class="mt-6 pt-6 border-t border-gray-100 dark:border-gray-800 text-center">
+        <p class="text-xs text-gray-400 uppercase tracking-widest font-bold">{{ 'APP.FOOTER' | translate }}</p>
+      </footer>
+    </div>
+  </div>
+</div>
+
+<p-dialog header="System Terms of Service" [(visible)]="showTermsModal" [modal]="true" [style]="{ width: '90vw', maxWidth: '600px' }" [draggable]="false" [resizable]="false" styleClass="dark:bg-gray-800 dark:text-white">
+  <div class="text-gray-600 dark:text-gray-300 leading-relaxed space-y-4 max-h-[60vh] overflow-y-auto pr-2">
+    <p><strong>1. Acceptance of Terms:</strong> By accessing and using the MindSpark OS Multi-Tenant Banking Command Center, you accept and agree to be bound by the terms and provisions of this agreement.</p>
+    </div>
+  <ng-template pTemplate="footer">
+    <button pButton type="button" icon="pi pi-check" label="I Accept & Enable Registration" (click)="acceptTerms()" 
+            class="p-button-primary w-full sm:w-auto"></button>
+  </ng-template>
+</p-dialog>

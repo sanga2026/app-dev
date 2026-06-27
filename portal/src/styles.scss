@@ -1,0 +1,69 @@
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* 🎯 Base Body Styles */
+body {
+  @apply bg-gray-50 text-gray-900 transition-colors duration-300 antialiased;
+}
+
+/* 🌙 Dark Mode Override */
+/* This ensures that when the 'dark' class is on the <html> tag, the body reacts */
+.dark body {
+  @apply bg-gray-950 text-gray-100;
+}
+
+/* 💎 Custom Scrollbar for that "Premium OS" feel */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-transparent;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-gray-300 dark:bg-gray-700 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-gray-400 dark:bg-gray-600;
+}
+.custom-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background: transparent;
+  border-radius: 10px;
+}
+
+/* Show thumb on hover of the parent container */
+aside:hover .custom-scrollbar::-webkit-scrollbar-thumb {
+  @apply bg-gray-200 dark:bg-gray-700;
+}
+
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fade-in-up {
+  animation: fadeInUp 0.4s ease-out forwards;
+}
+
+@layer base {
+  body {
+    /* This forces the exact same base size, color, and smooth rendering app-wide */
+    @apply font-sans text-sm text-gray-900 bg-gray-50 antialiased dark:bg-gray-900 dark:text-gray-100;
+  }
+
+  /* Standardize all labels app-wide */
+  label {
+    @apply text-xs font-semibold text-gray-700 dark:text-gray-300 tracking-wide;
+  }
+}

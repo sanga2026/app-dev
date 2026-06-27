@@ -1,0 +1,39 @@
+<div class="container mt-4">
+  <h2>Supervisor Review Queue</h2>
+
+  <div *ngIf="loading" class="text-center">
+    <div class="spinner-border text-primary" role="status"></div>
+    <p>Loading the vault...</p>
+  </div>
+
+  <div *ngIf="!loading && pendingLoans.length > 0">
+    <table class="table table-hover mt-3">
+      <thead class="table-dark">
+        <tr>
+          <th>Ref ID</th>
+          <th>Type</th>
+          <th>Amount</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let loan of pendingLoans">
+          <td><small>{{ loan.id }}</small></td>
+          <td>{{ loan.loanType }}</td>
+          <td>{{ loan.loanAmount | currency:'INR' }}</td>
+          <td>
+            <span class="badge bg-warning text-dark">{{ loan.status }}</span>
+          </td>
+          <td>
+            <button class="btn btn-success btn-sm" (click)="approveLoan(loan.id)">Approve</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div *ngIf="!loading && pendingLoans.length === 0" class="alert alert-info">
+    No pending applications found in the vault.
+  </div>
+</div>

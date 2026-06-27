@@ -1,0 +1,138 @@
+<p-toast position="top-right"></p-toast>
+
+<div *ngIf="isLoading" class="min-h-[70vh] flex flex-col items-center justify-center space-y-4">
+  <i class="pi pi-spin pi-spinner text-4xl text-blue-600"></i>
+  <p class="text-gray-500 font-medium text-sm animate-pulse tracking-wide">
+    {{ 'COMMON.MISC.LOADING' | translate }}
+  </p>
+</div>
+
+<div
+  *ngIf="!isLoading && bank"
+  class="mx-auto animate-fade-in-up transition-all duration-500 ease-out"
+  [ngClass]="
+    currentLayout === 'compact' ? 'max-w-[1600px] p-1 space-y-4' : 'max-w-[1600px] p-1 space-y-6'
+  "
+>
+  <div
+    class="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 flex flex-col md:flex-row justify-between items-center gap-6 transition-all duration-300 hover:shadow-md"
+    [ngClass]="currentLayout === 'compact' ? 'p-4 rounded-xl' : 'p-6 rounded-2xl'"
+  >
+    <div class="flex items-center gap-4 w-full md:w-auto">
+      <div
+        class="bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold shadow-md uppercase shrink-0 transition-transform duration-300 hover:scale-105"
+        [ngClass]="
+          currentLayout === 'compact'
+            ? 'h-10 w-10 rounded-lg text-lg'
+            : 'h-14 w-14 rounded-xl text-xl'
+        "
+      >
+        {{ bank.name | slice: 0 : 2 }}
+      </div>
+      <div class="flex-1">
+        <h1
+          class="font-bold text-gray-900 dark:text-white tracking-tight transition-all"
+          [ngClass]="currentLayout === 'compact' ? 'text-lg' : 'text-xl'"
+        >
+          {{ bank.name }}
+        </h1>
+        <div class="flex items-center gap-2 mt-1">
+          <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ 'BANK_DETAIL.HEADER.TENANT_ID' | translate }}:</span>
+          <span
+            class="font-mono text-xs text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded select-all"
+            >{{ bank.id }}</span
+          >
+        </div>
+      </div>
+    </div>
+    <div class="flex items-center gap-3 w-full md:w-auto justify-end">
+      <span
+        [ngClass]="
+          bank.isActive
+            ? 'bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800'
+            : 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800'
+        "
+        class="font-semibold uppercase tracking-wider border rounded-md transition-all shadow-sm px-3 py-1.5 text-xs"
+      >
+        {{ (bank.isActive ? 'COMMON.STATUS.OPERATIONAL' : 'COMMON.STATUS.SUSPENDED') | translate }}
+      </span>
+    </div>
+  </div>
+
+  <div class="border-b border-gray-200 dark:border-gray-700 mt-2">
+    <nav
+      class="flex items-center overflow-x-auto no-scrollbar bg-transparent px-1 gap-2 transition-all"
+    >
+      <button
+        *ngFor="let tab of visibleTabs"
+        (click)="setTab(tab.id)"
+        type="button"
+        class="relative whitespace-nowrap font-semibold transition-all duration-300 flex items-center gap-2 border-b-[3px] -mb-[2px] outline-none group py-3 px-4 text-sm"
+        [ngClass]="
+          activeTab === tab.id
+            ? 'text-blue-600 dark:text-blue-400 border-blue-600'
+            : 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600'
+        "
+      >
+        <i class="pi {{ tab.icon }} transition-transform duration-300 group-hover:scale-110"></i>
+        <span>{{ tab.label | translate }}</span>
+      </button>
+    </nav>
+  </div>
+
+  <div
+    class="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-500"
+    [ngClass]="
+      currentLayout === 'compact' ? 'min-h-[500px] rounded-xl p-5' : 'min-h-[600px] rounded-2xl p-8'
+    "
+  >
+    
+    <ng-container *ngIf="activeTab === 'general'">
+      <app-bank-general
+        [bank]="bank"
+        [currentLayout]="currentLayout"
+        (refreshData)="fetchBankDetails()"
+      >
+      </app-bank-general>
+    </ng-container>
+
+    <ng-container *ngIf="activeTab === 'admins'">
+      <ng-container *appHasPermission="['users', 'read']">
+        <app-bank-admins
+          [bankId]="bank.id"
+          [currentLayout]="currentLayout"
+        >
+        </app-bank-admins>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="activeTab === 'branches'">
+      <ng-container *appHasPermission="['branches', 'read']">
+        <app-bank-branches
+          [bankId]="bank.id"
+          [currentLayout]="currentLayout"
+        >
+        </app-bank-branches>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="activeTab === 'loansproducts'">
+      <ng-container *appHasPermission="['products', 'read']">
+        <app-bank-loans
+          [bankId]="bank.id"
+          [currentLayout]="currentLayout"
+        ></app-bank-loans>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="activeTab === 'roles'">
+      <ng-container *appHasPermission="['roles', 'read']">
+        <app-bank-roles
+          [bankId]="bankId"
+          [currentLayout]="currentLayout">
+        </app-bank-roles>
+      </ng-container>
+    </ng-container>
+
+  </div>
+</div>
