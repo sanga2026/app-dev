@@ -14,7 +14,6 @@ import { HasPermissionDirective } from '../../../../shared/directives/has-permis
   selector: 'app-admin-detail',
   standalone: true,
   imports: [CommonModule, TranslateModule, RouterLink, AdminGeneralComponent, ToastModule,HasPermissionDirective],
-  providers: [MessageService],
   templateUrl: './admin-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -27,12 +26,13 @@ export class AdminDetailComponent implements OnInit, OnDestroy {
   private destroy$ = new Subject<void>();
 
   public bankId!: string;
-  public branchId!: string; // 🚀 Added to detect branch context
+  public branchId!: string;
   public adminId!: string;
-  public branchName = 'Branch Details'; // 🚀 Fallback for breadcrumb
+  public branchName = 'Branch Details';
   public adminUser: any = null;
   public isLoading: boolean = true;
   public activeTab: string = 'general';
+  public currentLayout: string = 'compact';
 
   public readonly adminTabs = [
     { id: 'general', label: 'Profile & Access', icon: 'pi-user' }
@@ -74,23 +74,34 @@ export class AdminDetailComponent implements OnInit, OnDestroy {
 
   public fetchAdminDetails() {
     this.isLoading = true;
-    
-    // 🚀 SINGLE PROFILE ENDPOINT: Works universally for Bank Admins and Branch Staff
-    this.http.get<any>(`/banks/${this.bankId}/users/${this.adminId}`)
+
+    // Use bank-scoped endpoint when bankId is available, global endpoint otherwise
+    const url = this.bankId
+      ? `/banks/${this.bankId}/users/${this.adminId}`
+      : `/users/${this.adminId}`;
+
+    this.http.get<any>(url)
       .pipe(
-        takeUntil(this.destroy$), 
-        finalize(() => {
-          this.isLoading = false;
-          this.cdr.detectChanges();
-        })
+        takeUntil(this.destroy$),
+        finalize(() => { this.isLoading = false; this.cdr.detectChanges(); })
       )
       .subscribe({
-        next: (res) => { 
-          this.adminUser = res.data ? res.data : res; 
+        next: (res) => {
+          this.adminUser = res.data ? res.data : res;
+          // Fill bankId from the user data if not already set (e.g. navigated from /users/:id)
+          if (!this.bankId && this.adminUser?.bankId) {
+            this.bankId = this.adminUser.bankId;
+          }
+          this.cdr.detectChanges();
         },
         error: () => {
           this.messageService.add({ severity: 'error', summary: 'Sync Error', detail: 'User profile unavailable.' });
-          this.router.navigate(['/banks', this.bankId]);
+          // Navigate back appropriately
+          if (this.bankId) {
+            this.router.navigate(['/banks', this.bankId]);
+          } else {
+            this.router.navigate(['/users']);
+          }
         },
       });
   }

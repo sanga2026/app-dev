@@ -2,26 +2,29 @@ import {
   PrimaryGeneratedColumn,
   CreateDateColumn,
   UpdateDateColumn,
+  DeleteDateColumn,
   Column,
   ManyToOne,
   JoinColumn,
+  VersionColumn,
 } from 'typeorm';
-// Import your UserEntity (you might need a dynamic import or careful pathing to avoid circular deps)
 import { UserEntity } from '../../modules/users/entities/user.entity';
 
 export abstract class BaseBankingEntity {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  // --- RAW DATA ---
+  // ── Audit: who created / updated / deleted ──────────────────────────────
   @Column({ type: 'uuid', nullable: true, name: 'created_by' })
   createdBy: string;
 
   @Column({ type: 'uuid', nullable: true, name: 'updated_by' })
   updatedBy: string;
 
-  // --- VIRTUAL RELATIONS (For Readability) ---
-  // This allows you to do: bank.creator.firstName
+  @Column({ type: 'uuid', nullable: true, name: 'deleted_by' })
+  deletedBy: string | null;
+
+  // ── Virtual relations (for readability in code) ─────────────────────────
   @ManyToOne(() => UserEntity, { nullable: true })
   @JoinColumn({ name: 'created_by' })
   creator: UserEntity;
@@ -30,10 +33,18 @@ export abstract class BaseBankingEntity {
   @JoinColumn({ name: 'updated_by' })
   updater: UserEntity;
 
-  // --- TIMESTAMPS ---
+  // ── Timestamps ──────────────────────────────────────────────────────────
   @CreateDateColumn({ type: 'timestamptz', name: 'created_at' })
   createdAt: Date;
 
   @UpdateDateColumn({ type: 'timestamptz', name: 'updated_at' })
   updatedAt: Date;
+
+  // Soft delete: TypeORM sets this on softDelete(); null = active record
+  @DeleteDateColumn({ type: 'timestamptz', name: 'deleted_at', nullable: true })
+  deletedAt: Date | null;
+
+  // Optimistic locking: TypeORM increments this on every UPDATE; prevents lost updates
+  @VersionColumn({ name: 'version', default: 1 })
+  version: number;
 }

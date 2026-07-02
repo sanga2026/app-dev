@@ -1,92 +1,97 @@
-// --- 1. EXTERNAL IMPORTS ---
 import {
-  Controller,
-  Get,
-  Post,
-  Body,
-  Param,
-  Logger,
-  ParseUUIDPipe,
-  Patch,
-  BadRequestException,
-  Req,
-  InternalServerErrorException,
-  NotFoundException,
+  Controller, Post, Body, Param, Get, Patch, Delete,
+  UseGuards, ParseUUIDPipe, Req, BadRequestException,
+  InternalServerErrorException, NotFoundException, Logger,
 } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiBearerAuth } from '@nestjs/swagger';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { PermissionsGuard } from '../access-control/guards/permissions.guard';
+import { RequirePermissions } from '../../common/decorators/require-permissions.decorator';
+import { CurrentUser } from '../../common/decorators/current-user.decorator';
+import { UserEntity } from '../users/entities/user.entity';
 import { MakerCheckerService } from './maker-checker.service';
 import { LoanApplicationEntity } from '../loans/entities/application.entity';
 
-// --- 2. THE MAKER/CHECKER GATEWAY ---
-// This controller manages the lifecycle of operational drafts.
-// Principle: Security-First, Auditable Workflow.
+@ApiTags('Maker-Checker Workflow')
+@ApiBearerAuth()
+@UseGuards(JwtAuthGuard, PermissionsGuard)
 @Controller('maker-checker')
 export class MakerCheckerController {
-  // <--- CRITICAL: 'export' keyword fixes TS2305
-private readonly logger = new Logger(MakerCheckerController.name);
+  private readonly logger = new Logger(MakerCheckerController.name);
 
-constructor(private readonly makerCheckerService: MakerCheckerService) {}
+  constructor(private readonly makerCheckerService: MakerCheckerService) {}
 
-  // --- 3. CREATE NEW REQUEST ---
-  // Note: While the Onboarding Controller calls the Service directly for speed,
-  // this endpoint allows for direct manual creation if needed.
-@Post('create')
-  async create(@Body() createDto: any) {
+  @Post('create')
+  @RequirePermissions('loans', 'create')
+  @ApiOperation({ summary: 'Create a new loan application (Maker)' })
+  async create(@Body() createDto: any, @CurrentUser() user: UserEntity) {
     try {
       return await this.makerCheckerService.createRequest(createDto.entityName, {
         ...createDto.data,
         notes: createDto.notes,
+        makerId: user.id,
       });
     } catch (error) {
       throw new BadRequestException(error.message);
     }
   }
 
-@Patch('approve/:id')
-  async approve(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
-    return await this.makerCheckerService.approveRequest(id, body);
+  @Patch('approve/:id')
+  @RequirePermissions('loans', 'approve')
+  @ApiOperation({ summary: 'Approve a pending loan application (Checker)' })
+  async approve(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: any,
+    @CurrentUser() user: UserEntity,
+  ) {
+    return await this.makerCheckerService.approveRequest(id, { ...body, checkerId: user.id });
   }
 
   @Patch('reject/:id')
-  async reject(@Param('id', ParseUUIDPipe) id: string, @Body() body: { reason: string }) {
-    return await this.makerCheckerService.rejectRequest(id, body.reason);
+  @RequirePermissions('loans', 'reject')
+  @ApiOperation({ summary: 'Reject a pending loan application (Checker)' })
+  async reject(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: { reason: string },
+    @CurrentUser() user: UserEntity,
+  ) {
+    return await this.makerCheckerService.rejectRequest(id, body.reason, user.id);
   }
 
   @Patch('disburse/:id')
-  async disburse(@Param('id', ParseUUIDPipe) id: string, @Body() body: any) {
-    return await this.makerCheckerService.disburseRequest(id, body);
+  @RequirePermissions('loans', 'disburse')
+  @ApiOperation({ summary: 'Disburse an approved loan (Finance)' })
+  async disburse(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() body: any,
+    @CurrentUser() user: UserEntity,
+  ) {
+    return await this.makerCheckerService.disburseRequest(id, { ...body, disbursedBy: user.id });
   }
 
-  // --- 4. GET PENDING REQUESTS ---
-  // Used by the 'Checker' (Supervisor) to see what needs approval.
-// --- 1. GET PENDING REQUESTS ---
-  // LOGIC: Filtered by the Supervisor's Bank ID to ensure multi-tenant security.
   @Get('pending')
-  async getPendingRequests(@Req() req: any) {
+  @RequirePermissions('loans', 'read')
+  @ApiOperation({ summary: 'List pending loan applications for checker review' })
+  async getPendingRequests(@CurrentUser() user: UserEntity) {
     try {
-      const bankId = req.user?.bankId; // Extracted from Auth Middleware
-      this.logger.log(`Fetching pending review list for Bank: ${bankId}`);
-      
       return await this.makerCheckerService.searchRequests(LoanApplicationEntity, {
         status: 'PENDING',
-        bankId: bankId,
+        bankId: user.bankId ?? '',
       });
     } catch (error) {
       throw new InternalServerErrorException('Failed to fetch pending requests.');
     }
   }
 
-  // --- 2. GET SPECIFIC REQUEST ---
-  // LOGIC: Provides full detail of a loan application for the Checker to review.
   @Get(':id')
-  async getRequestById(@Param('id', ParseUUIDPipe) id: string, @Req() req: any) {
-    const bankId = req.user?.bankId;
-    const request = await this.makerCheckerService.getLoanDetail(id, bankId);
-    
-    if (!request) {
-      throw new NotFoundException(`Request with ID ${id} not found.`);
-    }
+  @RequirePermissions('loans', 'read')
+  @ApiOperation({ summary: 'Get loan application detail' })
+  async getRequestById(
+    @Param('id', ParseUUIDPipe) id: string,
+    @CurrentUser() user: UserEntity,
+  ) {
+    const request = await this.makerCheckerService.getLoanDetail(id, user.bankId ?? '');
+    if (!request) throw new NotFoundException(`Request ${id} not found.`);
     return request;
   }
-
-  
 }

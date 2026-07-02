@@ -1,4 +1,11 @@
 <app-offline-modal></app-offline-modal>
 
-<p-toast position="top-right"></p-toast>
+<!-- Single global toast — renders at body root, always above dialogs -->
+<p-toast
+  position="top-right"
+  [style]="{ 'z-index': '99999', 'margin-top': '84px' }"
+  [baseZIndex]="99999"
+  [autoZIndex]="false">
+</p-toast>
+
 <router-outlet></router-outlet>

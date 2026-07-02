@@ -31,7 +31,6 @@ import { HasPermissionDirective } from '../../../../shared/directives/has-permis
     TranslateModule,
     HasPermissionDirective
   ],
-  providers: [MessageService],
   templateUrl: './branch-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

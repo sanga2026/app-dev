@@ -1,130 +1,293 @@
-<div class="animate-in fade-in slide-in-from-bottom-4 duration-500">
-  
-  <div class="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4 mb-6">
+<div class="animate-fade-in-up space-y-6">
+
+  <!-- ── Page Header ─────────────────────────────────────────── -->
+  <div class="page-header">
     <div>
-      <h2 class="text-xl font-bold text-gray-900 dark:text-white tracking-tight">{{ 'ADMIN_DETAIL.GENERAL.TITLE' | translate }}</h2>
-      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">{{ 'ADMIN_DETAIL.GENERAL.SUBTITLE' | translate }}</p>
+      <h2 class="page-title">{{ 'ADMIN_DETAIL.GENERAL.TITLE' | translate }}</h2>
+      <p class="page-subtitle">{{ 'ADMIN_DETAIL.GENERAL.SUBTITLE' | translate }}</p>
     </div>
-    <div class="flex items-center gap-3 shrink-0">
-      
+
+    <div class="flex items-center gap-2 shrink-0">
       <ng-container *appHasPermission="['users', 'delete']">
-        <app-button *ngIf="!isEditing" variant="danger-light" icon="pi-trash" [label]="'COMMON.ACTIONS.DELETE' | translate" (onClick)="confirmDelete()"></app-button>
+        <button *ngIf="!isEditing" type="button" (click)="confirmDelete()"
+                class="btn-danger px-4 py-2 text-sm gap-1.5">
+          <i class="pi pi-trash text-xs"></i>
+          {{ 'COMMON.ACTIONS.DELETE' | translate }}
+        </button>
       </ng-container>
-      
+
       <ng-container *appHasPermission="['users', 'update']">
-        <app-button *ngIf="!isEditing" variant="primary" icon="pi-pencil" [label]="'COMMON.ACTIONS.EDIT' | translate" (onClick)="toggleEditMode()"></app-button>
-        <app-button *ngIf="isEditing" variant="secondary" [label]="'COMMON.ACTIONS.CANCEL' | translate" [disabled]="isSaving" (onClick)="cancelEditMode()"></app-button>
-        <app-button *ngIf="isEditing" variant="success" icon="pi-check" [label]="'COMMON.ACTIONS.SAVE' | translate" [loading]="isSaving" (onClick)="saveDetails()"></app-button>
+        <button *ngIf="!isEditing" type="button" (click)="toggleEditMode()"
+                class="btn-primary px-4 py-2 text-sm gap-1.5">
+          <i class="pi pi-pencil text-xs"></i>
+          {{ 'COMMON.ACTIONS.EDIT' | translate }}
+        </button>
+        <button *ngIf="isEditing" type="button" (click)="cancelEditMode()"
+                [disabled]="isSaving" class="btn-secondary px-4 py-2 text-sm">
+          {{ 'COMMON.ACTIONS.CANCEL' | translate }}
+        </button>
+        <button *ngIf="isEditing" type="button" (click)="saveDetails()"
+                [disabled]="isSaving" class="btn-primary px-4 py-2 text-sm gap-2">
+          <i *ngIf="isSaving" class="pi pi-spin pi-spinner text-xs"></i>
+          <i *ngIf="!isSaving" class="pi pi-check text-xs"></i>
+          {{ 'COMMON.ACTIONS.SAVE' | translate }}
+        </button>
       </ng-container>
-      
     </div>
   </div>
 
-  <form [formGroup]="editForm" class="space-y-6">
-    
-    <div class="bg-white dark:bg-gray-800/50 rounded-2xl border border-gray-100 dark:border-gray-700 p-6 shadow-sm">
-      <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-6 flex items-center gap-2">
-        <i class="pi pi-id-card text-blue-500"></i> {{ 'ADMIN_DETAIL.GENERAL.SECTION_TITLE' | translate }}
-      </h3>
-      
-      <div *ngIf="!isEditing" class="grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div>
-          <label class="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1.5">{{ 'COMMON.FORM.EMAIL' | translate }}</label>
-          <p class="text-sm font-semibold text-gray-900 dark:text-gray-200">
-            <ng-container *ngIf="adminUser?.email">{{ adminUser?.email }}</ng-container>
-            <ng-container *ngIf="!adminUser?.email">N/A</ng-container>
-          </p>
-        </div>
-        <div>
-          <label class="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1.5">{{ 'COMMON.FORM.PHONE' | translate }}</label>
-          <p class="text-sm font-semibold text-gray-900 dark:text-gray-200 font-mono">
-            <ng-container *ngIf="adminUser?.phoneNumber || adminUser?.phone">{{ adminUser?.phoneNumber || adminUser?.phone }}</ng-container>
-            <ng-container *ngIf="!(adminUser?.phoneNumber || adminUser?.phone)">N/A</ng-container>
-          </p>
-        </div>
-        <div>
-          <label class="block text-[10px] font-bold text-gray-400 dark:text-gray-500 uppercase tracking-wider mb-1.5">{{ 'ADMIN_DETAIL.GENERAL.SECURITY_ROLE' | translate }}</label>
-          <p class="text-sm font-bold text-blue-600 dark:text-blue-400">
-             <ng-container *ngIf="adminUser?.role?.name || adminUser?.roleType">{{ adminUser?.role?.name || adminUser?.roleType }}</ng-container>
-             <ng-container *ngIf="!(adminUser?.role?.name || adminUser?.roleType)">N/A</ng-container>
-          </p>
-        </div>
-      </div>
-
-      <div *ngIf="isEditing" class="space-y-6 animate-in fade-in zoom-in-95 duration-200">
-        
-        <div class="group">
-          <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
-            {{ 'COMMON.FORM.EMAIL' | translate }} <span class="text-[10px] font-normal italic text-gray-400">{{ 'ADMIN_DETAIL.GENERAL.IMMUTABLE_NOTE' | translate }}</span>
-          </label>
-          <div class="relative">
-            <i class="pi pi-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-            <input type="text" [value]="adminUser?.email" disabled class="w-full pl-9 pr-3 py-2.5 text-sm rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-900/50 text-gray-500 cursor-not-allowed">
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-          <div class="group">
-            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'COMMON.FORM.FIRST_NAME' | translate }} <span class="text-red-500">*</span></label>
-            <input type="text" formControlName="firstName" class="w-full px-3 py-2.5 text-sm rounded-xl border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20 transition-all" [ngClass]="isFieldInvalid('firstName') ? 'border-red-500' : 'border-gray-200 dark:border-gray-700'">
-            <small *ngIf="isFieldInvalid('firstName')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'COMMON.FORM.REQUIRED' | translate }}</small>
-          </div>
-          <div class="group">
-            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'COMMON.FORM.MIDDLE_NAME' | translate }} <span class="text-gray-400 font-normal text-[10px]">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span></label>
-            <input type="text" formControlName="middleName" class="w-full px-3 py-2.5 text-sm rounded-xl border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20 transition-all" [ngClass]="isFieldInvalid('middleName') ? 'border-red-500' : 'border-gray-200 dark:border-gray-700'">
-          </div>
-          <div class="group">
-            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'COMMON.FORM.LAST_NAME' | translate }} <span class="text-red-500">*</span></label>
-            <input type="text" formControlName="lastName" class="w-full px-3 py-2.5 text-sm rounded-xl border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20 transition-all" [ngClass]="isFieldInvalid('lastName') ? 'border-red-500' : 'border-gray-200 dark:border-gray-700'">
-            <small *ngIf="isFieldInvalid('lastName')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'COMMON.FORM.REQUIRED' | translate }}</small>
-          </div>
-        </div>
-
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div class="group">
-            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">{{ 'COMMON.FORM.PHONE' | translate }} <span class="text-red-500">*</span></label>
-            <div class="flex w-full relative">
-              <span class="inline-flex items-center px-3 rounded-l-xl border border-r-0 border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800 text-gray-600 dark:text-gray-400 text-sm font-semibold">{{ 'ADMIN_DETAIL.GENERAL.PHONE_PREFIX' | translate }}</span>
-              <input type="text" formControlName="phone" placeholder="9876543210" class="flex-1 w-full px-3 py-2.5 text-sm font-mono rounded-r-xl border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20 transition-all" [ngClass]="isFieldInvalid('phone') ? 'border-red-500' : 'border-gray-200 dark:border-gray-700'">
-            </div>
-            <small *ngIf="isFieldInvalid('phone')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'USER_ONBOARD_MODAL.VALIDATION.PHONE' | translate }}</small>
-          </div>
-          
-          <div class="group">
-            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1 flex justify-between">
-              <span>{{ 'ADMIN_DETAIL.GENERAL.SECURITY_ROLE' | translate }} <span class="text-red-500">*</span></span>
-              <i *ngIf="isLoadingRoles" class="pi pi-spinner pi-spin text-blue-500"></i>
-            </label>
-            <div class="relative">
-              <select formControlName="role" class="w-full pl-3 pr-8 py-2.5 text-sm rounded-xl border bg-white dark:bg-gray-900/50 text-gray-900 dark:text-white outline-none appearance-none cursor-pointer focus:ring-2 focus:ring-blue-500/20 transition-all" [ngClass]="isFieldInvalid('role') ? 'border-red-500' : 'border-gray-200 dark:border-gray-700'">
-                <option *ngFor="let r of availableRoles" [value]="r.role">{{ r.name }}</option>
-              </select>
-              <i class="pi pi-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-500 pointer-events-none"></i>
-            </div>
-            <small *ngIf="isFieldInvalid('role')" class="block text-red-500 text-[10px] font-semibold mt-1">{{ 'COMMON.FORM.REQUIRED' | translate }}</small>
-          </div>
-        </div>
+  <!-- ── Primary Details Card ────────────────────────────────── -->
+  <div class="card">
+    <div class="card-header">
+      <div class="flex items-center gap-2">
+        <i class="pi pi-id-card text-primary-500 text-base"></i>
+        <span class="text-sm font-bold text-slate-800 dark:text-slate-100">
+          {{ 'ADMIN_DETAIL.GENERAL.SECTION_TITLE' | translate }}
+        </span>
       </div>
     </div>
-  </form>
+
+    <div class="card-body">
+
+      <!-- ── VIEW MODE ── -->
+      <div *ngIf="!isEditing" class="grid grid-cols-2 md:grid-cols-4 gap-6">
+
+        <div>
+          <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">
+            Username (ID)
+          </p>
+          <p class="text-sm font-bold text-slate-900 dark:text-slate-200 font-mono">
+            {{ adminUser?.username || 'N/A' }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">
+            {{ 'COMMON.FORM.EMAIL' | translate }}
+          </p>
+          <p class="text-sm font-semibold text-slate-900 dark:text-slate-200">
+            {{ adminUser?.email || 'N/A' }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">
+            {{ 'COMMON.FORM.PHONE' | translate }}
+          </p>
+          <p class="text-sm font-semibold text-slate-900 dark:text-slate-200 font-mono">
+            {{ adminUser?.phoneNumber || adminUser?.phone || 'N/A' }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest mb-1.5">
+            {{ 'ADMIN_DETAIL.GENERAL.SECURITY_ROLE' | translate }}
+          </p>
+          <div class="flex items-center gap-2">
+            <span class="badge"
+                  [class.badge-blue]="adminUser?.role?.isSystemRole !== false"
+                  [class.badge-purple]="adminUser?.role?.isSystemRole === false">
+              {{ adminUser?.role?.name || adminUser?.roleType || 'N/A' }}
+            </span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ── EDIT MODE ── -->
+      <form *ngIf="isEditing" [formGroup]="editForm" class="space-y-5 animate-fade-in-up">
+
+        <!-- Username (immutable — this is the permanent ID) -->
+        <div class="flex items-center gap-3 p-3 rounded-xl bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800/50">
+          <i class="pi pi-info-circle text-amber-500 shrink-0"></i>
+          <p class="text-xs text-amber-700 dark:text-amber-400">
+            <span class="font-bold">Username: </span>
+            <span class="font-mono">{{ adminUser?.username }}</span>
+            — this is the permanent login identifier and cannot be changed.
+          </p>
+        </div>
+
+        <!-- Email (editable — username is the immutable identifier) -->
+        <div class="form-group">
+          <label>
+            {{ 'COMMON.FORM.EMAIL' | translate }}
+            <span class="text-slate-400 font-normal text-[10px] ml-1">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span>
+          </label>
+          <div class="input-icon-wrap">
+            <i class="pi pi-envelope"></i>
+            <input type="email" formControlName="email"
+                   placeholder="rajesh.sharma@bank.com"
+                   [class.border-red-400]="isInvalid('email')" />
+          </div>
+          <p *ngIf="isInvalid('email')" class="text-xs text-red-500 mt-1 flex items-center gap-1">
+            <i class="pi pi-exclamation-circle text-[10px]"></i>Enter a valid email address.
+          </p>
+        </div>
+
+        <!-- Name row -->
+        <div class="grid grid-cols-3 gap-3">
+
+          <div class="form-group">
+            <label>{{ 'COMMON.FORM.FIRST_NAME' | translate }} <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="firstName" placeholder="Rajesh"
+                   [class.border-red-400]="isInvalid('firstName')" />
+            <p *ngIf="isInvalid('firstName')" class="text-xs text-red-500 mt-1 flex items-center gap-1">
+              <i class="pi pi-exclamation-circle text-[10px]"></i>{{ errorMsg('firstName') }}
+            </p>
+          </div>
+
+          <div class="form-group">
+            <label>
+              {{ 'COMMON.FORM.MIDDLE_NAME' | translate }}
+              <span class="text-slate-400 font-normal text-[10px] ml-1">({{ 'COMMON.FORM.OPTIONAL' | translate }})</span>
+            </label>
+            <input type="text" formControlName="middleName" placeholder="Kumar" />
+          </div>
+
+          <div class="form-group">
+            <label>{{ 'COMMON.FORM.LAST_NAME' | translate }} <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="lastName" placeholder="Sharma"
+                   [class.border-red-400]="isInvalid('lastName')" />
+            <p *ngIf="isInvalid('lastName')" class="text-xs text-red-500 mt-1 flex items-center gap-1">
+              <i class="pi pi-exclamation-circle text-[10px]"></i>{{ errorMsg('lastName') }}
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Phone + Role -->
+        <div class="grid grid-cols-2 gap-4">
+
+          <!-- Phone -->
+          <div class="form-group">
+            <label>{{ 'COMMON.FORM.PHONE' | translate }} <span class="text-red-500">*</span></label>
+            <div class="flex gap-2">
+              <select formControlName="phoneCode"
+                      class="w-28 flex-shrink-0 rounded-xl border border-slate-200 dark:border-slate-700
+                             bg-slate-50 dark:bg-slate-800/60 text-sm px-2 py-2.5 outline-none
+                             focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20
+                             text-slate-800 dark:text-slate-100">
+                <option *ngFor="let code of countryCodes" [value]="code.value">{{ code.label }}</option>
+              </select>
+              <input type="tel" formControlName="phone" placeholder="9876543210" maxlength="10"
+                     [class.border-red-400]="isInvalid('phone')" />
+            </div>
+            <p *ngIf="isInvalid('phone')" class="text-xs text-red-500 mt-1 flex items-center gap-1">
+              <i class="pi pi-exclamation-circle text-[10px]"></i>{{ errorMsg('phone') }}
+            </p>
+          </div>
+
+          <!-- Security Role — searchable dropdown -->
+          <div class="form-group">
+            <label class="flex items-center justify-between">
+              <span>{{ 'ADMIN_DETAIL.GENERAL.SECURITY_ROLE' | translate }} <span class="text-red-500">*</span></span>
+              <span *ngIf="isLoadingRoles" class="flex items-center gap-1 text-[11px] text-slate-400">
+                <i class="pi pi-spinner pi-spin text-[10px]"></i> Loading...
+              </span>
+            </label>
+
+            <p-dropdown
+              formControlName="roleId"
+              [options]="availableRoles"
+              optionLabel="name"
+              optionValue="id"
+              [filter]="true"
+              filterBy="name,role"
+              filterPlaceholder="Search roles..."
+              placeholder="Select a role..."
+              [disabled]="isLoadingRoles"
+              appendTo="body"
+              styleClass="w-full"
+              [class.ng-invalid]="isInvalid('roleId')"
+              [class.ng-dirty]="isInvalid('roleId')">
+
+              <ng-template pTemplate="selectedItem" let-role>
+                <div *ngIf="role" class="flex items-center gap-2">
+                  <span class="inline-flex items-center px-2 py-0.5 rounded-md text-[10px] font-bold uppercase tracking-wider"
+                        [class.bg-blue-100]="role.isSystemRole"
+                        [class.text-blue-700]="role.isSystemRole"
+                        [class.bg-purple-100]="!role.isSystemRole"
+                        [class.text-purple-700]="!role.isSystemRole">
+                    {{ role.isSystemRole ? 'System' : 'Custom' }}
+                  </span>
+                  <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ role.name }}</span>
+                </div>
+              </ng-template>
+
+              <ng-template pTemplate="item" let-role>
+                <div class="flex items-center gap-3 py-1">
+                  <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                       [class.bg-blue-50]="role.isSystemRole"
+                       [class.bg-purple-50]="!role.isSystemRole">
+                    <i class="pi text-sm"
+                       [class.pi-shield]="role.isSystemRole" [class.text-blue-600]="role.isSystemRole"
+                       [class.pi-lock-open]="!role.isSystemRole" [class.text-purple-600]="!role.isSystemRole"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">{{ role.name }}</p>
+                    <p class="text-[10px] text-slate-400 font-mono">{{ role.role }}</p>
+                  </div>
+                  <span class="text-[10px] font-bold px-2 py-0.5 rounded-full"
+                        [class.bg-blue-100]="role.isSystemRole" [class.text-blue-600]="role.isSystemRole"
+                        [class.bg-purple-100]="!role.isSystemRole" [class.text-purple-600]="!role.isSystemRole">
+                    {{ role.isSystemRole ? 'System' : 'Custom' }}
+                  </span>
+                </div>
+              </ng-template>
+
+              <ng-template pTemplate="empty">
+                <div class="flex flex-col items-center py-5 text-slate-400">
+                  <i class="pi pi-shield text-2xl mb-1"></i>
+                  <span class="text-xs">No roles found</span>
+                </div>
+              </ng-template>
+
+            </p-dropdown>
+
+            <p *ngIf="isInvalid('roleId')" class="text-xs text-red-500 mt-1 flex items-center gap-1">
+              <i class="pi pi-exclamation-circle text-[10px]"></i>Please select a security role.
+            </p>
+          </div>
+
+        </div>
+      </form>
+    </div>
+  </div>
+
 </div>
 
-<p-dialog [(visible)]="showDeleteModal" appendTo="body" [modal]="true" [style]="{ width: '450px' }" [showHeader]="false" contentStyleClass="p-0 bg-transparent" transitionOptions="150ms cubic-bezier(0.4, 0, 0.2, 1)">
-  <div class="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl p-6 border border-gray-200 dark:border-gray-700 text-center">
-    <div class="w-16 h-16 rounded-full bg-red-50 dark:bg-red-900/30 flex items-center justify-center mx-auto mb-4">
+<!-- ── Delete Confirmation Dialog ─────────────────────────────── -->
+<p-dialog [(visible)]="showDeleteModal" appendTo="body" [modal]="true"
+          [style]="{ width: '420px' }" [showHeader]="false"
+          contentStyleClass="p-0 bg-transparent">
+  <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl p-6
+              border border-slate-200 dark:border-slate-700 text-center animate-scale-in">
+    <div class="w-16 h-16 rounded-2xl bg-red-50 dark:bg-red-900/30
+                flex items-center justify-center mx-auto mb-4">
       <i class="pi pi-exclamation-triangle text-3xl text-red-500"></i>
     </div>
-    <h3 class="text-xl font-bold text-gray-900 dark:text-white mb-2">{{ 'ADMIN_DETAIL.DELETE_MODAL.TITLE' | translate }}</h3>
-    <p class="text-sm text-gray-500 dark:text-gray-400 mb-6">
-      {{ 'ADMIN_DETAIL.DELETE_MODAL.MESSAGE_P1' | translate }} <span class="font-bold text-gray-900 dark:text-white">{{ adminUser?.firstName }} {{ adminUser?.lastName }}</span>{{ 'ADMIN_DETAIL.DELETE_MODAL.MESSAGE_P2' | translate }}
+    <h3 class="text-lg font-bold text-slate-900 dark:text-white mb-2">
+      {{ 'ADMIN_DETAIL.DELETE_MODAL.TITLE' | translate }}
+    </h3>
+    <p class="text-sm text-slate-500 dark:text-slate-400 mb-6 leading-relaxed">
+      {{ 'ADMIN_DETAIL.DELETE_MODAL.MESSAGE_P1' | translate }}
+      <span class="font-bold text-slate-900 dark:text-white">
+        {{ adminUser?.firstName }} {{ adminUser?.lastName }}
+      </span>
+      {{ 'ADMIN_DETAIL.DELETE_MODAL.MESSAGE_P2' | translate }}
     </p>
-    <div class="flex gap-3 w-full">
-      <div class="flex-1"><app-button variant="secondary" [label]="'COMMON.ACTIONS.CANCEL' | translate" [fullWidth]="true" (onClick)="showDeleteModal = false"></app-button></div>
-      <div class="flex-1">
-        <ng-container *appHasPermission="['users', 'delete']">
-          <app-button variant="danger" [label]="'ADMIN_DETAIL.DELETE_MODAL.BTN_TERMINATE' | translate" [fullWidth]="true" [loading]="isDeleting" (onClick)="executeDelete()"></app-button>
-        </ng-container>
-      </div>
+    <div class="flex gap-3">
+      <button type="button" (click)="showDeleteModal = false"
+              class="btn-secondary flex-1 py-2.5">
+        {{ 'COMMON.ACTIONS.CANCEL' | translate }}
+      </button>
+      <ng-container *appHasPermission="['users', 'delete']">
+        <button type="button" (click)="executeDelete()"
+                [disabled]="isDeleting" class="btn-danger flex-1 py-2.5 gap-2">
+          <i *ngIf="isDeleting" class="pi pi-spin pi-spinner text-xs"></i>
+          {{ 'ADMIN_DETAIL.DELETE_MODAL.BTN_TERMINATE' | translate }}
+        </button>
+      </ng-container>
     </div>
   </div>
 </p-dialog>

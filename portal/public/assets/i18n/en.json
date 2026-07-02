@@ -1,316 +1,448 @@
 {
   "APP": {
-    "BRAND_HTML": "SANGA<span class='text-blue-600'>MARKET</span>",
-    "VERSION": "Cloud ERP v1.0",
+    "BRAND_HTML": "Banking<span class='text-blue-600'>OS</span>",
+    "VERSION": "Banking OS v1.0",
     "SYSTEM_NAME": "Banking System OS",
     "SUFFIX": "OS",
     "FULL_NAME": "Banking OS",
     "TAGLINE": "The next-generation Multi-Tenant Banking Command Center. Secure, Scalable, and localized for Bharat.",
-    "FOOTER": "MindSpark Technologies © 2026",
-    "PORTAL_TYPE": "Super Admin Portal"
+    "FOOTER": "Banking OS © 2026",
+    "PORTAL_TYPE": "Unified Banking Portal"
   },
+
   "COMMON": {
+    "SUCCESS":  "Success",
+    "ERROR":    "Error",
+    "SAVE":     "Save",
+    "CANCEL":   "Cancel",
+    "ADD":      "Add",
+    "EDIT":     "Edit",
+    "DELETE":   "Delete",
+    "SAVING":   "Saving...",
+    "ACTIVE":   "Active",
+    "INACTIVE": "Inactive",
+    "NO_DATA":  "No data available",
+
     "ACTIONS": {
-      "SAVE": "Save",
-      "SAVING": "Saving...",
-      "CANCEL": "Cancel",
-      "BACK": "Back",
-      "NEXT": "Next",
+      "SAVE":      "Save",
+      "SAVING":    "Saving...",
+      "CANCEL":    "Cancel",
+      "BACK":      "Back",
+      "NEXT":      "Next",
       "NEXT_STEP": "Next Step",
-      "UPDATE": "Update",
-      "EDIT": "Edit",
-      "DELETE": "Delete"
+      "UPDATE":    "Update",
+      "EDIT":      "Edit",
+      "DELETE":    "Delete",
+      "ADD":       "Add"
     },
+
     "STATUS": {
-      "ACTIVE": "Active",
+      "ACTIVE":      "Active",
+      "INACTIVE":    "Inactive",
       "OPERATIONAL": "Operational",
-      "SUSPENDED": "Suspended",
-      "UNKNOWN": "Unknown"
+      "SUSPENDED":   "Suspended",
+      "UNKNOWN":     "Unknown"
     },
+
     "FORM": {
-      "FIRST_NAME": "First Name",
+      "FIRST_NAME":  "First Name",
       "MIDDLE_NAME": "Middle Name",
-      "LAST_NAME": "Last Name",
-      "EMAIL": "Email Address",
-      "PHONE": "Phone Number",
-      "PASSWORD": "Password",
-      "OPTIONAL": "(Optional)",
-      "REQUIRED": "Required.",
+      "LAST_NAME":   "Last Name",
+      "EMAIL":       "Email Address",
+      "PHONE":       "Phone Number",
+      "PASSWORD":    "Password",
+      "OPTIONAL":    "(Optional)",
+      "REQUIRED":    "Required.",
       "DESCRIPTION": "Description"
     },
+
     "MISC": {
-      "SELECT": "Select...",
+      "SELECT":     "Select...",
       "SELECT_DOC": "Select Document Type",
-      "STEP": "Step",
-      "OF": "of",
-      "UNLIMITED": "Unlimited",
-      "LOADING": "Loading Data..."
+      "STEP":       "Step",
+      "OF":         "of",
+      "UNLIMITED":  "Unlimited",
+      "LOADING":    "Loading Data..."
     },
+
     "ERRORS": {
-      "SYSTEM_ERROR_TITLE": "System Error",
+      "SYSTEM_ERROR_TITLE":  "System Error",
       "SYSTEM_ERROR_DETAIL": "An unexpected error occurred. Please contact support.",
-      "VALIDATION_ERROR": "Validation Error",
-      "CHECK_FORM_ERRORS": "Please correct the highlighted fields before proceeding."
+      "VALIDATION_ERROR":    "Validation Error",
+      "CHECK_FORM_ERRORS":   "Please correct the highlighted fields before proceeding."
     },
+
     "PERMISSIONS": {
-      "READ": "Read",
+      "READ":   "Read",
       "CREATE": "Create",
       "UPDATE": "Update",
       "DELETE": "Delete"
     },
+
     "KYC_STATUS": {
-      "VERIFIED": "Verified",
-      "REJECTED": "Rejected",
-      "PENDING": "Pending",
+      "VERIFIED":  "Verified",
+      "REJECTED":  "Rejected",
+      "PENDING":   "Pending",
       "IN_REVIEW": "In Review"
     }
   },
+
+  "NAV": {
+    "DASHBOARD":   "Dashboard",
+    "BANKS":       "Banks",
+    "BRANCHES":    "Branches",
+    "CUSTOMERS":   "Customers",
+    "LOANS":       "Loans",
+    "ACCOUNTING":  "Accounting",
+    "GEOGRAPHY":   "Geography",
+    "CURRENCIES":  "Currencies",
+    "MASTER_DATA": "Master Data",
+    "PROFILE":     "My Profile",
+    "SUPER_ADMIN": "Administration",
+    "SETTINGS":    "Settings"
+  },
+
+  "HEADER": {
+    "TENANT":  "Tenant",
+    "PROFILE": "My Profile",
+    "SETTINGS": "Settings",
+    "PRIVACY":  "Privacy & Security",
+    "LOGOUT":   "Log Out"
+  },
+
   "DROPDOWN_VALUES": {
     "COUNTRY_CODES": {
-      "IN": "IN (+91)",
-      "US": "US (+1)",
-      "UK": "UK (+44)",
-      "UAE": "UAE (+971)"
+      "IN":  "IN (+91)",
+      "US":  "US (+1)",
+      "UK":  "UK (+44)",
+      "UAE": "UAE (+971)",
+      "SG":  "SG (+65)",
+      "AU":  "AU (+61)"
     },
     "BRANCH_TYPES": {
-      "RETAIL_BRANCH": "Retail Branch",
+      "RETAIL_BRANCH":    "Retail Branch",
       "CORPORATE_BRANCH": "Corporate Branch",
-      "SERVICE_CENTER": "Service Center",
-      "REGIONAL_OFFICE": "Regional Office",
-      "ZONAL_OFFICE": "Zonal Office",
-      "HEAD_OFFICE": "Head Office"
+      "SERVICE_CENTER":   "Service Center",
+      "REGIONAL_OFFICE":  "Regional Office",
+      "ZONAL_OFFICE":     "Zonal Office",
+      "HEAD_OFFICE":      "Head Office"
     },
     "TIERS": {
-      "METRO": "Metro",
-      "URBAN": "Urban",
+      "METRO":      "Metro",
+      "URBAN":      "Urban",
       "SEMI-URBAN": "Semi-Urban",
-      "RURAL": "Rural"
+      "RURAL":      "Rural"
     },
     "STATES": {
       "SELECT": "Select State",
       "KA": "Karnataka",
       "MH": "Maharashtra",
       "DL": "Delhi",
-      "TN": "Tamil Nadu"
+      "TN": "Tamil Nadu",
+      "TS": "Telangana",
+      "GJ": "Gujarat",
+      "RJ": "Rajasthan",
+      "UP": "Uttar Pradesh",
+      "WB": "West Bengal",
+      "PB": "Punjab"
     },
     "CITIES": {
       "SELECT": "Select City",
-      "KA": ["Bengaluru", "Mangaluru", "Hubballi", "Mysuru"],
-      "MH": ["Mumbai", "Pune", "Nagpur", "Nashik"],
-      "DL": ["New Delhi", "North Delhi"],
-      "TN": ["Chennai", "Coimbatore", "Madurai"]
+      "KA": ["Bengaluru", "Mangaluru", "Hubballi", "Mysuru", "Belagavi"],
+      "MH": ["Mumbai", "Pune", "Nagpur", "Nashik", "Aurangabad"],
+      "DL": ["New Delhi", "North Delhi", "South Delhi", "Dwarka"],
+      "TN": ["Chennai", "Coimbatore", "Madurai", "Salem", "Tiruchirappalli"],
+      "TS": ["Hyderabad", "Warangal", "Nizamabad", "Karimnagar"],
+      "GJ": ["Ahmedabad", "Surat", "Vadodara", "Rajkot"],
+      "RJ": ["Jaipur", "Jodhpur", "Kota", "Udaipur"],
+      "UP": ["Lucknow", "Agra", "Kanpur", "Varanasi", "Noida"],
+      "WB": ["Kolkata", "Howrah", "Durgapur", "Siliguri"],
+      "PB": ["Chandigarh", "Ludhiana", "Amritsar", "Jalandhar"]
     },
     "VILLAGES": {
-      "SELECT": "Select Village/Town",
-      "Bengaluru": ["Whitefield", "Marathahalli", "Koramangala", "HSR Layout"],
-      "Mysuru": ["Hebbal", "Gokulam", "Kuvempunagar"],
-      "Mumbai": ["Andheri", "Bandra", "Borivali"],
-      "Pune": ["Koregaon Park", "Hinjewadi", "Viman Nagar"],
-      "Chennai": ["Adyar", "T Nagar", "Velachery"]
+      "SELECT": "Select Village / Locality",
+      "Bengaluru": ["Whitefield", "Marathahalli", "Koramangala", "HSR Layout", "Hebbal"],
+      "Mumbai":    ["Andheri", "Bandra", "Borivali", "Thane", "Navi Mumbai"],
+      "Pune":      ["Koregaon Park", "Hinjewadi", "Viman Nagar", "Kothrud"],
+      "Chennai":   ["Adyar", "T Nagar", "Velachery", "Anna Nagar"],
+      "Hyderabad": ["Gachibowli", "Hitech City", "Banjara Hills", "Kukatpally"]
     },
-    "GENDERS": { "MALE": "Male", "FEMALE": "Female", "OTHER": "Other" },
-    "CATEGORIES": { "PUBLIC": "Public", "STAFF": "Staff", "CORPORATE": "Corporate" },
+    "GENDERS": {
+      "MALE":   "Male",
+      "FEMALE": "Female",
+      "OTHER":  "Other"
+    },
+    "CATEGORIES": {
+      "PUBLIC":        "Public Sector",
+      "PRIVATE":       "Private Sector",
+      "COOPERATIVE":   "Cooperative Bank",
+      "RRB":           "Regional Rural Bank",
+      "STAFF":         "Staff",
+      "CORPORATE":     "Corporate",
+      "SENIOR_CITIZEN":"Senior Citizen"
+    },
     "TITLES": {
-      "MR.": "Mr.",
+      "MR.":  "Mr.",
       "MRS.": "Mrs.",
-      "MS.": "Ms.",
+      "MS.":  "Ms.",
       "SHRI": "Shri",
       "SMT.": "Smt.",
       "KUM.": "Kum.",
-      "DR.": "Dr."
+      "DR.":  "Dr."
     },
     "ID_TYPES": {
-      "PAN": "PAN Card",
-      "AADHAAR": "Aadhaar Card",
-      "PASSPORT": "Passport",
-      "VOTER_ID": "Voter ID",
+      "PAN":             "PAN Card",
+      "AADHAAR":         "Aadhaar Card",
+      "PASSPORT":        "Passport",
+      "VOTER_ID":        "Voter ID",
       "DRIVING_LICENSE": "Driving License"
     },
     "MARITAL_STATUSES": {
-      "SINGLE": "Single",
-      "MARRIED": "Married",
+      "SINGLE":   "Single",
+      "MARRIED":  "Married",
       "DIVORCED": "Divorced",
-      "WIDOWED": "Widowed"
+      "WIDOWED":  "Widowed"
+    },
+    "MARITAL": {
+      "SINGLE":   "Single",
+      "MARRIED":  "Married",
+      "DIVORCED": "Divorced",
+      "WIDOWED":  "Widowed"
+    },
+    "KYC": {
+      "PENDING":  "Pending",
+      "VERIFIED": "Verified",
+      "REJECTED": "Rejected",
+      "EXPIRED":  "Expired"
+    },
+    "RISK": {
+      "LOW":    "Low",
+      "MEDIUM": "Medium",
+      "HIGH":   "High"
     },
     "LOAN_TYPES": {
-      "PERSONAL_LOAN": "Personal Loan",
-      "HOME_LOAN": "Home Loan (Mortgage)",
-      "AUTO_LOAN": "Auto / Vehicle Loan",
-      "EDUCATION_LOAN": "Education Loan",
-      "GOLD_LOAN": "Gold Loan",
-      "AGRICULTURE_LOAN": "Agriculture Loan",
-      "MICROFINANCE": "Microfinance",
-      "CONSUMER_DURABLE_LOAN": "Consumer Durable Loan",
-      "TERM_LOAN": "Corporate Term Loan",
-      "WORKING_CAPITAL": "Working Capital / OD",
-      "TRADE_FINANCE": "Trade Finance (LC/BG)",
-      "SYNDICATED_LOAN": "Syndicated Loan",
-      "BILL_DISCOUNTING": "Bill Discounting"
+      "PERSONAL":        "Personal Loan",
+      "HOME":            "Home Loan",
+      "VEHICLE":         "Vehicle Loan",
+      "EDUCATION":       "Education Loan",
+      "BUSINESS":        "Business Loan",
+      "AGRICULTURE":     "Agriculture Loan",
+      "GOLD":            "Gold Loan",
+      "PERSONAL_LOAN":   "Personal Loan",
+      "HOME_LOAN":       "Home Loan (Mortgage)",
+      "AUTO_LOAN":       "Auto / Vehicle Loan",
+      "EDUCATION_LOAN":  "Education Loan",
+      "GOLD_LOAN":       "Gold Loan",
+      "MICROFINANCE":    "Microfinance",
+      "TERM_LOAN":       "Corporate Term Loan",
+      "WORKING_CAPITAL": "Working Capital / OD"
     }
   },
-  "NAV": {
-    "DASHBOARD": "Dashboard",
-    "BANKS": "Tenant Banks",
-    "CUSTOMERS": "Customers",
-    "LOANS": "Loans",
-    "ACCOUNTING": "Accounting",
-    "BRANCHES": "Branches",
-    "MASTER_DATA": "Master Data",
-    "SETTINGS": "Settings"
-  },
-  "HEADER": {
-    "TENANT": "Tenant: Sanga Bank",
-    "PROFILE": "My Profile",
-    "SETTINGS": "Settings",
-    "PRIVACY": "Privacy & Security",
-    "LOGOUT": "Log Out"
-  },
+
   "AUTH": {
     "LOGIN": {
-      "TRUSTED_MESSAGE": "Trusted by <strong class='text-white'>thousands</strong> of banking institutions worldwide.",
-      "WELCOME_BACK": "Welcome Back",
-      "SUBTITLE": "Enter your credentials to access the command center.",
-      "IDENTIFIER_LABEL": "Email or Username",
-      "IDENTIFIER_PLACEHOLDER": "admin@bank.com or admin_user",
-      "SIGN_IN_BUTTON": "Sign In",
-      "FORGOT_PASSWORD": "Forgot Password?",
-      "NO_ACCOUNT": "Don't have an account?",
-      "SIGN_UP_LINK": "Sign up here",
-      "AVATAR_COUNT": "+5k",
-      "TENANT_LABEL": "Tenant ID",
-      "TENANT_PLACEHOLDER": "e.g. SangaBank"
+      "TRUSTED_MESSAGE":        "Used by <strong class='text-white'>Super Admins, Bank Admins, Branch Staff and Customers</strong> — one portal for all roles.",
+      "WELCOME_BACK":           "Welcome Back",
+      "SUBTITLE":               "Enter your User ID and password to continue.",
+      "IDENTIFIER_LABEL":       "User ID",
+      "IDENTIFIER_PLACEHOLDER": "Username, Staff ID or Email",
+      "SIGN_IN_BUTTON":         "Sign In",
+      "SIGNING_IN":             "Signing in...",
+      "FORGOT_PASSWORD":        "Forgot Password?",
+      "AVATAR_COUNT":           "+1k"
     },
     "SIGNUP": {
-      "CREATE_ACCOUNT": "Create Super Admin",
-      "SUBTITLE": "Register the root system administrator for MindSpark OS.",
+      "CREATE_ACCOUNT":         "Create Super Admin",
+      "SUBTITLE":               "Register the root system administrator for Banking OS.",
       "CONFIRM_PASSWORD_LABEL": "Confirm Password",
-      "TERMS_AGREE": "I agree to the System Terms of Service",
-      "REGISTER_BUTTON": "Initialize System Admin",
-      "HAS_ACCOUNT": "Already initialized?",
-      "SIGN_IN_LINK": "Sign in here"
+      "TERMS_AGREE":            "I agree to the System Terms of Service",
+      "REGISTER_BUTTON":        "Initialize System Admin",
+      "HAS_ACCOUNT":            "Already initialized?",
+      "SIGN_IN_LINK":           "Sign in here"
     }
   },
+
   "DASHBOARD": {
-    "WELCOME": "Welcome back!",
-    "SUBTITLE": "Here is what's happening at your branch today.",
-    "STATS": {
-      "TOTAL_CUSTOMERS": "Total Customers",
-      "ACTIVE_LOANS": "Active Loans",
-      "REVENUE": "Revenue",
-      "VS_LAST_MONTH": "vs last month"
+    "WELCOME":          "Welcome back",
+    "SUBTITLE":         "Here's what's happening across the platform today",
+    "TOTAL_BANKS":      "Total Banks",
+    "TOTAL_BRANCHES":   "Total Branches",
+    "TOTAL_USERS":      "Total Users",
+    "TOTAL_CUSTOMERS":  "Total Customers",
+    "TOTAL_STAFF":      "Staff Members",
+    "TOTAL_LOANS":      "Total Loans",
+    "TOTAL_ACCOUNTS":   "Total Accounts",
+    "PENDING_APPROVALS":"Pending Approvals",
+    "LOAN_PIPELINE":    "Loan Pipeline",
+    "LOAN_STATUS": {
+      "PENDING":   "Pending",
+      "APPROVED":  "Approved",
+      "REJECTED":  "Rejected",
+      "DISBURSED": "Disbursed",
+      "DRAFT":     "Draft"
     },
-    "GRAPH_COMING_SOON": "Transaction Graph Coming Soon..."
-  },
-  "USER_ONBOARD_MODAL": {
-    "HEADER_ADMIN": "Provision Administrator",
-    "HEADER_STAFF": "Provision Staff Member",
-    "ROLE_SELECT_LABEL": "Assigned Role",
-    "ROLE_SELECT_PLACEHOLDER": "Select an access level...",
-    "PASSWORD_LABEL": "Temporary Password",
-    "PASSWORD_GENERATE": "Generate",
-    "BUTTON_SUBMIT": "Provision Account",
-    "VALIDATION": {
-      "EMAIL": "Valid email required.",
-      "PHONE": "10-digit number required.",
-      "PASSWORD_COMPLEXITY": "Must be 8+ chars with Uppercase, Lowercase, Number & Special Char."
+    "SUPER_ADMIN": {
+      "TITLE":       "Platform Overview",
+      "TOTAL_BANKS": "Total Banks",
+      "TOTAL_USERS": "Active Users",
+      "TOTAL_CUSTOMERS": "Total Customers"
+    },
+    "BANK_ADMIN": {
+      "TITLE":       "Bank Overview",
+      "BRANCHES":    "Your Branches",
+      "CUSTOMERS":   "Total Customers",
+      "STAFF":       "Staff Members"
+    },
+    "BRANCH": {
+      "TITLE":       "Branch Overview",
+      "CUSTOMERS":   "Branch Customers",
+      "LOANS":       "Active Loans",
+      "PENDING":     "Pending Approvals"
     }
   },
+
   "BANKS": {
-    "TITLE": "Tenant Banks Management",
-    "SUBTITLE": "Monitor platform tenants, subscription plans, and manage global access.",
-    "BUTTON_ONBOARD": "Onboard New Bank",
-    "LOAD_MORE": "Load More Banks",
-    "ALL_LOADED": "All records loaded",
-    "MODAL_TITLE": "Onboard New Tenant Bank",
-    "BUTTON_PROVISIONING": "Provisioning Tenant...",
-    "BUTTON_FINISH": "Initialize Bank",
+    "TITLE":              "Tenant Banks Management",
+    "SUBTITLE":           "Monitor platform tenants, subscription plans, and manage global access.",
+    "BUTTON_ONBOARD":     "Onboard New Bank",
+    "LOAD_MORE":          "Load More Banks",
+    "ALL_LOADED":         "All records loaded",
+    "MODAL_TITLE":        "Onboard New Tenant Bank",
+    "BUTTON_PROVISIONING":"Provisioning Tenant...",
+    "BUTTON_FINISH":      "Initialize Bank",
     "TABLE": {
-      "NAME": "Bank Name",
-      "CODE": "Code",
-      "PLAN": "Plan",
-      "STATUS": "Status",
+      "NAME":    "Bank Name",
+      "CODE":    "Code",
+      "PLAN":    "Plan",
+      "STATUS":  "Status",
       "CREATED": "Created At",
       "ACTIONS": "Actions"
     },
     "EMPTY": {
-      "TITLE": "No Tenants Found",
+      "TITLE":    "No Tenants Found",
       "SUBTITLE": "You haven't onboarded any banks to the platform yet."
     },
     "STEPS": {
       "IDENTITY": "Identity",
-      "CONTACT": "Contact",
-      "PLAN": "Plan",
-      "REVIEW": "Review"
+      "CONTACT":  "Contact",
+      "PLAN":     "Plan",
+      "REVIEW":   "Review"
     },
     "FORM": {
-      "BANK_NAME": "Bank Registered Name",
-      "IFSC_PREFIX": "IFSC Prefix",
-      "TAX_ID": "Tax ID (GSTIN/PAN)",
+      "BANK_NAME":           "Bank Registered Name",
+      "IFSC_PREFIX":         "IFSC Prefix",
+      "TAX_ID":              "Tax ID (GSTIN/PAN)",
       "REGISTRATION_NUMBER": "Registration Number (CIN)",
-      "CATEGORY": "Sector Category",
-      "WEBSITE": "Corporate Website",
-      "HQ_EMAIL": "HQ Email",
-      "HQ_PHONE": "HQ Phone",
-      "ADDRESS_1": "Address Line 1",
-      "CITY": "City",
-      "STATE": "State",
-      "POSTAL_CODE": "Postal Code",
-      "COUNTRY": "Country"
+      "CATEGORY":            "Sector Category",
+      "WEBSITE":             "Corporate Website",
+      "HQ_EMAIL":            "HQ Email",
+      "HQ_PHONE":            "HQ Phone",
+      "ADDRESS_1":           "Address Line 1",
+      "CITY":                "City",
+      "STATE":               "State",
+      "POSTAL_CODE":         "Postal Code",
+      "COUNTRY":             "Country"
+    },
+    "PLAN_FEATS": {
+      "BRANCHES": "Branches",
+      "USERS":    "Users",
+      "SESSIONS": "Concurrent Sessions"
+    },
+    "REVIEW": {
+      "TITLE":      "Summary — please verify before submitting",
+      "BANK":       "Bank Name",
+      "IFSC":       "IFSC Prefix",
+      "TAX_ID":     "Tax ID",
+      "EMAIL":      "HQ Email",
+      "LOCATION":   "Location",
+      "PLAN":       "Subscription Plan",
+      "DISCLAIMER": "By clicking Initialize Bank, you confirm that all details are accurate. This will create the tenant, its database partition and provision the first Bank Admin credentials."
+    },
+    "VALIDATION": {
+      "ERROR_TITLE":    "Validation Error",
+      "ERROR_DETAIL":   "Please fix the highlighted fields before continuing.",
+      "FETCH_FAILED":   "Failed to load banks. Please refresh and try again.",
+      "NAME_REQUIRED":  "Bank name is required (min. 3 characters)",
+      "IFSC_INVALID":   "IFSC prefix must be exactly 4 uppercase letters (e.g. SBIN)",
+      "TAX_INVALID":    "Invalid Tax ID format (15 alphanumeric characters)",
+      "CIN_INVALID":    "Invalid CIN format (e.g. U74140KA2026PLC123456)",
+      "CATEGORY_REQ":   "Please select a sector category",
+      "EMAIL_INVALID":  "Please enter a valid email address",
+      "PHONE_INVALID":  "Phone must be 10 digits",
+      "ADDRESS_REQUIRED":"Address Line 1 is required",
+      "STATE_REQUIRED": "Please select a state",
+      "CITY_REQUIRED":  "Please select a city",
+      "POSTAL_INVALID": "Postal code must be 6 digits (not starting with 0)"
+    },
+    "STATES": {
+      "KA": "Karnataka",
+      "MH": "Maharashtra",
+      "DL": "Delhi",
+      "TN": "Tamil Nadu",
+      "TS": "Telangana",
+      "GJ": "Gujarat",
+      "RJ": "Rajasthan",
+      "UP": "Uttar Pradesh",
+      "WB": "West Bengal",
+      "PB": "Punjab"
     },
     "DELETE_MODAL": {
-      "TITLE": "Delete Tenant Institution?",
-      "CONFIRM_TEXT": "Yes, Terminate Bank",
+      "TITLE":           "Delete Tenant Institution?",
+      "CONFIRM_TEXT":    "Yes, Terminate Bank",
       "PROCESSING_TEXT": "Terminating...",
-      "MESSAGE_P1": "Are you sure you want to permanently delete ",
-      "MESSAGE_P2": "? This action cannot be undone and will instantly revoke access for all associated users, branches, and loan products."
+      "MESSAGE_P1":      "Are you sure you want to permanently delete ",
+      "MESSAGE_P2":      "? This action cannot be undone and will instantly revoke access for all associated users, branches, and loan products."
     }
   },
+
   "BANK_DETAIL": {
     "HEADER": {
       "TENANT_ID": "Tenant ID",
-      "EXPORT": "Download Registry"
+      "EXPORT":    "Download Registry"
     },
     "TABS": {
-      "GENERAL": "General Info",
-      "ADMINS": "Admin Users",
+      "GENERAL":  "General Info",
+      "ADMINS":   "Admin Users",
+      "BRANCHES": "Branches",
       "PRODUCTS": "Loan Products",
-      "TXN": "Transactions"
+      "ROLES":    "Roles",
+      "TXN":      "Transactions"
     },
     "GENERAL": {
       "CORP_IDENTITY": "Corporate Identity",
-      "CONTACT_INFO": "Contact Information",
-      "HQ_LOCATION": "Headquarters Location",
-      "NOT_PROVIDED": "Not Provided"
+      "CONTACT_INFO":  "Contact Information",
+      "HQ_LOCATION":   "Headquarters Location",
+      "NOT_PROVIDED":  "Not Provided"
     },
     "ADMINS": {
-      "TITLE": "Tenant Administrators",
-      "ADD_BTN": "Provision Admin",
+      "TITLE":              "Tenant Administrators",
+      "ADD_BTN":            "Provision Admin",
       "SEARCH_PLACEHOLDER": "Search by name, email...",
-      "DEFAULT_ROLE": "Bank Admin",
-      "EMPTY_MESSAGE": "No administrators found.",
-      "LOAD_MORE": "Load More Users",
+      "DEFAULT_ROLE":       "Bank Admin",
+      "EMPTY_MESSAGE":      "No administrators found.",
+      "LOAD_MORE":          "Load More Users",
       "TABLE": {
-        "USER": "User Profile",
-        "STAFF_ID": "Staff ID",
-        "CONTACT": "Contact Info",
+        "USER":      "User Profile",
+        "STAFF_ID":  "Staff ID",
+        "CONTACT":   "Contact Info",
         "JOINED_AT": "Joined At",
-        "STATUS": "Status",
-        "ACTIONS": "Actions"
+        "STATUS":    "Status",
+        "ACTIONS":   "Actions"
       }
     },
     "BRANCHES": {
-      "TITLE": "Branch Network",
-      "ADD_BTN": "Onboard Branch",
+      "TITLE":              "Branch Network",
+      "ADD_BTN":            "Onboard Branch",
       "SEARCH_PLACEHOLDER": "Search branch code, city...",
-      "EMPTY_MESSAGE": "No branches onboarded yet.",
-      "LOAD_MORE": "Load More Branches",
-      "TIER_SUFFIX": "TIER",
+      "EMPTY_MESSAGE":      "No branches onboarded yet.",
+      "LOAD_MORE":          "Load More Branches",
+      "TIER_SUFFIX":        "TIER",
       "TABLE": {
-        "INFO": "Branch Info",
-        "CODES": "Routing Codes",
+        "INFO":     "Branch Info",
+        "CODES":    "Routing Codes",
         "LOCATION": "Location",
-        "STATUS": "Status",
-        "ACTIONS": "Actions"
+        "STATUS":   "Status",
+        "ACTIONS":  "Actions"
       },
       "LABELS": {
         "IFSC": "IFSC",
@@ -318,336 +450,354 @@
       }
     },
     "PRODUCTS": {
-      "TITLE": "Loan Products Directory",
-      "SUBTITLE": "Review and modify institution parameters.",
+      "TITLE":              "Loan Products Directory",
+      "SUBTITLE":           "Review and modify institution parameters.",
       "SEARCH_PLACEHOLDER": "Search by name, code...",
-      "ADD_BTN": "Create Product",
-      "EMPTY_MESSAGE": "No loan products configured.",
-      "LOAD_MORE": "Load More Products",
+      "ADD_BTN":            "Create Product",
+      "EMPTY_MESSAGE":      "No loan products configured.",
+      "LOAD_MORE":          "Load More Products",
       "LOAN_MODAL": {
-        "TITLE": "New Loan Product",
-        "PRODUCT_NAME": "Product Name",
+        "TITLE":                    "New Loan Product",
+        "PRODUCT_NAME":             "Product Name",
         "PRODUCT_NAME_PLACEHOLDER": "e.g., Premium Home Loan",
-        "CATEGORY": "Category",
-        "CATEGORY_PLACEHOLDER": "Select Category...",
-        "INTEREST_RATE": "Interest Rate",
-        "MIN_BALANCE": "Minimum Balance",
-        "MAX_TENURE": "Max Tenure (Months)",
-        "DESCRIPTION": "Description",
+        "CATEGORY":                 "Category",
+        "CATEGORY_PLACEHOLDER":     "Select Category...",
+        "INTEREST_RATE":            "Interest Rate",
+        "MIN_BALANCE":              "Minimum Balance",
+        "MAX_TENURE":               "Max Tenure (Months)",
+        "DESCRIPTION":              "Description",
         "VALIDATION": {
-          "PRODUCT_NAME": "Product name is required.",
+          "PRODUCT_NAME":  "Product name is required.",
           "INTEREST_RATE": "Valid percentage required.",
-          "MIN_BALANCE": "Minimum balance required.",
-          "MAX_TENURE": "Valid tenure required."
+          "MIN_BALANCE":   "Minimum balance required.",
+          "MAX_TENURE":    "Valid tenure required."
         }
       },
       "METRICS": {
-        "PA": "p.a.",
+        "PA":      "p.a.",
         "MIN_BAL": "Min Bal",
-        "MONTHS": "M"
+        "MONTHS":  "M"
       },
       "TABLE": {
-        "INFO": "Product Info",
+        "INFO":       "Product Info",
         "FINANCIALS": "Financials",
-        "TENURE": "Max Tenure",
-        "STATUS": "Status",
-        "ACTIONS": "Actions"
+        "TENURE":     "Max Tenure",
+        "STATUS":     "Status",
+        "ACTIONS":    "Actions"
       }
+    },
+    "ROLES": {
+      "TITLE":              "Role Management",
+      "SEARCH_PLACEHOLDER": "Search roles...",
+      "ADD_BTN":            "Create Custom Role",
+      "LOAD_MORE":          "Load More Roles",
+      "TABLE": {
+        "IDENTIFIER": "Role Identifier",
+        "SCOPE":      "Scope",
+        "STATUS":     "Status",
+        "ACTIONS":    "Actions"
+      },
+      "SCOPE": {
+        "SYSTEM":    "System Role",
+        "CUSTOM":    "Custom Role",
+        "PROTECTED": "System Protected"
+      },
+      "EMPTY_TITLE": "No Roles Configured",
+      "EMPTY_DESC":  "Create a custom role to define specific access privileges."
     },
     "TXN": {
       "AUDIT_TITLE": "Super Admin Audit Mode",
-      "AUDIT_MSG": "You are viewing live financial data for this tenant. All access is logged for regulatory compliance."
+      "AUDIT_MSG":   "You are viewing live financial data for this tenant. All access is logged for regulatory compliance."
     },
     "BRANCH_MODAL": {
       "TITLE": "Provision Bank Branch",
       "STEPS": {
-        "IDENTITY": "Identity & Classification",
-        "LOCATION": "Geographic Location",
+        "IDENTITY":   "Identity & Classification",
+        "LOCATION":   "Geographic Location",
         "OPERATIONS": "Operations & Limits"
       },
       "IDENTITY": {
-        "NAME_LABEL": "Branch Name",
-        "NAME_PLACEHOLDER": "e.g., Indiranagar Main",
-        "NAME_ERROR": "Branch name is required.",
-        "BRANCH_TYPE": "Branch Type",
+        "NAME_LABEL":        "Branch Name",
+        "NAME_PLACEHOLDER":  "e.g., Indiranagar Main",
+        "NAME_ERROR":        "Branch name is required.",
+        "BRANCH_TYPE":       "Branch Type",
         "INAUGURATION_DATE": "Inauguration Date",
-        "TIER_LABEL": "Classification Tier",
-        "IFSC_LABEL": "IFSC Code",
-        "IFSC_PLACEHOLDER": "HDFC0001234",
-        "IFSC_ERROR": "Valid 11-character IFSC required.",
-        "MICR_CODE": "MICR Code",
-        "MICR_PLACEHOLDER": "9-Digit Code",
-        "MICR_ERROR": "Must be exactly 9 digits.",
-        "SWIFT_CODE": "SWIFT Code",
+        "TIER_LABEL":        "Classification Tier",
+        "IFSC_LABEL":        "IFSC Code",
+        "IFSC_PLACEHOLDER":  "HDFC0001234",
+        "IFSC_ERROR":        "Valid 11-character IFSC required.",
+        "MICR_CODE":         "MICR Code",
+        "MICR_PLACEHOLDER":  "9-Digit Code",
+        "MICR_ERROR":        "Must be exactly 9 digits.",
+        "SWIFT_CODE":        "SWIFT Code",
         "SWIFT_PLACEHOLDER": "8 or 11 Chars",
-        "SWIFT_ERROR": "Must be 8 or 11 characters."
+        "SWIFT_ERROR":       "Must be 8 or 11 characters."
       },
       "LOCATION": {
-        "EMAIL_LABEL": "Branch Contact Email",
-        "EMAIL_PLACEHOLDER": "branch@bank.com",
-        "EMAIL_ERROR": "Invalid email format.",
-        "PHONE_ERROR": "10-digit number required.",
-        "ADDRESS_1_PLACEHOLDER": "Building, Street Name",
-        "ADDRESS_2_LABEL": "Address Line 2",
-        "ADDRESS_2_PLACEHOLDER": "Locality, Area",
-        "ADDRESS_ERROR": "Street address is required.",
-        "STATE_LABEL": "State/Province",
-        "CITY_LABEL": "City/District",
-        "VILLAGE_LABEL": "Village/Town",
-        "PIN_LABEL": "Postal Code",
-        "PIN_PLACEHOLDER": "e.g. 560001",
-        "PIN_ERROR": "6-digit postal code required."
+        "EMAIL_LABEL":         "Branch Contact Email",
+        "EMAIL_PLACEHOLDER":   "branch@bank.com",
+        "EMAIL_ERROR":         "Invalid email format.",
+        "PHONE_ERROR":         "10-digit number required.",
+        "ADDRESS_1_PLACEHOLDER":"Building, Street Name",
+        "ADDRESS_2_LABEL":     "Address Line 2",
+        "ADDRESS_2_PLACEHOLDER":"Locality, Area",
+        "ADDRESS_ERROR":       "Street address is required.",
+        "STATE_LABEL":         "State/Province",
+        "CITY_LABEL":          "City/District",
+        "VILLAGE_LABEL":       "Village/Town",
+        "PIN_LABEL":           "Postal Code",
+        "PIN_PLACEHOLDER":     "e.g. 560001",
+        "PIN_ERROR":           "6-digit postal code required."
       },
       "OPERATIONS": {
-        "GSTIN_LABEL": "Regional GSTIN",
-        "GSTIN_PLACEHOLDER": "GST Number",
-        "VAULT_LIMIT_LABEL": "Max Vault Retention Limit (₹)",
-        "VAULT_LIMIT_PLACEHOLDER": "e.g. 5000000",
-        "MANAGER_LABEL": "Branch Manager",
-        "MANAGER_PLACEHOLDER": "Branch Manager Name",
-        "OPENING_LABEL": "Opening Time",
-        "CLOSING_LABEL": "Closing Time",
-        "ATM_LABEL": "ATM Facility",
-        "ATM_DESC": "Does this branch have an ATM facility?"
+        "GSTIN_LABEL":          "Regional GSTIN",
+        "GSTIN_PLACEHOLDER":    "GST Number",
+        "VAULT_LIMIT_LABEL":    "Max Vault Retention Limit (₹)",
+        "VAULT_LIMIT_PLACEHOLDER":"e.g. 5000000",
+        "MANAGER_LABEL":        "Branch Manager",
+        "MANAGER_PLACEHOLDER":  "Branch Manager Name",
+        "OPENING_LABEL":        "Opening Time",
+        "CLOSING_LABEL":        "Closing Time",
+        "ATM_LABEL":            "ATM Facility",
+        "ATM_DESC":             "Does this branch have an ATM facility?"
       },
       "FOOTER": {
         "FINALIZE": "Finalize Branch"
       }
     },
     "ROLES_MODAL": {
-      "TITLE_CREATE": "Provision Custom Role",
-      "TITLE_UPDATE": "Update Custom Role",
-      "ROLE_NAME": "Role Name",
-      "ROLE_NAME_PLACEHOLDER": "e.g., Senior Loan Officer",
-      "ROLE_SLUG": "System Identifier",
-      "ROLE_SLUG_PLACEHOLDER": "e.g., SENIOR_LOAN_OFFICER",
-      "SIDEBAR_VISIBILITY": "Sidebar Visibility",
-      "DATA_ACCESS_MATRIX": "Data Access Matrix",
-      "MATRIX_DISCLAIMER": "You can only assign privileges that you currently possess.",
-      "BUTTON_CREATE": "Provision Role",
-      "BUTTON_UPDATE": "Update Role"
-    },
-    "ROLES": {
-    "TITLE": "Role Management",
-    "SEARCH_PLACEHOLDER": "Search roles...",
-    "ADD_BTN": "Create Custom Role",
-    "LOAD_MORE": "Load More Roles",
-    "TABLE": {
-      "IDENTIFIER": "Role Identifier",
-      "SCOPE": "Scope",
-      "STATUS": "Status",
-      "ACTIONS": "Actions"
-    },
-    "SCOPE": {
-      "SYSTEM": "System Role",
-      "CUSTOM": "Custom Role",
-      "PROTECTED": "System Protected"
-    },
-    "EMPTY_TITLE": "No Roles Configured",
-    "EMPTY_DESC": "Create a custom role to define specific access privileges."
-  }
+      "TITLE_CREATE":     "Provision Custom Role",
+      "TITLE_UPDATE":     "Update Custom Role",
+      "ROLE_NAME":        "Role Name",
+      "ROLE_NAME_PLACEHOLDER":"e.g., Senior Loan Officer",
+      "ROLE_SLUG":        "System Identifier",
+      "ROLE_SLUG_PLACEHOLDER":"e.g., SENIOR_LOAN_OFFICER",
+      "SIDEBAR_VISIBILITY":"Sidebar Visibility",
+      "DATA_ACCESS_MATRIX":"Data Access Matrix",
+      "MATRIX_DISCLAIMER":"You can only assign privileges that you currently possess.",
+      "BUTTON_CREATE":    "Provision Role",
+      "BUTTON_UPDATE":    "Update Role"
+    }
+  },
+
+  "USER_ONBOARD_MODAL": {
+    "HEADER_ADMIN":         "Provision Administrator",
+    "HEADER_STAFF":         "Provision Staff Member",
+    "ROLE_SELECT_LABEL":    "Assigned Role",
+    "ROLE_SELECT_PLACEHOLDER":"Select an access level...",
+    "PASSWORD_LABEL":       "Temporary Password",
+    "PASSWORD_GENERATE":    "Generate",
+    "BUTTON_SUBMIT":        "Provision Account",
+    "VALIDATION": {
+      "EMAIL":               "Valid email required.",
+      "PHONE":               "10-digit number required.",
+      "PASSWORD_COMPLEXITY": "Must be 8+ chars with Uppercase, Lowercase, Number & Special Char."
+    }
   },
 
   "CUSTOMER_ONBOARD_MODAL": {
     "TITLE": "Onboard New Customer",
     "SECTIONS": {
       "PERSONAL": "Personal Details",
-      "CONTACT": "Contact & Address",
-      "KYC": "Identity & KYC"
+      "CONTACT":  "Contact & Address",
+      "KYC":      "Identity & KYC"
     },
     "PERSONAL": {
-      "TITLE_LABEL": "Title",
-      "GUARDIAN_LABEL": "Guardian / Spouse",
+      "TITLE_LABEL":          "Title",
+      "GUARDIAN_LABEL":       "Guardian / Spouse",
       "GUARDIAN_PLACEHOLDER": "Father/Husband Name",
-      "DOB_LABEL": "Date of Birth",
-      "GENDER_LABEL": "Gender",
+      "DOB_LABEL":            "Date of Birth",
+      "GENDER_LABEL":         "Gender",
       "MARITAL_STATUS_LABEL": "Marital Status",
-      "MARRIAGE_DATE_LABEL": "Marriage Date",
-      "CATEGORY_LABEL": "Customer Category"
+      "MARRIAGE_DATE_LABEL":  "Marriage Date",
+      "CATEGORY_LABEL":       "Customer Category"
     },
     "CONTACT": {
-      "ALT_PHONE_LABEL": "Alternate Phone",
+      "ALT_PHONE_LABEL":       "Alternate Phone",
       "ALT_PHONE_PLACEHOLDER": "Landline/Other",
       "ADDRESS_1_PLACEHOLDER": "Flat, Building, Area",
       "ADDRESS_2_PLACEHOLDER": "Landmark, Street"
     },
     "KYC": {
-      "DOC_TYPE_LABEL": "Document Type",
-      "DOC_NUMBER_LABEL": "Document Number",
-      "DOC_NUMBER_PLACEHOLDER": "e.g., ABCDE1234F",
-      "C_KYC_LABEL": "C-KYC No.",
-      "E_KYC_LABEL": "E-KYC No.",
-      "GSTIN_LABEL": "GSTIN (Corporate)"
+      "DOC_TYPE_LABEL":    "Document Type",
+      "DOC_NUMBER_LABEL":  "Document Number",
+      "DOC_NUMBER_PLACEHOLDER":"e.g., ABCDE1234F",
+      "C_KYC_LABEL":       "C-KYC No.",
+      "E_KYC_LABEL":       "E-KYC No.",
+      "GSTIN_LABEL":       "GSTIN (Corporate)"
     },
     "BUTTONS": {
       "SAVE": "Save Customer"
     }
   },
+
   "ADMIN_DETAIL": {
     "GENERAL": {
-      "TITLE": "Identity & Access Management",
-      "SUBTITLE": "Review and modify administrator personal details and role assignments.",
-      "SECTION_TITLE": "Primary Details",
-      "IMMUTABLE_NOTE": "(Immutable)",
-      "SECURITY_ROLE": "Security Role",
+      "TITLE":        "Identity & Access Management",
+      "SUBTITLE":     "Review and modify administrator personal details and role assignments.",
+      "SECTION_TITLE":"Primary Details",
+      "IMMUTABLE_NOTE":"(Immutable)",
+      "SECURITY_ROLE":"Security Role",
       "PHONE_PREFIX": "+91"
     },
     "DELETE_MODAL": {
-      "TITLE": "Delete User?",
-      "MESSAGE_P1": "Are you sure you want to permanently remove ",
-      "MESSAGE_P2": "? This action cannot be undone.",
+      "TITLE":         "Delete User?",
+      "MESSAGE_P1":    "Are you sure you want to permanently remove ",
+      "MESSAGE_P2":    "? This action cannot be undone.",
       "BTN_TERMINATE": "Yes, Terminate"
     },
     "BREADCRUMBS": {
-      "BANKS": "Banks",
+      "BANKS":        "Banks",
       "DEFAULT_BANK": "Bank Details"
     },
     "HEADER": {
       "STAFF_ID": "Staff ID:"
     }
   },
+
   "BRANCH_DETAIL": {
     "BREADCRUMBS": {
-      "BANKS": "Banks",
+      "BANKS":        "Banks",
       "DEFAULT_BANK": "Bank Details"
     },
     "HEADER": {
       "DEFAULT_TIER": "Branch"
     },
-
     "GENERAL": {
-      "TITLE": "Branch Core Details",
+      "TITLE":    "Branch Core Details",
       "SUBTITLE": "Review and modify operational parameters.",
       "SECTIONS": {
-        "IDENTITY": "Identity & Routing",
-        "LOCATION": "Location & Contact",
+        "IDENTITY":   "Identity & Routing",
+        "LOCATION":   "Location & Contact",
         "OPERATIONS": "Operations & Limits"
       },
       "LABELS": {
-        "NAME": "Branch Name",
-        "CODE": "Branch Code",
-        "TYPE": "Branch Type",
-        "OPENING_DATE": "Opening Date",
-        "IFSC": "IFSC Code",
-        "MICR": "MICR Code",
-        "SWIFT": "SWIFT Code",
-        "CLASSIFICATION": "Classification",
-        "EMAIL": "Branch Email",
-        "PHONE": "Branch Phone",
-        "ADDRESS": "Physical Address",
-        "MANAGER": "Manager",
-        "GSTIN": "Regional GSTIN",
-        "VAULT_LIMIT": "Vault Cash Limit",
-        "ATM": "ATM Facility",
-        "OPENING_TIME": "Opening Time",
-        "CLOSING_TIME": "Closing Time"
+        "NAME":          "Branch Name",
+        "CODE":          "Branch Code",
+        "TYPE":          "Branch Type",
+        "OPENING_DATE":  "Opening Date",
+        "IFSC":          "IFSC Code",
+        "MICR":          "MICR Code",
+        "SWIFT":         "SWIFT Code",
+        "CLASSIFICATION":"Classification",
+        "EMAIL":         "Branch Email",
+        "PHONE":         "Branch Phone",
+        "ADDRESS":       "Physical Address",
+        "VILLAGE":       "Village / Locality",
+        "MANAGER":       "Manager",
+        "GSTIN":         "Regional GSTIN",
+        "VAULT_LIMIT":   "Vault Cash Limit",
+        "ATM":           "ATM Facility",
+        "OPENING_TIME":  "Opening Time",
+        "CLOSING_TIME":  "Closing Time"
       },
       "PLACEHOLDERS": {
         "GENERATING": "Generating...",
-        "MANAGER": "Branch Manager Name"
+        "MANAGER":    "Branch Manager Name"
       },
       "MISC": {
-        "NO_LIMIT": "No Limit Set",
+        "NO_LIMIT":   "No Limit Set",
         "UNASSIGNED": "Unassigned"
       }
     },
     "DELETE_MODAL": {
-      "TITLE": "Delete Branch?",
-      "CONFIRM": "Yes, Terminate Branch",
+      "TITLE":      "Delete Branch?",
+      "CONFIRM":    "Yes, Terminate Branch",
       "PROCESSING": "Terminating...",
       "MESSAGE_P1": "Are you sure you want to permanently delete the ",
       "MESSAGE_P2": " branch? This action cannot be undone."
     },
     "STAFF": {
-    "TITLE": "Branch Staff Directory",
-    "SEARCH_PLACEHOLDER": "Search by name, email...",
-    "ADD_BTN": "Provision Staff",
-    "LOAD_MORE": "Load More Staff",
-    "DEFAULT_ROLE": "Branch Staff",
-    "TABLE": {
-      "USER": "User Profile",
-      "STAFF_ID": "Staff ID",
-      "CONTACT": "Contact Info",
-      "JOINED_AT": "Joined At",
-      "STATUS": "Status",
-      "ACTIONS": "Actions"
-    },
-    "EMPTY_TITLE": "No Branch Staff Found",
-    "EMPTY_DESC": "Provision a new staff member to assign them to this branch."
-  },
-  "CUSTOMERS": {
-      "TITLE": "Customer Directory",
-      "SEARCH_PLACEHOLDER": "Search name, CIF, Phone...",
-      "ADD_BTN": "Onboard Customer",
-      "LOAD_MORE": "Load More",
+      "TITLE":              "Branch Staff Directory",
+      "SEARCH_PLACEHOLDER": "Search by name, email...",
+      "ADD_BTN":            "Provision Staff",
+      "LOAD_MORE":          "Load More Staff",
+      "DEFAULT_ROLE":       "Branch Staff",
       "TABLE": {
-        "PROFILE": "Customer Profile",
+        "USER":      "User Profile",
+        "STAFF_ID":  "Staff ID",
+        "CONTACT":   "Contact Info",
+        "JOINED_AT": "Joined At",
+        "STATUS":    "Status",
+        "ACTIONS":   "Actions"
+      },
+      "EMPTY_TITLE": "No Branch Staff Found",
+      "EMPTY_DESC":  "Provision a new staff member to assign them to this branch."
+    },
+    "CUSTOMERS": {
+      "TITLE":              "Customer Directory",
+      "SEARCH_PLACEHOLDER": "Search name, CIF, Phone...",
+      "ADD_BTN":            "Onboard Customer",
+      "LOAD_MORE":          "Load More",
+      "TABLE": {
+        "PROFILE":    "Customer Profile",
         "IDENTIFIER": "CIF / Identifier",
-        "CONTACT": "Contact",
+        "CONTACT":    "Contact",
         "KYC_STATUS": "KYC Status",
-        "ACTIONS": "Actions"
+        "ACTIONS":    "Actions"
       },
       "EMPTY_TITLE": "No Customers Found",
-      "EMPTY_DESC": "Search for an existing CIF or onboard a new customer."
+      "EMPTY_DESC":  "Search for an existing CIF or onboard a new customer."
     }
-  
   },
+
   "CUSTOMER_DETAIL": {
     "HEADER": {
-      "CIF": "CIF",
-      "STATUS": "KYC Status",
-      "SUSPEND": "Suspend Account",
+      "CIF":      "CIF",
+      "STATUS":   "KYC Status",
+      "SUSPEND":  "Suspend Account",
       "ACTIVATE": "Activate Account"
     },
     "PROFILE": {
-      "TITLE": "Customer Master Data",
-      "SUBTITLE": "Official profile and compliance details.",
-      "EDIT_BTN": "Edit Profile",
-      "PERSONAL": "Personal Details",
-      "CONTACT": "Contact & Address",
-      "KYC": "Identity & Documents",
+      "TITLE":        "Customer Master Data",
+      "SUBTITLE":     "Official profile and compliance details.",
+      "EDIT_BTN":     "Edit Profile",
+      "PERSONAL":     "Personal Details",
+      "CONTACT":      "Contact & Address",
+      "KYC":          "Identity & Documents",
       "NOT_PROVIDED": "Not Provided",
-      "DOB": "Date of Birth",
-      "GENDER": "Gender",
-      "MARITAL": "Marital Status",
-      "MARRIAGE": "Marriage Date",
-      "MOBILE": "Mobile No.",
-      "ALT_PHONE": "Alternate Phone",
-      "EMAIL": "Email Address",
-      "ADDRESS": "Physical Address",
-      "PAN": "PAN Card",
-      "AADHAAR": "Aadhaar",
-      "C_KYC": "C-KYC No.",
-      "E_KYC": "E-KYC No.",
-      "GSTIN": "GSTIN",
-      "REGISTERED": "Registered At"
+      "DOB":          "Date of Birth",
+      "GENDER":       "Gender",
+      "MARITAL":      "Marital Status",
+      "MARRIAGE":     "Marriage Date",
+      "MOBILE":       "Mobile No.",
+      "ALT_PHONE":    "Alternate Phone",
+      "EMAIL":        "Email Address",
+      "ADDRESS":      "Physical Address",
+      "PAN":          "PAN Card",
+      "AADHAAR":      "Aadhaar",
+      "C_KYC":        "C-KYC No.",
+      "E_KYC":        "E-KYC No.",
+      "GSTIN":        "GSTIN",
+      "REGISTERED":   "Registered At"
     }
   },
+
   "LOAN_DETAIL": {
     "GENERAL": {
-      "TITLE": "Product Parameters & Limits",
+      "TITLE":    "Product Parameters & Limits",
       "SUBTITLE": "Review and modify financial specifications.",
       "SECTIONS": {
         "CORE": "Core Specifications"
       },
       "LABELS": {
-        "PRODUCT_NAME": "Product Line Name",
-        "SYSTEM_CATEGORY": "System Category",
+        "PRODUCT_NAME":       "Product Line Name",
+        "SYSTEM_CATEGORY":    "System Category",
         "IMMUTABLE_CATEGORY": "Immutable Category Type",
-        "INTEREST_RATE": "Interest Rate",
+        "INTEREST_RATE":      "Interest Rate",
         "INTEREST_RATE_EDIT": "Interest Rate (% p.a.)",
-        "MIN_BALANCE": "Min Floor Balance",
-        "MIN_BALANCE_EDIT": "Min Floor Balance (₹)",
-        "MAX_TENURE": "Max Tenure Limit",
-        "MAX_TENURE_EDIT": "Max Tenure (Months)",
-        "DESCRIPTION_VIEW": "Public Descriptions & Notes",
-        "DESCRIPTION_EDIT": "Public Descriptions & Layout Notes"
+        "MIN_BALANCE":        "Min Floor Balance",
+        "MIN_BALANCE_EDIT":   "Min Floor Balance (₹)",
+        "MAX_TENURE":         "Max Tenure Limit",
+        "MAX_TENURE_EDIT":    "Max Tenure (Months)",
+        "DESCRIPTION_VIEW":   "Public Descriptions & Notes",
+        "DESCRIPTION_EDIT":   "Public Descriptions & Layout Notes"
       },
       "PLACEHOLDERS": {
         "PRODUCT_NAME": "e.g., Enterprise Vehicle Credit"
       },
       "VALIDATION": {
-        "PRODUCT_NAME": "Valid identifier title required.",
+        "PRODUCT_NAME":  "Valid identifier title required.",
         "INTEREST_RATE": "Valid percentage required."
       },
       "MISC": {
@@ -655,92 +805,208 @@
       }
     },
     "DELETE_MODAL": {
-      "TITLE": "Purge Financial Asset Configuration?",
-      "CONFIRM": "Yes, Delete Product",
+      "TITLE":      "Purge Financial Asset Configuration?",
+      "CONFIRM":    "Yes, Delete Product",
       "PROCESSING": "Purging...",
       "MESSAGE_P1": "Are you sure you want to permanently delete the ",
       "MESSAGE_P2": " configuration? This action cannot be undone."
     }
   },
+
+  "GEOGRAPHY": {
+    "TITLE":               "Geography Master Data",
+    "SUBTITLE":            "Manage countries, states, towns and villages used across the platform",
+    "COUNTRIES":           "Countries",
+    "STATES":              "States / UTs",
+    "TOWNS":               "Towns / Cities",
+    "VILLAGES":            "Villages / Localities",
+    "NO_COUNTRIES":        "No countries configured",
+    "NO_STATES":           "No states found for this country",
+    "NO_TOWNS":            "No towns found for this state",
+    "NO_VILLAGES":         "No villages found for this town",
+    "SELECT_COUNTRY":      "Select Country",
+    "SELECT_STATE":        "Select State",
+    "SELECT_TOWN":         "Select Town",
+    "SELECT_COUNTRY_FIRST":"Please select a country first",
+    "SELECT_STATE_FIRST":  "Please select a state first",
+    "SELECT_TOWN_FIRST":   "Please select a town first",
+    "CODE":                "Code",
+    "NAME":                "Name",
+    "DIAL_CODE":           "Dial Code",
+    "CURRENCY":            "Currency",
+    "FLAG":                "Flag",
+    "PIN_CODE":            "PIN Code",
+    "ADD_COUNTRY":         "Add Country",
+    "EDIT_COUNTRY":        "Edit Country",
+    "ADD_STATE":           "Add State",
+    "EDIT_STATE":          "Edit State",
+    "ADD_TOWN":            "Add Town",
+    "EDIT_TOWN":           "Edit Town",
+    "ADD_VILLAGE":         "Add Village",
+    "EDIT_VILLAGE":        "Edit Village"
+  },
+
+  "CURRENCIES": {
+    "TITLE":         "Currency Management",
+    "SUBTITLE":      "Manage ISO 4217 currencies used across banks and transactions",
+    "CODE":          "Code",
+    "NAME":          "Name",
+    "SYMBOL":        "Symbol",
+    "DECIMAL_PLACES":"Decimals",
+    "ADD":           "Add Currency",
+    "EDIT":          "Edit Currency",
+    "TOTAL":         "currencies",
+    "NO_CURRENCIES": "No currencies configured"
+  },
+
+  "VALIDATION": {
+    "REQUIRED":            "This field is required.",
+    "INVALID_EMAIL":       "Please enter a valid email address.",
+    "INVALID_PASSWORD":    "Password must be 8-25 characters with uppercase, lowercase, number and special character.",
+    "PASSWORD_MISMATCH":   "Passwords do not match.",
+    "MIN_LENGTH":          "Minimum length not met.",
+    "MAX_LENGTH":          "Maximum length exceeded.",
+    "INVALID_FORMAT":      "Invalid format.",
+    "INVALID_IFSC":        "Invalid IFSC code. Format: 4 letters + 0 + 6 alphanumeric.",
+    "INVALID_IFSC_PREFIX": "Invalid IFSC prefix. Must be exactly 4 uppercase letters.",
+    "INVALID_GSTIN":       "Invalid GSTIN. Format: 15 alphanumeric characters.",
+    "INVALID_PAN":         "Invalid PAN. Format: ABCDE1234F.",
+    "INVALID_AADHAAR":     "Invalid Aadhaar. Must be 12 digits.",
+    "INVALID_MOBILE":      "Invalid mobile number. Must be 10 digits.",
+    "INVALID_POSTAL_CODE": "Invalid postal code. Must be 6 digits.",
+    "INVALID_USERNAME":    "Invalid username. Format: 2 letters + 8 digits.",
+    "INVALID_STAFF_ID":    "Invalid staff ID.",
+    "INVALID_URL":         "Invalid URL format.",
+    "INVALID_CIN":         "Invalid CIN format.",
+    "INVALID_BRANCH_CODE": "Invalid branch code.",
+    "INVALID_CURRENCY_CODE":"Currency code must be 3 letters.",
+    "INVALID_COUNTRY_CODE":"Country code must be 2 letters."
+  },
+
+  "PERMISSIONS": {
+    "CREATE_ROLE":       "Create Custom Role",
+    "EDIT_ROLE":         "Edit Role",
+    "ROLE_NAME":         "Role Name",
+    "ROLE_ID":           "Role Identifier (Slug)",
+    "DESCRIPTION":       "Description",
+    "SIDEBAR_VISIBILITY":"Sidebar Menu Visibility",
+    "DATA_ACCESS":       "Data Access Matrix",
+    "RESOURCES": {
+      "banks":           "Banks",
+      "branches":        "Branches",
+      "customers":       "Customers",
+      "loans":           "Loan Applications",
+      "loan-products":   "Loan Products",
+      "users":           "Users & Staff",
+      "roles":           "Roles & Permissions",
+      "geography":       "Geography Master",
+      "currencies":      "Currencies",
+      "master-data":     "Master Data",
+      "accounting":      "Accounting",
+      "audit":           "Audit Logs",
+      "global-settings": "Global Settings",
+      "reports":         "Reports",
+      "dashboard":       "Dashboard"
+    },
+    "ACTIONS": {
+      "read":     "View",
+      "create":   "Create",
+      "update":   "Edit",
+      "delete":   "Delete",
+      "approve":  "Approve",
+      "disburse": "Disburse",
+      "reject":   "Reject",
+      "export":   "Export"
+    },
+    "GROUPS": {
+      "Banking Operations":   "Banking Operations",
+      "Loan Operations":      "Loan Operations",
+      "Customer Management":  "Customer Management",
+      "Access Management":    "Access Management",
+      "Administration":       "Administration",
+      "Analytics & Audit":    "Analytics & Audit"
+    }
+  },
+
   "PROFILE": {
-    "TITLE": "My Profile",
+    "TITLE":    "My Profile",
     "SUBTITLE": "Manage your personal information and security preferences.",
     "INFO": {
       "USERNAME": "Username",
-      "EMAIL": "Email Address"
+      "EMAIL":    "Email Address"
     },
     "TABS": {
       "PROFILE_INFO": "Profile Info",
-      "SECURITY": "Security",
-      "SESSIONS": "Active Sessions",
-      "ACCESS_LOGS": "Access Logs",
-      "ABOUT": "About",
-      "HELP": "Help & Support"
+      "SECURITY":     "Security",
+      "SESSIONS":     "Active Sessions",
+      "ACCESS_LOGS":  "Access Logs",
+      "ABOUT":        "About",
+      "HELP":         "Help & Support"
     },
     "SECTIONS": {
-      "PERSONAL": "Personal Details",
-      "SYSTEM": "System Preferences",
+      "PERSONAL":      "Personal Details",
+      "SYSTEM":        "System Preferences",
       "NOTIFICATIONS": "Notification Settings"
     },
     "FIELDS": {
-      "FIRST_NAME": "First Name",
-      "LAST_NAME": "Last Name",
-      "PHONE_NUMBER": "Phone Number",
-      "LANGUAGE": "Language",
-      "LAYOUT": "Dashboard Layout"
+      "FIRST_NAME":  "First Name",
+      "LAST_NAME":   "Last Name",
+      "PHONE_NUMBER":"Phone Number",
+      "LANGUAGE":    "Language",
+      "LAYOUT":      "Dashboard Layout"
     },
     "TOGGLES": {
-      "DARK_MODE": "Dark Mode",
-      "SIDEBAR": "Collapse Sidebar",
+      "DARK_MODE":    "Dark Mode",
+      "SIDEBAR":      "Collapse Sidebar",
       "EMAIL_ALERTS": "Email Alerts",
-      "SMS_ALERTS": "SMS Alerts"
+      "SMS_ALERTS":   "SMS Alerts"
     },
     "BUTTONS": {
-      "UPDATE": "Update Profile",
+      "UPDATE":          "Update Profile",
       "UPDATE_PASSWORD": "Update Password"
     },
     "SECURITY": {
-      "PASSWORD_TITLE": "Change Password",
+      "PASSWORD_TITLE":   "Change Password",
       "CURRENT_PASSWORD": "Current Password",
-      "NEW_PASSWORD": "New Password",
+      "NEW_PASSWORD":     "New Password",
       "CONFIRM_PASSWORD": "Confirm New Password",
-      "2FA_TITLE": "Two-Factor Authentication",
-      "2FA_DESC": "Enable 2FA to add an extra layer of security to your bank account.",
-      "2FA_BTN": "Setup 2FA"
+      "2FA_TITLE":        "Two-Factor Authentication",
+      "2FA_DESC":         "Enable 2FA to add an extra layer of security to your account.",
+      "2FA_BTN":          "Setup 2FA"
     },
     "SESSIONS": {
-      "TITLE": "Session Management",
-      "SUB_TITLE": "Review and manage your active logins across devices.",
-      "ACTIVE_NOW": "Active Now",
-      "LAST_ACTIVE": "Last active:",
-      "SIGN_OUT": "Sign Out",
-      "NO_OTHER_SESSIONS": "No other active sessions detected."
+      "TITLE":              "Session Management",
+      "SUB_TITLE":          "Review and manage your active logins across devices.",
+      "ACTIVE_NOW":         "Active Now",
+      "LAST_ACTIVE":        "Last active:",
+      "SIGN_OUT":           "Sign Out",
+      "NO_OTHER_SESSIONS":  "No other active sessions detected."
     },
     "LOGS": {
-      "TITLE": "Recent Activity",
-      "LAST_ACTIVITIES": "Last {{count}} activities",
+      "TITLE":              "Recent Activity",
+      "LAST_ACTIVITIES":    "Last {{count}} activities",
       "SEARCH_PLACEHOLDER": "Search logs...",
-      "NO_LOGS": "No access logs found.",
-      "NO_MATCH": "No matching logs found.",
-      "UNKNOWN": "Unknown",
-      "LOAD_MORE": "Load More Logs",
+      "NO_LOGS":            "No access logs found.",
+      "NO_MATCH":           "No matching logs found.",
+      "UNKNOWN":            "Unknown",
+      "LOAD_MORE":          "Load More Logs",
       "TABLE": {
-        "EVENT": "Event",
+        "EVENT":      "Event",
         "IP_ADDRESS": "IP Address",
-        "DEVICE": "Device",
-        "DATE": "Date"
+        "DEVICE":     "Device",
+        "DATE":       "Date"
       }
     },
     "ABOUT": {
-      "TITLE": "Platform Information",
-      "DEFAULT_TEXT": "S-Market is a next-generation Omni-Channel Retail SaaS platform designed for high-security enterprise banking and retail inventory management."
+      "TITLE":        "Platform Information",
+      "DEFAULT_TEXT": "Banking OS is a next-generation multi-tenant banking operations platform — secure, scalable, and localized for Bharat."
     },
     "HELP": {
-      "TITLE": "Help & Support Center",
+      "TITLE":       "Help & Support Center",
       "EMAIL_TITLE": "Email Support",
-      "EMAIL_DESC": "Our team usually responds within 24 hours.",
+      "EMAIL_DESC":  "Our team usually responds within 24 hours.",
       "PHONE_TITLE": "Phone Support",
-      "PHONE_DESC": "Available Mon-Fri, 9am to 6pm IST."
+      "PHONE_DESC":  "Available Mon-Fri, 9am to 6pm IST."
     }
   }
 }

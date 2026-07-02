@@ -48,6 +48,10 @@ export class SessionService {
 
     return await this.sessionRepo.save(newSession);
   }
+  async updateRefreshTokenHash(sessionId: string, hash: string): Promise<void> {
+    await this.sessionRepo.update(sessionId, { refreshTokenHash: hash, lastActive: new Date() });
+  }
+
   /**
    * 📡 Fetch all active sessions for a user
    */

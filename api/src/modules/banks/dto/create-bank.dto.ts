@@ -34,6 +34,11 @@ export class CreateBankDto {
   @MaxLength(255)
   logoUrl?: string;
 
+  @IsOptional()
+  @IsUrl({}, { message: 'If provided, website must be a valid URL.' })
+  @MaxLength(255)
+  website?: string;
+
   // --- 2. REGULATORY & COMPLIANCE ---
   @IsNotEmpty({ message: 'IFSC Prefix is mandatory.' })
   @IsBankIfscPrefix()

@@ -75,11 +75,12 @@ export class CreateCustomerDto {
   @IsOptional() @IsString() @MaxLength(255) addressLine2?: string;
   @IsOptional() @IsString() @MaxLength(100) city?: string;
   @IsOptional() @IsString() @MaxLength(100) state?: string;
-  
-  // 🚀 FIXED: Whitelisted the village property so NestJS accepts it
-  @IsOptional() @IsString() @MaxLength(100) village?: string; 
-  
-  @IsOptional() @IsString() @MaxLength(20) pinCode?: string;
+  @IsOptional() @IsString() @MaxLength(100) country?: string;
+  @IsOptional() @IsString() @MaxLength(100) village?: string;
+  @IsOptional() @IsString() @MaxLength(20)  pinCode?: string;
+
+  // Pre-generated customer number from the bank's number range sequence
+  @IsOptional() @IsString() @MaxLength(50) customerNumber?: string;
 
   // --- Legacy Compliance Fields ---
   @IsOptional() @IsString() panCardNumber?: string;

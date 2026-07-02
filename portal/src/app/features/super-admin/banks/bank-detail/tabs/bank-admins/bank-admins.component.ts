@@ -118,7 +118,7 @@ export class BankAdminsComponent implements OnInit, OnDestroy {
           admin.isActive = newStatus;
           this.messageService.add({ severity: 'success', summary: 'Updated', detail: `Access updated.` });
         },
-        error: (err) => this.messageService.add({ severity: 'error', summary: 'Failed', detail: err.error?.message })
+        error: (err) => this.messageService.add({ severity: 'error', summary: 'Failed', detail: err?.error?.message || 'Operation failed. Please try again.' })
       });
   }
 

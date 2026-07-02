@@ -12,33 +12,24 @@ import { AuthService } from '../../../auth/auth.service';
 import { ToastModule } from 'primeng/toast';
 import { TooltipModule } from 'primeng/tooltip';
 
-// 🚀 Import your new child components here as you build them!
 import { BankGeneralComponent } from './tabs/bank-general/bank-general.component';
 import { BankAdminsComponent } from './tabs/bank-admins/bank-admins.component';
 import { BankBranchesComponent } from './tabs/bank-branches/bank-branches.component';
 import { BankLoanProductsComponent } from './tabs/bank-loan-products/bank-loan-products.component';
 import { BankRolesComponent } from './tabs/bank-roles/bank-roles.component';
+import { BankNumberRangesComponent }   from './tabs/bank-number-ranges/bank-number-ranges.component';
+import { BankAccountProductsComponent } from './tabs/bank-account-products/bank-account-products.component';
 import { HasPermissionDirective } from '../../../../shared/directives/has-permission.directive';
-// import { BankAdminsComponent } from './tabs/bank-admins/bank-admins.component';
-// import { BankBranchesComponent } from './tabs/bank-branches/bank-branches.component';
 
 @Component({
   selector: 'app-bank-detail',
   standalone: true,
   imports: [
-    CommonModule,
-    TranslateModule,
-    ToastModule,
-    TooltipModule,
-    RouterLink,
-    BankGeneralComponent, // 🚀 Inject Child Tab
-    BankAdminsComponent,
-    BankBranchesComponent,
-    BankLoanProductsComponent,
-    BankRolesComponent,
-    HasPermissionDirective // 🚀 Don't forget to import the permission directive for *hasPermission in the template!
+    CommonModule, TranslateModule, ToastModule, TooltipModule, RouterLink,
+    BankGeneralComponent, BankAdminsComponent, BankBranchesComponent,
+    BankLoanProductsComponent, BankRolesComponent, BankNumberRangesComponent,
+    BankAccountProductsComponent, HasPermissionDirective,
   ],
-  providers: [MessageService],
   templateUrl: './bank-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -58,13 +49,14 @@ public bankId!: string;
 private router = inject(Router);
 
 private readonly allBankTabs = [
-    { id: 'general', label: 'General Info', icon: 'pi-info-circle', resource: 'banks', action: 'read' },
-    { id: 'admins', label: 'Admin Users', icon: 'pi-users', resource: 'users', action: 'read' },
-    { id: 'branches', label: 'Branches', icon: 'pi-sitemap', resource: 'branches', action: 'read' },
-    { id: 'loansproducts', label: 'Loan Products', icon: 'pi-briefcase', resource: 'products', action: 'read' },
-    { id: 'roles', label: 'Custom Roles', icon: 'pi-key', resource: 'roles', action: 'read' },
-    { id: 'transactions', label: 'Transactions', icon: 'pi-sync', resource: 'transactions', action: 'read' },
-    { id: 'settings', label: 'Bank Settings', icon: 'pi-cog', resource: 'banks', action: 'update' }, // Notice settings requires 'update' permission!
+    { id: 'general',       label: 'General Info',     icon: 'pi-info-circle', resource: 'banks',        action: 'read'   },
+    { id: 'admins',        label: 'Admin Users',       icon: 'pi-users',       resource: 'users',        action: 'read'   },
+    { id: 'branches',      label: 'Branches',          icon: 'pi-sitemap',     resource: 'branches',     action: 'read'   },
+    { id: 'loansproducts', label: 'Loan Products',     icon: 'pi-briefcase',   resource: 'loan-products',action: 'read'   },
+    { id: 'roles',           label: 'Custom Roles',      icon: 'pi-key',         resource: 'roles',        action: 'read' },
+    { id: 'numberranges',    label: 'Number Sequences',  icon: 'pi-hashtag',     resource: 'master-data',  action: 'read' },
+    { id: 'accountproducts', label: 'Account Products',  icon: 'pi-th-large',    resource: 'banks',        action: 'read' },
+    { id: 'transactions',    label: 'Transactions',      icon: 'pi-sync',        resource: 'accounting',   action: 'read' },
   ];
 
   public visibleTabs: any[] = [];

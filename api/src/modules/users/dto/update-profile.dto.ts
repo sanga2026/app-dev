@@ -1,54 +1,53 @@
-import { IsString, IsOptional, IsObject, ValidateNested, IsIn, IsBoolean, MaxLength, IsNotEmpty, isNotEmpty } from 'class-validator';
+import { IsString, IsOptional, IsObject, IsIn, IsBoolean, MaxLength, IsNotEmpty, IsUUID } from 'class-validator';
 import { Type } from 'class-transformer';
-import { IsBankMobile, IsBankName } from '../../../common/decorators/is-bank-validated';
-import { UserRole } from '../../access-control/enums/user-role.enum';
-import { not } from 'rxjs/internal/util/not';
+import { IsBankMobile, IsBankName, IsBankEmail } from '../../../common/decorators/is-bank-validated';
 
-// 1. Define the strictly allowed preferences
+// Allowed preferences shape
 export class UserPreferencesDto {
-  @IsOptional()
-  @IsString()
-  @IsIn(['light', 'dark', 'system'])
+  @IsOptional() @IsString() @IsIn(['light', 'dark', 'system'])
   theme?: string;
 
-  @IsOptional()
-  @IsString()
+  @IsOptional() @IsString()
   language?: string;
 
-  @IsOptional()
-  @IsString()
+  @IsOptional() @IsString()
   dashboard_layout?: string;
 
-  @IsOptional()
-  @IsBoolean()
+  @IsOptional() @IsBoolean()
   is_sidebar_collapsed?: boolean;
 }
 
-// 2. Define the main update payload
 export class UpdateProfileDto {
-
- 
+  @IsOptional()
   @IsBankName('first')
-  @IsNotEmpty({ message: 'First name cannot be empty' })
   firstName?: string;
 
   @IsOptional()
   @IsBankName('middle')
-  middleName?: string | null; // Allow null to explicitly clear the middle name
+  middleName?: string | null;
 
+  @IsOptional()
   @IsBankName('last')
-  @IsNotEmpty({ message: 'Last name cannot be empty' })
   lastName?: string;
 
+  @IsOptional()
+  @IsBankEmail()
+  @MaxLength(150)
+  email?: string | null;
+
+  @IsOptional()
   @IsBankMobile()
-  @IsNotEmpty({ message: 'Phone number cannot be empty' })
   phoneNumber?: string;
 
   @IsOptional()
-  @IsNotEmpty({ message: 'Role is mandatory' })
+  @IsString()
   roleType?: string;
 
   @IsOptional()
-  @IsObject({ message: 'Preferences must be a valid JSON object' })
+  @IsUUID('4', { message: 'roleId must be a valid UUID.' })
+  roleId?: string | null;
+
+  @IsOptional()
+  @IsObject({ message: 'Preferences must be a valid JSON object.' })
   preferences?: Record<string, any>;
 }

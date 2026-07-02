@@ -1,334 +1,248 @@
-<div
-  class="animate-in fade-in slide-in-from-bottom-4 duration-500"
-  [ngClass]="currentLayout === 'compact' ? 'space-y-6' : 'space-y-8'"
->
-  <div
-    class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 border-b border-gray-100 dark:border-gray-700 pb-4"
-  >
-    <div>
-      <h2 class="text-lg font-bold text-gray-900 dark:text-white">
-        {{ 'BANK_DETAIL.GENERAL.CORP_IDENTITY' | translate }}
-      </h2>
-      <p class="text-sm text-gray-500 dark:text-gray-400">
-        {{ 'BANK_DETAIL.GENERAL.CONTACT_INFO' | translate }}
-      </p>
-    </div>
+<div class="animate-fade-in-up space-y-6">
 
-    <div class="flex items-center gap-3">
+  <!-- Section header with actions -->
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-100 dark:border-slate-800">
+    <div>
+      <h2 class="text-base font-bold text-slate-900 dark:text-white">{{ 'BANK_DETAIL.GENERAL.CORP_IDENTITY' | translate }}</h2>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mt-0.5">{{ 'BANK_DETAIL.GENERAL.CONTACT_INFO' | translate }}</p>
+    </div>
+    <div class="flex items-center gap-2 shrink-0">
       <ng-container *appHasPermission="['banks', 'delete']">
-        <app-button
-          *ngIf="!isEditingBank"
-          variant="danger-light"
-          icon="pi-trash"
-          [label]="'COMMON.ACTIONS.DELETE' | translate"
-          (onClick)="confirmDeleteBank()"
-        >
+        <app-button *ngIf="!isEditingBank" variant="danger-light" icon="pi-trash"
+          [label]="'COMMON.ACTIONS.DELETE' | translate" (onClick)="confirmDeleteBank()">
         </app-button>
       </ng-container>
-
       <ng-container *appHasPermission="['banks', 'update']">
-        <app-button
-          *ngIf="!isEditingBank"
-          variant="primary"
-          icon="pi-pencil"
-          [label]="'COMMON.ACTIONS.EDIT' | translate"
-          (onClick)="toggleEditBankMode()"
-        >
+        <app-button *ngIf="!isEditingBank" variant="primary" icon="pi-pencil"
+          [label]="'COMMON.ACTIONS.EDIT' | translate" (onClick)="toggleEditBankMode()">
         </app-button>
-
-        <app-button
-          *ngIf="isEditingBank"
-          variant="secondary"
-          [label]="'COMMON.ACTIONS.CANCEL' | translate"
-          [disabled]="isSavingBank"
-          (onClick)="cancelEditBankMode()"
-        >
+        <app-button *ngIf="isEditingBank" variant="secondary"
+          [label]="'COMMON.ACTIONS.CANCEL' | translate" [disabled]="isSavingBank" (onClick)="cancelEditBankMode()">
         </app-button>
-
-        <app-button
-          *ngIf="isEditingBank"
-          variant="success"
-          icon="pi-check"
-          [label]="'COMMON.ACTIONS.SAVE' | translate"
-          [loading]="isSavingBank"
-          (onClick)="saveBankDetails()"
-        >
+        <app-button *ngIf="isEditingBank" variant="success" icon="pi-check"
+          [label]="'COMMON.ACTIONS.SAVE' | translate" [loading]="isSavingBank" (onClick)="saveBankDetails()">
         </app-button>
       </ng-container>
     </div>
   </div>
 
-  <form [formGroup]="editBankForm" class="space-y-8">
-    <div class="group">
-      <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-        <i class="pi pi-building text-blue-500 transition-transform group-hover:rotate-12"></i>
+  <form [formGroup]="editBankForm" class="space-y-6">
+
+    <!-- Corporate Identity -->
+    <div>
+      <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+        <i class="pi pi-building text-slate-400"></i>
         {{ 'BANK_DETAIL.GENERAL.CORP_IDENTITY' | translate }}
       </h3>
-      <div
-        class="grid grid-cols-1 md:grid-cols-4 gap-6 p-5 bg-gray-50/50 dark:bg-gray-800/30 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors"
-      >
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-4 p-5 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-100 dark:border-slate-800">
+
         <div>
-          <label
-            class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider"
-            >{{ 'BANKS.FORM.REGISTRATION_NUMBER' | translate }}</label
-          >
-          <p
-            class="text-sm font-medium text-gray-900 dark:text-white break-all font-mono uppercase bg-gray-100/50 dark:bg-gray-900/50 px-2 py-1.5 rounded border border-transparent"
-          >
-            {{ bank?.registrationNumber || 'N/A' }}
-          </p>
-        </div>
-        <div>
-          <label
-            class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider"
-            >{{ 'BANKS.FORM.TAX_ID' | translate }}</label
-          >
-          <p
-            class="text-sm font-medium text-gray-900 dark:text-white break-all font-mono uppercase bg-gray-100/50 dark:bg-gray-900/50 px-2 py-1.5 rounded border border-transparent"
-          >
-            {{ bank?.taxIdentifier || 'N/A' }}
-          </p>
-        </div>
-        <div>
-          <label
-            class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider"
-            >{{ 'BANKS.FORM.IFSC_PREFIX' | translate }}</label
-          >
-          <p
-            class="text-sm font-medium text-gray-900 dark:text-white break-all font-mono uppercase bg-gray-100/50 dark:bg-gray-900/50 px-2 py-1.5 rounded border border-transparent"
-          >
-            {{ bank?.ifscPrefix || 'N/A' }}
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{{ 'BANKS.FORM.REGISTRATION_NUMBER' | translate }}</p>
+          <p class="text-sm font-semibold text-slate-900 dark:text-white font-mono bg-white dark:bg-slate-900 px-2.5 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700">
+            {{ bank?.registrationNumber || '—' }}
           </p>
         </div>
 
         <div>
-          <label
-            class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider"
-            >{{ 'BANKS.FORM.CATEGORY' | translate }}</label
-          >
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{{ 'BANKS.FORM.TAX_ID' | translate }}</p>
+          <p class="text-sm font-semibold text-slate-900 dark:text-white font-mono bg-white dark:bg-slate-900 px-2.5 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700">
+            {{ bank?.taxIdentifier || '—' }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{{ 'BANKS.FORM.IFSC_PREFIX' | translate }}</p>
+          <p class="text-sm font-semibold text-slate-900 dark:text-white font-mono bg-white dark:bg-slate-900 px-2.5 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700">
+            {{ bank?.ifscPrefix || '—' }}
+          </p>
+        </div>
+
+        <div>
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{{ 'BANKS.FORM.CATEGORY' | translate }}</p>
           <ng-container *ngIf="!isEditingBank">
-            <p class="text-sm font-medium text-gray-900 dark:text-white break-all px-2 py-1.5">
+            <p class="text-sm font-semibold text-slate-900 dark:text-white bg-white dark:bg-slate-900 px-2.5 py-1.5 rounded-lg border border-slate-100 dark:border-slate-700">
               {{ bank?.metadata?.category || ('BANK_DETAIL.GENERAL.NOT_PROVIDED' | translate) }}
             </p>
           </ng-container>
           <ng-container *ngIf="isEditingBank">
             <div class="relative">
-              <select
-                formControlName="category"
-                class="w-full px-3 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none appearance-none cursor-pointer border-gray-300 dark:border-gray-600 focus:border-blue-500 focus:ring-1"
-              >
-                <option value="Public Sector">
-                  {{ 'DROPDOWN_VALUES.CATEGORIES.PUBLIC' | translate }}
-                </option>
-                <option value="Private Sector">
-                  {{ 'DROPDOWN_VALUES.CATEGORIES.PRIVATE' | translate }}
-                </option>
-                <option value="Cooperative">
-                  {{ 'DROPDOWN_VALUES.CATEGORIES.COOPERATIVE' | translate }}
-                </option>
-                <option value="Regional Rural">
-                  {{ 'DROPDOWN_VALUES.CATEGORIES.RRB' | translate }}
-                </option>
+              <select formControlName="category"
+                class="w-full px-3 py-2 text-sm rounded-xl border bg-white dark:bg-slate-900 text-slate-900 dark:text-white outline-none appearance-none cursor-pointer border-slate-300 dark:border-slate-600 focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 transition-colors">
+                <option value="Public Sector">{{ 'DROPDOWN_VALUES.CATEGORIES.PUBLIC' | translate }}</option>
+                <option value="Private Sector">{{ 'DROPDOWN_VALUES.CATEGORIES.PRIVATE' | translate }}</option>
+                <option value="Cooperative">{{ 'DROPDOWN_VALUES.CATEGORIES.COOPERATIVE' | translate }}</option>
+                <option value="Regional Rural">{{ 'DROPDOWN_VALUES.CATEGORIES.RRB' | translate }}</option>
+                <option value="Small Finance">Small Finance Bank</option>
+                <option value="Payment">Payment Bank</option>
               </select>
-              <i
-                class="pi pi-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-500 pointer-events-none"
-              ></i>
+              <i class="pi pi-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-slate-400 pointer-events-none"></i>
             </div>
           </ng-container>
         </div>
+
       </div>
     </div>
 
-    <div class="group">
-      <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
-        <i class="pi pi-address-book text-blue-500 transition-transform group-hover:scale-110"></i>
+    <!-- Contact Information -->
+    <div>
+      <h3 class="text-xs font-black text-slate-400 uppercase tracking-widest mb-3 flex items-center gap-2">
+        <i class="pi pi-address-book text-slate-400"></i>
         {{ 'BANK_DETAIL.GENERAL.CONTACT_INFO' | translate }}
       </h3>
 
-      <div
-        *ngIf="!isEditingBank"
-        class="grid grid-cols-1 md:grid-cols-3 gap-6 p-5 bg-gray-50/50 dark:bg-gray-800/30 rounded-xl border border-gray-100 dark:border-gray-700 transition-colors"
-      >
+      <!-- View mode -->
+      <div *ngIf="!isEditingBank"
+           class="grid grid-cols-1 md:grid-cols-3 gap-4 p-5 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-100 dark:border-slate-800">
+
         <div>
-          <label
-            class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider"
-            >{{ 'BANK_DETAIL.GENERAL.EMAIL' | translate }}</label
-          >
-          <p class="text-sm font-medium text-gray-900 dark:text-white truncate px-2 py-1.5">
-            {{ bank?.hqEmail || ('BANK_DETAIL.GENERAL.NOT_PROVIDED' | translate) }}
-          </p>
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{{ 'BANK_DETAIL.GENERAL.EMAIL' | translate }}</p>
+          <div class="flex items-center gap-2">
+            <i class="pi pi-envelope text-xs text-slate-400 shrink-0"></i>
+            <p class="text-sm font-medium text-slate-800 dark:text-slate-200 truncate">
+              {{ bank?.hqEmail || ('BANK_DETAIL.GENERAL.NOT_PROVIDED' | translate) }}
+            </p>
+          </div>
         </div>
+
         <div>
-          <label
-            class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider"
-            >{{ 'BANK_DETAIL.GENERAL.PHONE' | translate }}</label
-          >
-          <p class="text-sm font-medium text-gray-900 dark:text-white font-mono px-2 py-1.5">
-            {{ bank?.hqPhone || ('BANK_DETAIL.GENERAL.NOT_PROVIDED' | translate) }}
-          </p>
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{{ 'BANK_DETAIL.GENERAL.PHONE' | translate }}</p>
+          <div class="flex items-center gap-2">
+            <i class="pi pi-phone text-xs text-slate-400 shrink-0"></i>
+            <p class="text-sm font-medium text-slate-800 dark:text-slate-200 font-mono">
+              {{ bank?.hqPhone || ('BANK_DETAIL.GENERAL.NOT_PROVIDED' | translate) }}
+            </p>
+          </div>
         </div>
+
         <div>
-          <label
-            class="block text-xs font-medium text-gray-500 dark:text-gray-400 mb-1 uppercase tracking-wider"
-            >{{ 'BANK_DETAIL.GENERAL.HQ_LOCATION' | translate }}</label
-          >
-          <p class="text-sm font-medium text-gray-900 dark:text-white leading-relaxed px-2 py-1.5">
-            {{ bank?.addressLine1 }}<br *ngIf="bank?.addressLine2" />{{ bank?.addressLine2 }}<br />
-            {{ bank?.city }}, {{ bank?.state }} - {{ bank?.postalCode }}
-          </p>
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">{{ 'BANK_DETAIL.GENERAL.HQ_LOCATION' | translate }}</p>
+          <div class="flex items-start gap-2">
+            <i class="pi pi-map-marker text-xs text-slate-400 shrink-0 mt-0.5"></i>
+            <p class="text-sm font-medium text-slate-800 dark:text-slate-200 leading-relaxed">
+              <ng-container *ngIf="bank?.addressLine1">{{ bank.addressLine1 }}<br /></ng-container>
+              <ng-container *ngIf="bank?.addressLine2">{{ bank.addressLine2 }}<br /></ng-container>
+              <ng-container *ngIf="bank?.city || bank?.state">
+                {{ bank?.city }}<ng-container *ngIf="bank?.city && bank?.state">, </ng-container>{{ bank?.state }}
+                <ng-container *ngIf="bank?.postalCode"> — {{ bank.postalCode }}</ng-container>
+              </ng-container>
+            </p>
+          </div>
         </div>
+
+        <div *ngIf="bank?.website">
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Website</p>
+          <div class="flex items-center gap-2">
+            <i class="pi pi-globe text-xs text-slate-400 shrink-0"></i>
+            <a [href]="bank.website" target="_blank" rel="noopener"
+               class="text-sm font-medium text-primary-600 dark:text-primary-400 hover:underline truncate">
+              {{ bank.website }}
+            </a>
+          </div>
+        </div>
+
+        <div *ngIf="bank?.timezone">
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Timezone</p>
+          <div class="flex items-center gap-2">
+            <i class="pi pi-clock text-xs text-slate-400 shrink-0"></i>
+            <p class="text-sm font-medium text-slate-800 dark:text-slate-200">{{ bank.timezone }}</p>
+          </div>
+        </div>
+
+        <div *ngIf="bank?.baseCurrency">
+          <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Base Currency</p>
+          <div class="flex items-center gap-2">
+            <i class="pi pi-dollar text-xs text-slate-400 shrink-0"></i>
+            <p class="text-sm font-mono font-bold text-slate-800 dark:text-slate-200">{{ bank.baseCurrency }}</p>
+          </div>
+        </div>
+
       </div>
 
-      <div
-        *ngIf="isEditingBank"
-        class="p-5 bg-blue-50/30 dark:bg-blue-900/10 rounded-xl border border-blue-100 dark:border-blue-900/30 space-y-5 animate-in fade-in zoom-in-95 duration-200"
-      >
+      <!-- Edit mode -->
+      <div *ngIf="isEditingBank"
+           class="p-5 bg-primary-50/30 dark:bg-primary-900/10 rounded-2xl border border-primary-100 dark:border-primary-900/30 space-y-5 animate-fade-in-up">
         <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
-          <div>
-            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1"
-              >{{ 'COMMON.FORM.EMAIL' | translate }} <span class="text-red-500">*</span></label
-            >
-            <input
-              type="text"
-              formControlName="hqEmail"
-              class="w-full px-3 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
-              [ngClass]="
-                isFieldInvalid(editBankForm, 'hqEmail')
-                  ? 'border-red-500 focus:border-red-500'
-                  : 'border-gray-300 dark:border-gray-600 focus:border-blue-500'
-              "
-            />
-            <small
-              *ngIf="isFieldInvalid(editBankForm, 'hqEmail')"
-              class="block text-red-500 text-[10px] font-semibold mt-1"
-              >{{ 'BANKS.VALIDATION.EMAIL' | translate }}</small
-            >
-          </div>
-          <div>
-            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1"
-              >{{ 'COMMON.FORM.PHONE' | translate }} <span class="text-red-500">*</span></label
-            >
-            <input
-              type="text"
-              formControlName="hqPhone"
-              class="w-full px-3 py-2 text-sm font-mono rounded-lg border bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
-              [ngClass]="
-                isFieldInvalid(editBankForm, 'hqPhone')
-                  ? 'border-red-500 focus:border-red-500'
-                  : 'border-gray-300 dark:border-gray-600 focus:border-blue-500'
-              "
-            />
-            <small
-              *ngIf="isFieldInvalid(editBankForm, 'hqPhone')"
-              class="block text-red-500 text-[10px] font-semibold mt-1"
-              >{{ 'BANKS.VALIDATION.MOBILE' | translate }}</small
-            >
+
+          <div class="form-group">
+            <label>{{ 'COMMON.FORM.EMAIL' | translate }} <span class="text-red-500">*</span></label>
+            <input type="email" formControlName="hqEmail"
+              [class.border-red-500]="isFieldInvalid(editBankForm, 'hqEmail')"
+              [class.focus:border-red-500]="isFieldInvalid(editBankForm, 'hqEmail')" />
+            <small *ngIf="isFieldInvalid(editBankForm, 'hqEmail')" class="text-red-500 text-[10px]">
+              {{ 'BANKS.VALIDATION.EMAIL' | translate }}
+            </small>
           </div>
 
-          <div class="md:col-span-2 border-t border-blue-100 dark:border-blue-900/30 pt-4 mt-1">
-            <h4
-              class="text-xs font-bold text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-4"
-            >
+          <div class="form-group">
+            <label>{{ 'COMMON.FORM.PHONE' | translate }} <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="hqPhone" class="font-mono"
+              [class.border-red-500]="isFieldInvalid(editBankForm, 'hqPhone')" />
+            <small *ngIf="isFieldInvalid(editBankForm, 'hqPhone')" class="text-red-500 text-[10px]">
+              {{ 'BANKS.VALIDATION.MOBILE' | translate }}
+            </small>
+          </div>
+
+          <div class="md:col-span-2 pt-2 border-t border-primary-100 dark:border-primary-900/30">
+            <p class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4">
               {{ 'BANK_DETAIL.GENERAL.HQ_LOCATION' | translate }}
-            </h4>
+            </p>
           </div>
 
-          <div class="md:col-span-2">
-            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1"
-              >{{ 'BANKS.FORM.ADDRESS_1' | translate }} <span class="text-red-500">*</span></label
-            >
-            <input
-              type="text"
-              formControlName="addressLine1"
-              class="w-full px-3 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
-              [ngClass]="
-                isFieldInvalid(editBankForm, 'addressLine1')
-                  ? 'border-red-500 focus:border-red-500'
-                  : 'border-gray-300 dark:border-gray-600 focus:border-blue-500'
-              "
-            />
-            <small
-              *ngIf="isFieldInvalid(editBankForm, 'addressLine1')"
-              class="block text-red-500 text-[10px] font-semibold mt-1"
-              >{{ 'BANKS.VALIDATION.REQUIRED' | translate }}</small
-            >
+          <div class="form-group md:col-span-2">
+            <label>{{ 'BANKS.FORM.ADDRESS_1' | translate }} <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="addressLine1"
+              [class.border-red-500]="isFieldInvalid(editBankForm, 'addressLine1')" />
+            <small *ngIf="isFieldInvalid(editBankForm, 'addressLine1')" class="text-red-500 text-[10px]">
+              {{ 'BANKS.VALIDATION.REQUIRED' | translate }}
+            </small>
           </div>
-          <div class="md:col-span-2">
-            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1"
-              >Address Line 2
-              <span class="text-[10px] text-gray-400 font-normal">{{
-                'COMMON.FORM.OPTIONAL' | translate
-              }}</span></label
-            >
-            <input
-              type="text"
-              formControlName="addressLine2"
-              class="w-full px-3 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900 text-gray-900 dark:text-white border-gray-300 dark:border-gray-600 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-colors"
-            />
+
+          <div class="form-group md:col-span-2">
+            <label>Address Line 2 <span class="text-[10px] text-slate-400 font-normal">{{ 'COMMON.FORM.OPTIONAL' | translate }}</span></label>
+            <input type="text" formControlName="addressLine2" />
           </div>
-          <div>
-            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1"
-              >{{ 'BANKS.FORM.CITY' | translate }} <span class="text-red-500">*</span></label
-            >
-            <input
-              type="text"
-              formControlName="city"
-              class="w-full px-3 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
-              [ngClass]="
-                isFieldInvalid(editBankForm, 'city')
-                  ? 'border-red-500 focus:border-red-500'
-                  : 'border-gray-300 dark:border-gray-600 focus:border-blue-500'
-              "
-            />
-            <small
-              *ngIf="isFieldInvalid(editBankForm, 'city')"
-              class="block text-red-500 text-[10px] font-semibold mt-1"
-              >{{ 'BANKS.VALIDATION.REQUIRED' | translate }}</small
-            >
+
+          <div class="form-group">
+            <label>{{ 'BANKS.FORM.CITY' | translate }} <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="city"
+              [class.border-red-500]="isFieldInvalid(editBankForm, 'city')" />
+            <small *ngIf="isFieldInvalid(editBankForm, 'city')" class="text-red-500 text-[10px]">{{ 'BANKS.VALIDATION.REQUIRED' | translate }}</small>
           </div>
-          <div>
-            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1"
-              >{{ 'BANKS.FORM.STATE' | translate }} <span class="text-red-500">*</span></label
-            >
-            <input
-              type="text"
-              formControlName="state"
-              class="w-full px-3 py-2 text-sm rounded-lg border bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
-              [ngClass]="
-                isFieldInvalid(editBankForm, 'state')
-                  ? 'border-red-500 focus:border-red-500'
-                  : 'border-gray-300 dark:border-gray-600 focus:border-blue-500'
-              "
-            />
-            <small
-              *ngIf="isFieldInvalid(editBankForm, 'state')"
-              class="block text-red-500 text-[10px] font-semibold mt-1"
-              >{{ 'BANKS.VALIDATION.REQUIRED' | translate }}</small
-            >
+
+          <div class="form-group">
+            <label>{{ 'BANKS.FORM.STATE' | translate }} <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="state"
+              [class.border-red-500]="isFieldInvalid(editBankForm, 'state')" />
+            <small *ngIf="isFieldInvalid(editBankForm, 'state')" class="text-red-500 text-[10px]">{{ 'BANKS.VALIDATION.REQUIRED' | translate }}</small>
           </div>
-          <div>
-            <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1"
-              >{{ 'BANKS.FORM.POSTAL_CODE' | translate }} <span class="text-red-500">*</span></label
-            >
-            <input
-              type="text"
-              formControlName="postalCode"
-              class="w-full px-3 py-2 text-sm font-mono rounded-lg border bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20 transition-colors"
-              [ngClass]="
-                isFieldInvalid(editBankForm, 'postalCode')
-                  ? 'border-red-500 focus:border-red-500'
-                  : 'border-gray-300 dark:border-gray-600 focus:border-blue-500'
-              "
-            />
-            <small
-              *ngIf="isFieldInvalid(editBankForm, 'postalCode')"
-              class="block text-red-500 text-[10px] font-semibold mt-1"
-              >{{ 'BANKS.VALIDATION.POSTAL_CODE' | translate }}</small
-            >
+
+          <div class="form-group">
+            <label>{{ 'BANKS.FORM.POSTAL_CODE' | translate }} <span class="text-red-500">*</span></label>
+            <input type="text" formControlName="postalCode" class="font-mono"
+              [class.border-red-500]="isFieldInvalid(editBankForm, 'postalCode')" />
+            <small *ngIf="isFieldInvalid(editBankForm, 'postalCode')" class="text-red-500 text-[10px]">{{ 'BANKS.VALIDATION.POSTAL_CODE' | translate }}</small>
           </div>
+
         </div>
       </div>
     </div>
+
+    <!-- Metadata row: created / updated -->
+    <div *ngIf="!isEditingBank" class="grid grid-cols-2 md:grid-cols-4 gap-4 p-4 bg-slate-50 dark:bg-slate-800/40 rounded-2xl border border-slate-100 dark:border-slate-800">
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Created</p>
+        <p class="text-xs font-medium text-slate-600 dark:text-slate-400">{{ bank?.createdAt | date:'MMM dd, yyyy' }}</p>
+      </div>
+      <div>
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Last Updated</p>
+        <p class="text-xs font-medium text-slate-600 dark:text-slate-400">{{ bank?.updatedAt | date:'MMM dd, yyyy' }}</p>
+      </div>
+      <div *ngIf="bank?.slug">
+        <p class="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-1">Slug</p>
+        <p class="text-xs font-mono font-medium text-slate-600 dark:text-slate-400">{{ bank.slug }}</p>
+      </div>
+    </div>
+
   </form>
 </div>
 
@@ -338,9 +252,7 @@
   [title]="'BANKS.DELETE_MODAL.TITLE' | translate"
   [confirmText]="'BANKS.DELETE_MODAL.CONFIRM_TEXT' | translate"
   [processingText]="'BANKS.DELETE_MODAL.PROCESSING_TEXT' | translate"
-  (confirm)="executeDeleteBank()"
->
+  (confirm)="executeDeleteBank()">
   {{ 'BANKS.DELETE_MODAL.MESSAGE_P1' | translate }}
-  <span class="font-bold text-gray-900 dark:text-white">{{ bank?.name }}</span
-  >{{ 'BANKS.DELETE_MODAL.MESSAGE_P2' | translate }}
+  <span class="font-bold text-slate-900 dark:text-white">{{ bank?.name }}</span>{{ 'BANKS.DELETE_MODAL.MESSAGE_P2' | translate }}
 </app-confirm-modal>

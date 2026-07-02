@@ -28,7 +28,6 @@ import { HasPermissionDirective } from '../../../../shared/directives/has-permis
     TranslateModule,
     HasPermissionDirective
   ],
-  providers: [MessageService],
   templateUrl: './loan-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

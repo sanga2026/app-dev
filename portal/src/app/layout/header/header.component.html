@@ -1,28 +1,69 @@
-<header class="w-full h-20 bg-white dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 flex items-center justify-between px-6 lg:px-10 z-40 transition-colors duration-500">
-  
-  <div class="flex items-center gap-3">
-    <div class="w-9 h-9 bg-blue-600 rounded-xl flex items-center justify-center shadow-lg shadow-blue-200 dark:shadow-none">
-      <i class="pi pi-th-large text-white"></i>
-    </div>
-    <h2 class="text-xl font-bold text-gray-800 dark:text-white">{{ 'APP.SYSTEM_NAME' | translate }}</h2>
+<header class="w-full h-[64px] bg-white dark:bg-slate-900
+              border-b border-slate-100 dark:border-slate-800
+              flex items-center justify-between px-5 lg:px-7
+              transition-colors duration-300 z-20 gap-4">
+
+  <!-- Left: brand OR branch name for branch users -->
+  <div class="flex items-center gap-3 shrink-0">
+    <ng-container *ngIf="isBranchUser && branchName; else globalBrand">
+      <!-- Branch users: show branch name on the left -->
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-indigo-600 to-violet-600
+                  flex items-center justify-center shadow-sm shadow-indigo-300/40">
+        <i class="pi pi-sitemap text-white text-xs"></i>
+      </div>
+      <div class="hidden sm:block">
+        <p class="text-sm font-black text-slate-900 dark:text-white leading-tight">{{ branchName }}</p>
+        <p *ngIf="branchIfsc" class="text-[10px] text-slate-400 font-mono leading-tight">{{ branchIfsc }}</p>
+      </div>
+    </ng-container>
+    <ng-template #globalBrand>
+      <div class="w-8 h-8 rounded-xl bg-gradient-to-br from-blue-600 to-indigo-600
+                  flex items-center justify-center shadow-sm shadow-blue-300/40 dark:shadow-none">
+        <i class="pi pi-building-columns text-white text-xs"></i>
+      </div>
+      <span class="hidden sm:block text-sm font-bold text-slate-800 dark:text-slate-100">
+        {{ 'APP.SYSTEM_NAME' | translate }}
+      </span>
+    </ng-template>
   </div>
 
-  <button (click)="goToProfile()" 
-          [title]="'PROFILE.TITLE' | translate"
-          class="flex items-center gap-3 p-1.5 pl-4 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 border border-transparent hover:border-gray-200 dark:hover:border-gray-700 transition-all active:scale-95 group">
-    
-    <div class="text-right hidden sm:block">
-      <p class="text-sm font-bold text-gray-900 dark:text-white leading-tight group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-        {{ currentUser?.fullName }}
-      </p>
-      <p class="text-[10px] text-gray-500 uppercase tracking-widest font-bold">
-        {{ currentUser?.role }}
-      </p>
-    </div>
-    
-    <div class="w-10 h-10 rounded-full bg-gradient-to-br from-blue-600 to-indigo-700 text-white flex items-center justify-center font-bold border-2 border-white dark:border-gray-800 shadow-md group-hover:shadow-lg group-hover:scale-105 transition-all">
-      {{ userInitials }}
-    </div>
-  </button>
+  <!-- Center spacer -->
+  <div class="flex-1"></div>
 
+  <!-- Right actions -->
+  <div class="flex items-center gap-2 shrink-0">
+    <!-- Theme toggle -->
+    <button (click)="toggleTheme()"
+            class="btn-icon w-9 h-9 rounded-xl text-slate-400 hover:text-slate-700 dark:hover:text-slate-200
+                   hover:bg-slate-100 dark:hover:bg-slate-800 transition-all"
+            [title]="isDark ? 'Switch to light' : 'Switch to dark'">
+      <i class="pi text-base transition-transform duration-500"
+         [ngClass]="isDark ? 'pi-sun rotate-180' : 'pi-moon'"></i>
+    </button>
+
+    <div class="w-px h-6 bg-slate-200 dark:bg-slate-700 mx-1"></div>
+
+    <!-- Profile pill -->
+    <button (click)="goToProfile()"
+            class="flex items-center gap-2.5 pl-2.5 pr-1.5 py-1.5 rounded-2xl
+                   hover:bg-slate-100 dark:hover:bg-slate-800
+                   border border-transparent hover:border-slate-200 dark:hover:border-slate-700
+                   transition-all duration-200 active:scale-95 group">
+      <div class="text-right hidden sm:block">
+        <p class="text-sm font-bold text-slate-900 dark:text-white leading-tight
+                  group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+          {{ currentUser?.firstName }} {{ currentUser?.lastName }}
+        </p>
+        <p class="text-[10px] text-slate-400 uppercase tracking-widest font-bold leading-tight">
+          {{ currentUser?.roleType || currentUser?.role }}
+        </p>
+      </div>
+      <div class="w-9 h-9 rounded-xl bg-gradient-to-br from-blue-500 to-indigo-600
+                  text-white text-sm font-bold flex items-center justify-center
+                  shadow-md shadow-blue-400/25 dark:shadow-blue-900/40
+                  group-hover:shadow-lg group-hover:scale-105 transition-all shrink-0">
+        {{ userInitials }}
+      </div>
+    </button>
+  </div>
 </header>

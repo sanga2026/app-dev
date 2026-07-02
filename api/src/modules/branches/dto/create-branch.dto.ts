@@ -108,8 +108,14 @@ export class CreateBranchDto {
   @MaxLength(100)
   state: string;
 
+  @IsOptional()
+  @IsString()
+  @MaxLength(50)
+  country?: string;
+
   @IsNotEmpty({ message: 'Postal Code is mandatory.' })
-  @Matches(/^[1-9][0-9]{5}$/, { message: 'Standard Violation: Indian PIN Code must be exactly 6 digits.' })
+  @IsString()
+  @MaxLength(10)
   postalCode: string;
 
   @IsNotEmpty({ message: 'Phone number is mandatory.' })

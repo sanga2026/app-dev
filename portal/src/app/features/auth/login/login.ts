@@ -6,8 +6,6 @@ import { HttpClient } from '@angular/common/http';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { MessageService } from 'primeng/api';
 import { ToastModule } from 'primeng/toast';
-
-// 🚀 Core Utilities & Services
 import { AppValidators } from '../../../core/utils/validators.util';
 import { AuthService } from '../auth.service';
 
@@ -19,69 +17,59 @@ import { AuthService } from '../auth.service';
   styleUrl: './login.scss',
 })
 export class LoginComponent {
-  // --- Injections ---
-  private authService = inject(AuthService);
-  private router = inject(Router);
-  private http = inject(HttpClient);
+  private authService    = inject(AuthService);
+  private router         = inject(Router);
+  private http           = inject(HttpClient);
   private messageService = inject(MessageService);
-  private translate = inject(TranslateService);
+  private translate      = inject(TranslateService);
 
-  // --- UI State ---
-  public showPassword = false;
-  public isProcessing = false;              // Controls main login button
-  public isForgotPasswordProcessing = false; // Controls forgot password link spinner
+  public showPassword               = false;
+  public isProcessing               = false;
+  public isForgotPasswordProcessing = false;
 
-  // --- Form Model ---
-  public loginData = {
-    identifier: '', // Can be Email or Username
-    password: '',
-  };
+  public loginData = { identifier: '', password: '' };
 
-  /**
-   * 🛡️ Standard Login Logic
-   * Handles multi-format identifier validation and session storage.
-   */
+  // Who can use this portal — shown on left panel and bottom of form
+  public roles = [
+    { name: 'Super Admin',     desc: 'Platform management',    icon: 'pi-shield',          iconBg: 'bg-indigo-500/80'  },
+    { name: 'Bank Admin',      desc: 'Bank-level operations',  icon: 'pi-building-columns', iconBg: 'bg-blue-500/80'    },
+    { name: 'Branch Manager',  desc: 'Branch oversight',       icon: 'pi-sitemap',         iconBg: 'bg-sky-500/80'     },
+    { name: 'Branch Staff',    desc: 'Daily transactions',     icon: 'pi-users',           iconBg: 'bg-cyan-500/80'    },
+    { name: 'Customer',        desc: 'Account & loans',        icon: 'pi-id-card',         iconBg: 'bg-teal-500/80'    },
+    { name: 'Custom Roles',    desc: 'Bank-defined access',    icon: 'pi-lock',            iconBg: 'bg-purple-500/80'  },
+  ];
+
   public onLogin(): void {
     const rawIdentifier = this.loginData.identifier.trim();
-    const rawPassword = this.loginData.password;
+    const rawPassword   = this.loginData.password;
 
-    // 1. Basic Null Check
+    // Basic presence check — identifier can be email, username, staffId, or customer number
     if (!rawIdentifier || !rawPassword) {
-      this.showToast('warn', 'Missing Fields', 'Please enter both your identifier and password.');
+      this.showToast('warn', 'Missing Fields', 'Please enter your User ID and password.');
       return;
     }
 
-    // 2. Multi-Format Validation (Omni-Validation)
-    // We allow users to login via Email OR a strictly formatted Username
-    const isEmail = AppValidators.isValidEmail(rawIdentifier);
-    const isUsername = AppValidators.isValidUsername(rawIdentifier);
-
-    if (!isEmail && !isUsername) {
-      this.showToast('error', 'Invalid Format', 'Please enter a valid email address or username.');
+    if (rawIdentifier.length < 3) {
+      this.showToast('error', 'Invalid User ID', 'User ID must be at least 3 characters.');
       return;
     }
 
-    // 3. Security: Password Complexity (Basic frontend gatekeeper)
     if (rawPassword.length < 6) {
-      this.showToast('error', 'Weak Password', 'Passwords must be at least 6 characters.');
+      this.showToast('error', 'Invalid Password', 'Password must be at least 6 characters.');
       return;
     }
 
-    // ✅ Validation Passed - Begin Authentication
     this.isProcessing = true;
 
     this.authService.login(rawIdentifier, rawPassword).subscribe({
       next: (response) => {
-        // Store Session (Token + Stringified User Data)
-        this.authService.setSession(response.access_token, JSON.stringify(response.user));
-
-        this.showToast('success', 'Access Granted', `Welcome back, ${response.user.fullName}!`);
-        
-        // Brief delay for the toast to be seen before redirect
+        this.authService.setSession(response.access_token, JSON.stringify(response.user), response.refresh_token);
+        const name = (response.user as any).fullName ?? (response.user as any).firstName ?? 'there';
+        this.showToast('success', 'Access Granted', `Welcome back, ${name}!`);
         setTimeout(() => {
           this.isProcessing = false;
-          this.router.navigate(['/dashboard']);
-        }, 1000);
+          this.router.navigate([this.resolvePostLoginRoute(response.user)]);
+        }, 900);
       },
       error: (err) => {
         this.isProcessing = false;
@@ -121,7 +109,22 @@ export class LoginComponent {
   }
 
   /**
-   * 🛠️ Helper: Toast Centralization
+   * Determines post-login landing route based on role type.
+   */
+  private resolvePostLoginRoute(user: any): string {
+    const role = user?.roleType ?? user?.role ?? '';
+    switch (role.toUpperCase()) {
+      case 'SUPER_ADMIN':    return '/banks';
+      case 'BANK_ADMIN':     return '/dashboard';
+      case 'BRANCH_MANAGER': return '/dashboard';
+      case 'STAFF':          return '/dashboard';
+      case 'CUSTOMER':       return '/dashboard';
+      default:               return '/dashboard';
+    }
+  }
+
+  /**
+   * Helper: Toast Centralization
    */
   private showToast(severity: string, summary: string, detail: string): void {
     this.messageService.add({ severity, summary, detail });

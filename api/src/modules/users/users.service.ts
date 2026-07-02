@@ -576,8 +576,9 @@ export class UsersService {
           middleName: true,
           lastName: true,
           email: true,
-          phoneNumber: true,
+          username: true,
           staffId: true,
+          phoneNumber: true,
           isActive: true,
           roleType: true,
           createdAt: true,
@@ -717,13 +718,12 @@ export class UsersService {
     const result = await this.findOne(id, requester);
     const user = result.data;
 
-    // 2. 🛡️ SECURITY: Strip restricted system fields
-    // Added 'roleId' here so a hacker cannot bypass the lookup by passing a raw UUID
-    const restrictedFields = ['password', 'staffId', 'bankId', 'roleId'];
+    // 2. Strip fields that must never be set via this endpoint
+    const restrictedFields = ['password', 'staffId', 'bankId'];
     restrictedFields.forEach((field) => delete dto[field]);
 
-    // 3. 🛡️ IMMUTABILITY GUARD
-    const illegalChanges = ['email', 'username'].filter(
+    // 3. IMMUTABILITY GUARD — username is the permanent identifier; email IS now changeable
+    const illegalChanges = ['username'].filter(
       (field) => dto[field] && dto[field] !== (user as any)[field],
     );
 
@@ -731,8 +731,30 @@ export class UsersService {
       throw new BadRequestException(`Security Violation: Immutable fields: ${illegalChanges.join(', ')}`);
     }
 
-    // 🚀 4. DYNAMIC ROLE RESOLUTION & ESCALATION GUARD
-    if (dto.roleType && dto.roleType !== user.roleType) {
+    // 4. ROLE RESOLUTION — support both roleId (UUID for custom roles) and roleType (slug)
+    if (dto.roleId && dto.roleId !== user.roleId) {
+      // Direct UUID assignment — find by id
+      const targetRole = await this.roleRepo.findOne({
+        where: [
+          { id: dto.roleId, bankId: user.bankId === null ? IsNull() : user.bankId },
+          { id: dto.roleId, bankId: IsNull() },
+        ],
+      });
+
+      if (!targetRole) {
+        throw new BadRequestException(`The role with ID '${dto.roleId}' is invalid or not available for this institution.`);
+      }
+      if (targetRole.role === UserRole.SUPER_ADMIN && requester.roleType !== UserRole.SUPER_ADMIN) {
+        throw new ForbiddenException('Security Policy: You do not have clearance to assign Platform Owner roles.');
+      }
+
+      user.roleId   = targetRole.id;
+      user.roleType = targetRole.role;
+      user.role     = targetRole;
+      delete dto.roleId;
+      delete dto.roleType;
+
+    } else if (dto.roleType && dto.roleType !== user.roleType) {
       const sanitizedSlug = dto.roleType.toUpperCase().trim();
 
       // Look up the role (Global or Tenant-Specific)
@@ -1084,25 +1106,23 @@ export class UsersService {
     return username;
   }
 
-  // 🚀 The Omni-Login Database Query
+  // Omni-Login: matches email, username (2 letters + 8 digits), or staffId (10 digits)
   async findByIdentifier(identifier: string) {
     try {
-      // 🚀 Optimization: A single WHERE statement with an OR clause compiles
-      // slightly faster in TypeORM than chaining .where() and .orWhere()
       return await this.userRepo
         .createQueryBuilder('user')
         .addSelect('user.password')
         .leftJoinAndSelect('user.role', 'role')
-        .where('user.email = :id OR user.username = :id', { id: identifier })
+        .where(
+          'user.email = :id OR user.username = :id OR user.staffId = :id',
+          { id: identifier.trim() },
+        )
         .getOne();
     } catch (error) {
-      // 🛡️ Fail-Safe: Catch DB connection drops or query syntax errors
-      const errorMessage =
-        error instanceof Error ? error.message : 'Unknown database error';
+      const errorMessage = error instanceof Error ? error.message : 'Unknown database error';
       this.logger.error(
         `[FIND_USER_ERROR]: Failed to query user by identifier '${identifier}'. Details: ${errorMessage}`,
       );
-
       throw new InternalServerErrorException(
         'A database error occurred while verifying user credentials.',
       );

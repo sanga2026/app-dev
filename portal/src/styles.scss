@@ -1,69 +1,466 @@
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* 🎯 Base Body Styles */
-body {
-  @apply bg-gray-50 text-gray-900 transition-colors duration-300 antialiased;
+/* ═══════════════════════════════════════════
+   DESIGN TOKENS  —  single source of truth
+═══════════════════════════════════════════ */
+:root {
+  --brand-50:  #eff6ff;
+  --brand-100: #dbeafe;
+  --brand-200: #bfdbfe;
+  --brand-400: #60a5fa;
+  --brand-500: #3b82f6;
+  --brand-600: #2563eb;
+  --brand-700: #1d4ed8;
+  --brand-900: #1e3a8a;
+
+  --surface-0:   #ffffff;
+  --surface-50:  #f8fafc;
+  --surface-100: #f1f5f9;
+  --surface-200: #e2e8f0;
+  --surface-700: #334155;
+  --surface-800: #1e293b;
+  --surface-900: #0f172a;
+
+  --radius-card: 1rem;
+  --radius-btn:  0.75rem;
+  --shadow-card: 0 1px 3px 0 rgb(0 0 0 / .04), 0 1px 2px -1px rgb(0 0 0 / .04);
+  --shadow-elevated: 0 4px 20px -4px rgb(37 99 235 / .12), 0 2px 8px -2px rgb(0 0 0 / .06);
 }
 
-/* 🌙 Dark Mode Override */
-/* This ensures that when the 'dark' class is on the <html> tag, the body reacts */
-.dark body {
-  @apply bg-gray-950 text-gray-100;
+/* ═══════════════════════════════════════════
+   BASE
+═══════════════════════════════════════════ */
+@layer base {
+  html { scroll-behavior: smooth; }
+
+  body {
+    @apply font-sans text-sm antialiased
+           bg-slate-50 text-slate-900
+           dark:bg-slate-950 dark:text-slate-100
+           transition-colors duration-300;
+  }
+
+  /* Uniform label across all forms */
+  label {
+    @apply block text-xs font-semibold text-slate-600 dark:text-slate-400
+           tracking-wide mb-1 select-none;
+  }
+
+  /* Base input — every input/textarea inherits this */
+  input:not([type="checkbox"]):not([type="radio"]):not([type="range"]),
+  textarea,
+  select {
+    @apply w-full px-3 py-2.5 text-sm rounded-xl
+           border border-slate-200 dark:border-slate-700
+           bg-slate-50 dark:bg-slate-800/60
+           text-slate-900 dark:text-slate-100
+           placeholder:text-slate-400 dark:placeholder:text-slate-500
+           outline-none
+           transition-all duration-200
+           focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20
+           dark:focus:border-blue-400 dark:focus:ring-blue-400/20;
+  }
+
+  /* Form label + input group spacing */
+  .form-group {
+    @apply flex flex-col gap-1;
+  }
+
+  /* Consistent form-label shortcut */
+  .form-label {
+    @apply text-xs font-semibold text-slate-600 dark:text-slate-400 tracking-wide;
+  }
 }
 
-/* 💎 Custom Scrollbar for that "Premium OS" feel */
-::-webkit-scrollbar {
-  width: 8px;
+/* ═══════════════════════════════════════════
+   CARD  —  the primary surface
+═══════════════════════════════════════════ */
+@layer components {
+  .card {
+    @apply bg-white dark:bg-slate-900
+           border border-slate-200/80 dark:border-slate-700/80
+           rounded-2xl shadow-[var(--shadow-card)]
+           transition-all duration-300;
+  }
+
+  .card-header {
+    @apply px-5 py-4 border-b border-slate-100 dark:border-slate-800
+           flex items-center justify-between;
+  }
+
+  .card-body { @apply p-5; }
+
+  /* ── BUTTON SYSTEM ──────────────────────────── */
+
+  .btn {
+    @apply inline-flex items-center justify-center gap-2
+           px-4 py-2.5 rounded-xl text-sm font-semibold
+           transition-all duration-200 active:scale-95
+           focus:outline-none focus:ring-2 focus:ring-offset-1
+           disabled:opacity-50 disabled:cursor-not-allowed disabled:pointer-events-none
+           select-none cursor-pointer border-0;
+  }
+
+  .btn-primary {
+    @apply btn text-white
+           bg-gradient-to-r from-blue-600 to-blue-500
+           hover:from-blue-700 hover:to-blue-600
+           shadow-md shadow-blue-500/20
+           focus:ring-blue-500
+           hover:-translate-y-px;
+  }
+
+  .btn-secondary {
+    @apply btn text-slate-700 dark:text-slate-200
+           bg-white dark:bg-slate-800
+           border border-slate-200 dark:border-slate-700
+           hover:bg-slate-50 dark:hover:bg-slate-700
+           focus:ring-slate-400
+           shadow-sm;
+  }
+
+  .btn-danger {
+    @apply btn text-white
+           bg-gradient-to-r from-red-600 to-red-500
+           hover:from-red-700 hover:to-red-600
+           shadow-md shadow-red-500/20
+           focus:ring-red-500
+           hover:-translate-y-px;
+  }
+
+  .btn-ghost {
+    @apply btn text-slate-500 dark:text-slate-400
+           hover:bg-slate-100 dark:hover:bg-slate-800
+           focus:ring-slate-300;
+  }
+
+  .btn-sm  { @apply btn px-3 py-1.5 text-xs; }
+  .btn-lg  { @apply btn px-6 py-3.5 text-base; }
+  .btn-icon{ @apply btn p-2 aspect-square; }
+
+  /* ── STATUS BADGES ──────────────────────────── */
+  .badge {
+    @apply inline-flex items-center gap-1.5 px-2.5 py-0.5
+           rounded-full text-xs font-semibold select-none;
+  }
+  .badge-green  { @apply badge bg-emerald-50 text-emerald-700 dark:bg-emerald-900/30 dark:text-emerald-400; }
+  .badge-red    { @apply badge bg-red-50    text-red-700    dark:bg-red-900/30    dark:text-red-400;    }
+  .badge-amber  { @apply badge bg-amber-50  text-amber-700  dark:bg-amber-900/30  dark:text-amber-400;  }
+  .badge-blue   { @apply badge bg-blue-50   text-blue-700   dark:bg-blue-900/30   dark:text-blue-400;   }
+  .badge-purple { @apply badge bg-purple-50 text-purple-700 dark:bg-purple-900/30 dark:text-purple-400; }
+  .badge-gray   { @apply badge bg-slate-100 text-slate-600  dark:bg-slate-800     dark:text-slate-400;  }
+
+  /* ── TABLE ──────────────────────────────────── */
+  .data-table th {
+    @apply text-[10px] font-bold uppercase tracking-widest
+           text-slate-400 dark:text-slate-500
+           py-3 px-4 bg-slate-50/80 dark:bg-slate-800/60
+           border-b border-slate-100 dark:border-slate-800
+           whitespace-nowrap;
+  }
+
+  .data-table td {
+    @apply py-3 px-4 text-sm text-slate-700 dark:text-slate-300
+           border-b border-slate-100/70 dark:border-slate-800/70;
+  }
+
+  .data-table tbody tr {
+    @apply hover:bg-blue-50/40 dark:hover:bg-blue-900/10
+           transition-colors duration-150 cursor-pointer;
+  }
+
+  /* ── STAT CARD ──────────────────────────────── */
+  .stat-card {
+    @apply card p-5 flex items-center gap-4
+           hover:shadow-[var(--shadow-elevated)] hover:-translate-y-0.5
+           cursor-default;
+  }
+
+  .stat-icon {
+    @apply w-12 h-12 rounded-xl flex items-center justify-center
+           text-xl shrink-0;
+  }
+
+  /* ── PAGE HEADER ────────────────────────────── */
+  .page-header {
+    @apply flex flex-col sm:flex-row sm:items-center justify-between
+           gap-4 mb-6;
+  }
+
+  .page-title {
+    @apply text-xl font-bold text-slate-900 dark:text-white leading-tight;
+  }
+
+  .page-subtitle {
+    @apply text-sm text-slate-500 dark:text-slate-400 mt-0.5;
+  }
+
+  /* ── SIDEBAR ACTIVE LINK ─────────────────────── */
+  .active-link {
+    @apply bg-blue-50 dark:bg-blue-500/10
+           text-blue-700 dark:text-blue-400 !important;
+  }
+  .active-link .indicator {
+    @apply scale-y-100 !important;
+  }
+  .active-link i { @apply text-blue-600 dark:text-blue-400; }
+
+  /* ── SECTION DIVIDER ─────────────────────────── */
+  .section-label {
+    @apply text-[10px] font-bold uppercase tracking-widest
+           text-slate-400 dark:text-slate-600 px-3 py-2;
+  }
+
+  /* ── INPUT ICON WRAPPER ──────────────────────── */
+  .input-icon-wrap { @apply relative; }
+  .input-icon-wrap i {
+    @apply absolute left-3.5 top-1/2 -translate-y-1/2
+           text-slate-400 pointer-events-none text-sm z-10;
+  }
+  /* Use !important to override PrimeNG's pInputText padding */
+  .input-icon-wrap input,
+  .input-icon-wrap input.p-inputtext {
+    padding-left: 2.5rem !important;
+  }
 }
-::-webkit-scrollbar-track {
-  @apply bg-transparent;
-}
+
+/* ═══════════════════════════════════════════
+   SCROLLBAR
+═══════════════════════════════════════════ */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  @apply bg-gray-300 dark:bg-gray-700 rounded-full;
+  @apply bg-slate-300 dark:bg-slate-700 rounded-full;
 }
 ::-webkit-scrollbar-thumb:hover {
-  @apply bg-gray-400 dark:bg-gray-600;
+  @apply bg-slate-400 dark:bg-slate-600;
 }
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: transparent;
-  border-radius: 10px;
-}
-
-/* Show thumb on hover of the parent container */
+.custom-scrollbar::-webkit-scrollbar { width: 3px; }
+.custom-scrollbar::-webkit-scrollbar-thumb { background: transparent; border-radius: 10px; }
 aside:hover .custom-scrollbar::-webkit-scrollbar-thumb {
-  @apply bg-gray-200 dark:bg-gray-700;
+  @apply bg-slate-200 dark:bg-slate-700;
 }
 
+/* ═══════════════════════════════════════════
+   PRIMENG OVERRIDES  —  make them feel native
+═══════════════════════════════════════════ */
+
+/* Table — strip PrimeNG default chrome */
+.p-datatable .p-datatable-thead > tr > th,
+.p-datatable .p-datatable-tbody > tr > td {
+  background: transparent !important;
+  border-color: transparent !important;
+  box-shadow: none !important;
+}
+.p-datatable .p-datatable-tbody > tr:hover {
+  background: transparent !important;
+}
+.p-datatable-wrapper { overflow-x: auto; }
+
+/* Dialog */
+.p-dialog { @apply rounded-2xl shadow-2xl !important; overflow: visible !important; }
+.p-dialog .p-dialog-content { @apply p-0 !important; overflow: visible !important; }
+
+/* Full-viewport overlay — covers sidebar + content */
+.p-dialog-mask {
+  position: fixed !important;
+  top: 0 !important;
+  left: 0 !important;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 1100 !important;
+  background: rgba(15, 23, 42, 0.60) !important;
+  /* NO backdrop-filter here — it creates a new stacking context that traps the toast */
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
+/* Toast MUST be above the dialog mask — use a z-index higher than PrimeNG's dialog (1101+) */
+.p-toast {
+  position: fixed !important;
+  top: 84px !important;
+  right: 1rem !important;
+  z-index: 99999 !important;   /* well above any dialog/mask */
+  pointer-events: auto !important;
+}
+
+/* Toast — above everything including dialogs */
+.p-toast {
+  position: fixed !important;
+  top: 84px !important;
+  right: 1rem !important;
+  z-index: 99999 !important;
+  pointer-events: auto !important;
+}
+.p-toast.p-toast-top-right {
+  top: 84px !important;
+  right: 1rem !important;
+}
+.p-toast .p-toast-message {
+  @apply rounded-2xl border shadow-xl !important;
+}
+.p-toast .p-toast-message-content {
+  @apply p-4 !important;
+}
+.p-toast .p-toast-message-text {
+  @apply ml-3 !important;
+}
+.p-toast .p-toast-summary {
+  @apply text-sm font-bold text-slate-900 dark:text-white !important;
+}
+.p-toast .p-toast-detail {
+  @apply text-xs text-slate-600 dark:text-slate-300 mt-0.5 !important;
+}
+.p-toast .p-toast-message.p-toast-message-success {
+  @apply bg-white dark:bg-slate-900 border-emerald-200 dark:border-emerald-800 !important;
+}
+.p-toast .p-toast-message.p-toast-message-error {
+  @apply bg-white dark:bg-slate-900 border-red-200 dark:border-red-800 !important;
+}
+.p-toast .p-toast-message.p-toast-message-warn {
+  @apply bg-white dark:bg-slate-900 border-amber-200 dark:border-amber-800 !important;
+}
+.p-toast .p-toast-message.p-toast-message-info {
+  @apply bg-white dark:bg-slate-900 border-blue-200 dark:border-blue-800 !important;
+}
+/* Toast icon colours */
+.p-toast .p-toast-message-success .p-toast-message-icon { color: #10b981 !important; }
+.p-toast .p-toast-message-error   .p-toast-message-icon { color: #ef4444 !important; }
+.p-toast .p-toast-message-warn    .p-toast-message-icon { color: #f59e0b !important; }
+.p-toast .p-toast-message-info    .p-toast-message-icon { color: #3b82f6 !important; }
+
+/* InputSwitch */
+.p-inputswitch.p-inputswitch-checked .p-inputswitch-slider {
+  background: #2563eb !important;
+}
+
+/* Dropdown */
+.p-dropdown {
+  @apply rounded-xl border border-slate-200 dark:border-slate-700
+         bg-slate-50 dark:bg-slate-800/60
+         transition-all duration-200 !important;
+  width: 100% !important;
+}
+.p-dropdown:not(.p-disabled):hover {
+  @apply border-primary-400 dark:border-primary-500 !important;
+}
+.p-dropdown.p-focus,
+.p-dropdown:not(.p-disabled).p-focus {
+  @apply border-primary-500 ring-2 ring-primary-500/20 !important;
+  box-shadow: none !important;
+}
+.p-dropdown.ng-invalid.ng-dirty {
+  @apply border-red-400 dark:border-red-600 !important;
+}
+.p-dropdown .p-dropdown-label {
+  @apply text-sm text-slate-800 dark:text-slate-100 py-2.5 px-3 !important;
+}
+.p-dropdown .p-dropdown-label.p-placeholder {
+  @apply text-slate-400 dark:text-slate-500 !important;
+}
+.p-dropdown .p-dropdown-trigger {
+  @apply text-slate-400 w-8 !important;
+}
+.p-dropdown-panel {
+  @apply rounded-xl border border-slate-200 dark:border-slate-700
+         bg-white dark:bg-slate-900
+         shadow-xl !important;
+}
+.p-dropdown-panel .p-dropdown-header {
+  @apply px-3 py-2 border-b border-slate-100 dark:border-slate-800 bg-transparent !important;
+}
+.p-dropdown-panel .p-dropdown-filter {
+  @apply w-full text-sm rounded-lg border border-slate-200 dark:border-slate-700
+         bg-slate-50 dark:bg-slate-800 px-3 py-2 outline-none
+         focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20
+         text-slate-800 dark:text-slate-100 !important;
+}
+.p-dropdown-panel .p-dropdown-filter-icon {
+  @apply text-slate-400 !important;
+}
+.p-dropdown-panel .p-dropdown-items {
+  @apply p-1.5 !important;
+}
+.p-dropdown-panel .p-dropdown-item {
+  @apply rounded-lg px-3 py-2 text-sm text-slate-700 dark:text-slate-300
+         hover:bg-slate-50 dark:hover:bg-slate-800
+         transition-colors !important;
+}
+.p-dropdown-panel .p-dropdown-item.p-highlight {
+  @apply bg-primary-50 dark:bg-primary-900/30
+         text-primary-700 dark:text-primary-300 !important;
+}
+
+/* Stepper / Steps */
+.p-steps .p-steps-item.p-highlight .p-steps-number {
+  background: #2563eb !important;
+  border-color: #2563eb !important;
+}
+
+/* ═══════════════════════════════════════════
+   ANIMATIONS
+═══════════════════════════════════════════ */
 @keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(10px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: translateY(0);    }
+}
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(16px); }
+  to   { opacity: 1; transform: translateX(0);    }
+}
+@keyframes slideInLeft {
+  from { opacity: 0; transform: translateX(-16px); }
+  to   { opacity: 1; transform: translateX(0);     }
+}
+@keyframes scaleIn {
+  from { opacity: 0; transform: scale(.96); }
+  to   { opacity: 1; transform: scale(1);   }
+}
+@keyframes shimmer {
+  from { background-position: -400px 0; }
+  to   { background-position:  400px 0; }
+}
+@keyframes pulse-ring {
+  0%   { box-shadow: 0 0 0 0   rgb(37 99 235 / .4); }
+  70%  { box-shadow: 0 0 0 8px rgb(37 99 235 / 0);  }
+  100% { box-shadow: 0 0 0 0   rgb(37 99 235 / 0);  }
 }
 
-.animate-fade-in-up {
-  animation: fadeInUp 0.4s ease-out forwards;
+.animate-fade-in-up   { animation: fadeInUp      0.35s cubic-bezier(.16,1,.3,1) both; }
+.animate-fade-in      { animation: fadeIn        0.25s ease both; }
+.animate-slide-right  { animation: slideInRight  0.3s  cubic-bezier(.16,1,.3,1) both; }
+.animate-slide-left   { animation: slideInLeft   0.3s  cubic-bezier(.16,1,.3,1) both; }
+.animate-scale-in     { animation: scaleIn       0.25s cubic-bezier(.16,1,.3,1) both; }
+
+/* Staggered children */
+.stagger > *:nth-child(1) { animation-delay: 0ms;  }
+.stagger > *:nth-child(2) { animation-delay: 60ms; }
+.stagger > *:nth-child(3) { animation-delay:120ms; }
+.stagger > *:nth-child(4) { animation-delay:180ms; }
+.stagger > *:nth-child(5) { animation-delay:240ms; }
+.stagger > *:nth-child(6) { animation-delay:300ms; }
+
+/* Skeleton shimmer */
+.skeleton {
+  background: linear-gradient(90deg, #f1f5f9 25%, #e2e8f0 50%, #f1f5f9 75%);
+  background-size: 800px 100%;
+  animation: shimmer 1.4s infinite linear;
+  @apply rounded-xl;
+}
+.dark .skeleton {
+  background: linear-gradient(90deg, #1e293b 25%, #334155 50%, #1e293b 75%);
+  background-size: 800px 100%;
 }
 
-@layer base {
-  body {
-    /* This forces the exact same base size, color, and smooth rendering app-wide */
-    @apply font-sans text-sm text-gray-900 bg-gray-50 antialiased dark:bg-gray-900 dark:text-gray-100;
-  }
+/* Pulse ring on active indicators */
+.pulse-ring { animation: pulse-ring 2s cubic-bezier(.455,.03,.515,.955) infinite; }
 
-  /* Standardize all labels app-wide */
-  label {
-    @apply text-xs font-semibold text-gray-700 dark:text-gray-300 tracking-wide;
-  }
-}
+/* ── Smooth page transition ────────────────── */
+router-outlet + * { animation: fadeInUp 0.3s cubic-bezier(.16,1,.3,1) both; }

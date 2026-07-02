@@ -96,7 +96,7 @@ export class BankGeneralComponent implements OnInit {
           this.refreshData.emit(); // Tell parent to fetch fresh data
           this.isEditingBank = false;
         },
-        error: (err) => this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error?.message })
+        error: (err) => this.messageService.add({ severity: 'error', summary: 'Error', detail: err?.error?.message || 'Operation failed. Please try again.' })
       });
   }
 
@@ -112,7 +112,7 @@ export class BankGeneralComponent implements OnInit {
           this.showDeleteBankModal = false;
           setTimeout(() => this.router.navigate(['/banks']), 1000);
         },
-        error: (err) => this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error?.message })
+        error: (err) => this.messageService.add({ severity: 'error', summary: 'Error', detail: err?.error?.message || 'Operation failed. Please try again.' })
       });
   }
 

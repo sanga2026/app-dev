@@ -9,7 +9,7 @@ import { DataSource, EntityManager } from 'typeorm';
 import { CustomerEntity } from '../customers/entities/customer.entity';
 import { LoanApplicationEntity } from '../loans/entities/application.entity';
 import { LoanAuditLogEntity } from '../loans/entities/loan-audit-log.entity';
-import { AccountEntity } from '../accounting/entities/account.entity';
+import { AccountEntity, AccountType, AccountStatus } from '../accounting/entities/account.entity';
 import { SearchLoanDto } from '../loans/dto/search-loan.dto';
 import { getErrorMessage } from '../../common/utils/error-handler.util';
 
@@ -61,9 +61,11 @@ export class MakerCheckerService {
               bankId: dto.bankId,
               branchId: dto.branchId,
               accountNumber: `SA-${Date.now()}-${Math.floor(1000 + Math.random() * 9000)}`,
-              accountType: 'SAVINGS',
-              balance: 0.0,
-              status: 'ACTIVE',
+              accountType: AccountType.SAVINGS,
+              currentBalance: 0.0,
+              availableBalance: 0.0,
+              lienAmount: 0.0,
+              status: AccountStatus.ACTIVE,
             }),
           );
         }
@@ -177,7 +179,7 @@ export class MakerCheckerService {
         const wallet = await manager.findOne(AccountEntity, {
           where: {
             customerId: loan.customerId,
-            accountType: 'SAVINGS',
+            accountType: AccountType.SAVINGS,
             bankId: loan.bankId,
           },
         });
@@ -195,9 +197,11 @@ export class MakerCheckerService {
             bankId: loan.bankId,
             branchId: loan.branchId,
             accountNumber: `LN-${Date.now()}`,
-            accountType: 'LOAN',
-            balance: loan.loanAmount,
-            status: 'ACTIVE',
+            accountType: AccountType.PERSONAL_LOAN,
+            currentBalance: loan.loanAmount,
+            availableBalance: loan.loanAmount,
+            lienAmount: 0,
+            status: AccountStatus.ACTIVE,
           }),
         );
 

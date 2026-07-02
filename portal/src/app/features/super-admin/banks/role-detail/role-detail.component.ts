@@ -26,7 +26,6 @@ import { ToastModule } from 'primeng/toast';
     HasPermissionDirective,
     RoleGeneralComponent
   ],
-  providers: [MessageService],
   templateUrl: './role-detail.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -73,7 +72,12 @@ export class RoleDetailComponent implements OnInit, OnDestroy {
     if (this.roleId) {
       this.fetchRoleDetails();
     } else {
-      this.router.navigate(['/banks', this.bankId]);
+      // Navigate back appropriately
+      if (this.bankId) {
+        this.router.navigate(['/banks', this.bankId], { queryParams: { tab: 'roles' } });
+      } else {
+        this.router.navigate(['/roles']);
+      }
     }
   }
 
@@ -82,15 +86,20 @@ export class RoleDetailComponent implements OnInit, OnDestroy {
     this.destroy$.complete();
   }
 
-  private fetchRoleDetails() {
+  public fetchRoleDetails() {
     this.isLoading = true;
     this.http.get<any>(`/roles/${this.roleId}`)
       .pipe(takeUntil(this.destroy$), finalize(() => { this.isLoading = false; this.cdr.detectChanges(); }))
       .subscribe({
-        next: (res) => this.role = res.data || res,
+        next: (res) => {
+          this.role = res.data || res;
+          // Fill bankId from the role itself if not in the URL
+          if (!this.bankId && this.role?.bankId) this.bankId = this.role.bankId;
+          this.cdr.detectChanges();
+        },
         error: () => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: 'Role not found.' });
-          this.router.navigate(['/banks', this.bankId]);
+          this.bankId ? this.router.navigate(['/banks', this.bankId]) : this.router.navigate(['/roles']);
         }
       });
   }
@@ -110,7 +119,7 @@ export class RoleDetailComponent implements OnInit, OnDestroy {
           this.router.navigate(['/banks', this.bankId], { queryParams: { tab: 'roles' } });
         },
         error: (err) => {
-          this.messageService.add({ severity: 'error', summary: 'Delete Failed', detail: err.error?.message });
+          this.messageService.add({ severity: 'error', summary: 'Delete Failed', detail: err?.error?.message || 'Operation failed. Please try again.' });
           this.showDeleteModal = false;
         }
       });

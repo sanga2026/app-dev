@@ -28,7 +28,7 @@ export class RoleGeneralComponent implements OnInit, OnChanges {
   private fb = inject(FormBuilder);
   private messageService = inject(MessageService);
   private router = inject(Router);
-  private authService = inject(AuthService); // 🚀 INJECT AUTH SERVICE
+  readonly authService = inject(AuthService); // public so template can call isSuperAdmin()
   private destroy$ = new Subject<void>();
 
   public isEditing = false;
@@ -38,23 +38,36 @@ export class RoleGeneralComponent implements OnInit, OnChanges {
   public roleForm!: FormGroup;
 
   public systemResources = [
-    { key: 'banks', label: 'Bank Management' },
-    { key: 'branches', label: 'Branch Management' },
-    { key: 'users', label: 'Staff & Users' },
-    { key: 'customers', label: 'Customer Directory' },
-    { key: 'products', label: 'Loan Products' },
-    { key: 'transactions', label: 'Financial Transactions' },
-    { key: 'roles', label: 'Role Management' },
-    { key: 'master-data', label: 'Master Data' }
+    { key: 'banks',          label: 'Bank Management'         },
+    { key: 'branches',       label: 'Branch Management'       },
+    { key: 'users',          label: 'Staff & Users'           },
+    { key: 'customers',      label: 'Customer Directory'      },
+    { key: 'loans',          label: 'Loans'                   },
+    { key: 'loan-products',  label: 'Loan Products'           },
+    { key: 'accounting',     label: 'Accounting / Accounts'   },
+    { key: 'account-products', label: 'Account Products'      },
+    { key: 'roles',          label: 'Role Management'         },
+    { key: 'master-data',    label: 'Master Data'             },
+    { key: 'geography',      label: 'Geography'               },
+    { key: 'currencies',     label: 'Currencies'              },
+    { key: 'audit',          label: 'Audit Logs'              },
+    { key: 'reports',        label: 'Reports'                 },
+    { key: 'global-settings',label: 'Global Settings'        },
+    { key: 'dashboard',      label: 'Dashboard'               },
   ];
 
   public navigationResources = [
-    { key: 'banks', label: 'Tenant Banks' },
-    { key: 'customers', label: 'Customers' },
-    { key: 'loans', label: 'Loans' },
-    { key: 'branches', label: 'Branches' },
-    { key: 'accounting', label: 'Accounting' },
-    { key: 'master-data', label: 'Master Data' }
+    { key: 'banks',       label: 'Tenant Banks' },
+    { key: 'branches',    label: 'Branches'     },
+    { key: 'customers',   label: 'Customers'    },
+    { key: 'loans',       label: 'Loans'        },
+    { key: 'accounting',  label: 'Accounting'   },
+    { key: 'roles',       label: 'Roles'        },
+    { key: 'geography',   label: 'Geography'    },
+    { key: 'currencies',  label: 'Currencies'   },
+    { key: 'master-data', label: 'Master Data'  },
+    { key: 'audit',       label: 'Audit Logs'   },
+    { key: 'reports',     label: 'Reports'      },
   ];
 
   ngOnInit() { this.initForm(); }
@@ -66,46 +79,39 @@ export class RoleGeneralComponent implements OnInit, OnChanges {
   }
 
 private initForm() {
-  // 1. Navigation Group: Force false if they lack permission
-  const canNavBanks = this.authService.hasPermission('navigation', 'banks');
-  const canNavCust = this.authService.hasPermission('navigation', 'customers');
-  const canNavLoans = this.authService.hasPermission('navigation', 'loans');
-  const canNavBranches = this.authService.hasPermission('navigation', 'branches');
-  const canNavAcc = this.authService.hasPermission('navigation', 'accounting');
-  const canNavMD = this.authService.hasPermission('navigation', 'master-data');
+  // SUPER_ADMIN can always edit everything in the role matrix.
+  // Other users can only edit permissions they themselves hold.
+  const superAdmin = this.authService.isSuperAdmin();
 
-  const navigationGroup = this.fb.group({
-    banks: [{ value: canNavBanks ? (this.role?.permissions?.navigation?.banks || false) : false, disabled: !canNavBanks }],
-    customers: [{ value: canNavCust ? (this.role?.permissions?.navigation?.customers || false) : false, disabled: !canNavCust }],
-    loans: [{ value: canNavLoans ? (this.role?.permissions?.navigation?.loans || false) : false, disabled: !canNavLoans }],
-    branches: [{ value: canNavBranches ? (this.role?.permissions?.navigation?.branches || false) : false, disabled: !canNavBranches }],
-    accounting: [{ value: canNavAcc ? (this.role?.permissions?.navigation?.accounting || false) : false, disabled: !canNavAcc }],
-    'master-data': [{ value: canNavMD ? (this.role?.permissions?.navigation?.['master-data'] || false) : false, disabled: !canNavMD }]
+  // ── Navigation group ─────────────────────────────────────────────────────
+  const navControls: Record<string, any> = {};
+  this.navigationResources.forEach(nav => {
+    // Can this editor change this nav item?
+    const canEdit = superAdmin || this.authService.hasPermission('navigation', nav.key);
+    // Current value: explicit true/false from role, or false if null/absent
+    const currentVal = this.role?.permissions?.navigation?.[nav.key] ?? false;
+    navControls[nav.key] = [{ value: currentVal, disabled: !canEdit }];
   });
+  const navigationGroup = this.fb.group(navControls);
 
-  const permissionsConfig: Record<string, any> = {
-    navigation: navigationGroup
-  };
+  const permissionsConfig: Record<string, any> = { navigation: navigationGroup };
 
-  // 2. Data Matrix: Force false if they lack permission
+  // ── Data access groups ───────────────────────────────────────────────────
   this.systemResources.forEach(res => {
-    const canRead = this.authService.hasPermission(res.key, 'read');
-    const canCreate = this.authService.hasPermission(res.key, 'create');
-    const canUpdate = this.authService.hasPermission(res.key, 'update');
-    const canDelete = this.authService.hasPermission(res.key, 'delete');
-
-    permissionsConfig[res.key] = this.fb.group({
-      read: [{ value: canRead ? (this.role?.permissions?.[res.key]?.read || false) : false, disabled: !canRead }],
-      create: [{ value: canCreate ? (this.role?.permissions?.[res.key]?.create || false) : false, disabled: !canCreate }],
-      update: [{ value: canUpdate ? (this.role?.permissions?.[res.key]?.update || false) : false, disabled: !canUpdate }],
-      delete: [{ value: canDelete ? (this.role?.permissions?.[res.key]?.delete || false) : false, disabled: !canDelete }],
+    const actions = ['read', 'create', 'update', 'delete'];
+    const group: Record<string, any> = {};
+    actions.forEach(action => {
+      const canEdit = superAdmin || this.authService.hasPermission(res.key, action);
+      const currentVal = this.role?.permissions?.[res.key]?.[action] ?? false;
+      group[action] = [{ value: currentVal, disabled: !canEdit }];
     });
+    permissionsConfig[res.key] = this.fb.group(group);
   });
 
   this.roleForm = this.fb.group({
-    name: [this.role?.name || ''],
+    name:        [this.role?.name        || ''],
     description: [this.role?.description || ''],
-    permissions: this.fb.group(permissionsConfig) 
+    permissions: this.fb.group(permissionsConfig),
   });
 }
 
@@ -116,16 +122,19 @@ private initForm() {
 
   public saveChanges() {
     this.isSaving = true;
-    // 🚀 CRITICAL FIX: Use getRawValue() so disabled checkboxes are included in the payload
     const payload = this.roleForm.getRawValue();
 
     this.http.patch(`/roles/${this.role.id}`, payload)
       .pipe(takeUntil(this.destroy$), finalize(() => this.isSaving = false))
       .subscribe({
         next: () => {
-          this.messageService.add({ severity: 'success', summary: 'Success', detail: 'Role updated successfully.' });
+          this.messageService.add({ severity: 'success', summary: 'Role Saved',
+            detail: 'Role permissions updated. Refreshing your access...' });
           this.isEditing = false;
           this.refreshData.emit();
+          // Refresh the current user's permissions in localStorage so sidebar/guards
+          // reflect the new matrix immediately without requiring a re-login
+          this.authService.refreshPermissions().subscribe();
         },
         error: (err) => {
           this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error?.message || 'Failed to update.' });
@@ -143,7 +152,7 @@ private initForm() {
           this.router.navigate(['/banks', this.bankId], { queryParams: { tab: 'roles' } });
         },
         error: (err) => {
-          this.messageService.add({ severity: 'error', summary: 'Delete Failed', detail: err.error?.message });
+          this.messageService.add({ severity: 'error', summary: 'Delete Failed', detail: err?.error?.message || 'Operation failed. Please try again.' });
           this.showDeleteModal = false;
         }
       });

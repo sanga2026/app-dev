@@ -1,126 +1,394 @@
-<p-dialog [(visible)]="visible" (onHide)="closeModal()" appendTo="body" [modal]="true" [style]="{ width: '600px' }" [showHeader]="false" contentStyleClass="p-0 bg-transparent" transitionOptions="150ms cubic-bezier(0.4, 0, 0.2, 1)">
-  <div class="bg-white dark:bg-gray-800 rounded-2xl overflow-hidden shadow-2xl border border-gray-200 dark:border-gray-700">
-    
-    <div class="px-6 py-4 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center bg-gray-50/50 dark:bg-gray-900/30">
-      <h3 class="font-bold text-gray-900 dark:text-white text-base flex items-center gap-2">
-        <i class="pi pi-user-plus text-blue-600"></i>
-        <ng-container *ngIf="modalContext === 'ADMIN'; else staffHeader">
-          {{ 'USER_ONBOARD_MODAL.HEADER_ADMIN' | translate }}
-        </ng-container>
-        <ng-template #staffHeader>
-          {{ 'USER_ONBOARD_MODAL.HEADER_STAFF' | translate }}
-        </ng-template>
-      </h3>
-      <button (click)="closeModal()" class="text-gray-400 hover:text-red-500 hover:rotate-90 transition-all duration-300 focus:outline-none">
-        <i class="pi pi-times"></i>
+<p-dialog
+  [(visible)]="visible"
+  (onHide)="closeModal()"
+  appendTo="body"
+  [modal]="true"
+  position="center"
+  [style]="{ width: '600px', maxWidth: '95vw' }"
+  [showHeader]="false"
+  [closable]="false"
+  contentStyleClass="p-0 bg-transparent">
+
+  <div class="bg-white dark:bg-slate-900 rounded-2xl shadow-2xl
+              border border-slate-200 dark:border-slate-700
+              overflow-hidden animate-scale-in">
+
+    <!-- Header -->
+    <div class="px-6 py-4 border-b border-slate-100 dark:border-slate-800
+                flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/30 shrink-0">
+      <div class="flex items-center gap-3">
+        <div class="w-9 h-9 rounded-xl bg-primary-50 dark:bg-primary-900/30
+                    flex items-center justify-center border border-primary-100 dark:border-primary-800/50">
+          <i class="pi pi-user-plus text-primary-600 dark:text-primary-400 text-base"></i>
+        </div>
+        <div>
+          <h3 class="text-base font-bold text-slate-900 dark:text-white leading-none">
+            {{ (modalContext === 'ADMIN' ? 'USER_ONBOARD_MODAL.HEADER_ADMIN' : 'USER_ONBOARD_MODAL.HEADER_STAFF') | translate }}
+          </h3>
+          <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-0.5">
+            Fill in details and set the user's bank/branch scope.
+          </p>
+        </div>
+      </div>
+      <button (click)="closeModal()"
+              class="btn-icon w-8 h-8 rounded-xl text-slate-400 hover:text-slate-700
+                     dark:hover:text-slate-200 hover:bg-slate-100 dark:hover:bg-slate-700">
+        <i class="pi pi-times text-sm"></i>
       </button>
     </div>
 
-    <form [formGroup]="userForm" class="p-6 space-y-5">
-      
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-5">
-        <div class="group">
-          <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
-            {{ 'COMMON.FORM.FIRST_NAME' | translate }} <span class="text-red-500">*</span>
-          </label>
-          <input pInputText formControlName="firstName" class="w-full px-3 py-2.5 text-sm rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none transition-all" [ngClass]="isFieldInvalid(userForm, 'firstName') ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500/20'" />
-          <small *ngIf="isFieldInvalid(userForm, 'firstName')" class="block text-red-500 text-[10px] font-semibold mt-1">
-            {{ 'COMMON.FORM.REQUIRED' | translate }}
-          </small>
+    <!-- Body -->
+    <form [formGroup]="userForm" (ngSubmit)="submitUser()"
+          class="p-6 space-y-4 overflow-y-auto custom-scrollbar"
+          style="max-height: calc(100vh - 200px)">
+
+      <!-- ── SCOPE SECTION (Bank + Branch) ─────────────────────────── -->
+      <div class="rounded-2xl border border-slate-200 dark:border-slate-700
+                  bg-slate-50 dark:bg-slate-800/40 p-4 space-y-3">
+        <p class="text-[10px] font-bold text-slate-400 dark:text-slate-500 uppercase tracking-widest flex items-center gap-1.5">
+          <i class="pi pi-sitemap text-[10px]"></i> User Scope (Bank & Branch)
+        </p>
+
+        <div class="grid grid-cols-2 gap-3">
+
+          <!-- Bank field -->
+          <div class="form-group bank-autocomplete">
+            <label>
+              Bank
+              <span *ngIf="!isBankLocked" class="text-slate-400 font-normal text-[10px] ml-1">
+                (Optional — leave empty for platform-level)
+              </span>
+              <span *ngIf="isBankLocked" class="text-[10px] font-bold text-primary-600 ml-1">
+                <i class="pi pi-lock text-[9px]"></i> Auto-filled
+              </span>
+            </label>
+
+            <div class="relative">
+              <div class="input-icon-wrap">
+                <i class="pi"
+                   [class.pi-building-columns]="!resolvedBank"
+                   [class.pi-check-circle]="!!resolvedBank"
+                   [class.text-emerald-500]="!!resolvedBank"></i>
+                <input type="text"
+                       [(ngModel)]="bankQuery"
+                       [ngModelOptions]="{ standalone: true }"
+                       (ngModelChange)="!isBankLocked && onBankQueryChange($event)"
+                       [readonly]="isBankLocked"
+                       placeholder="Search bank..."
+                       autocomplete="off"
+                       [class.border-emerald-400]="!!resolvedBank"
+                       [class.bg-emerald-50]="!!resolvedBank"
+                       [class.dark:bg-emerald-900\/20]="!!resolvedBank"
+                       [class.cursor-not-allowed]="isBankLocked"
+                       [class.opacity-80]="isBankLocked" />
+                <i *ngIf="isSearchingBank"
+                   class="pi pi-spinner pi-spin text-xs text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+              </div>
+
+              <!-- Clear button (only when not locked and a bank is selected) -->
+              <button *ngIf="!isBankLocked && resolvedBank"
+                      type="button" (click)="clearBank()"
+                      class="absolute -right-8 top-1/2 -translate-y-1/2
+                             text-red-400 hover:text-red-600 focus:outline-none">
+                <i class="pi pi-times-circle text-sm"></i>
+              </button>
+
+              <!-- Bank suggestions dropdown -->
+              <div *ngIf="!isBankLocked && showBankDropdown && (bankSuggestions.length > 0 || isSearchingBank)"
+                   class="absolute top-full left-0 right-0 mt-1 z-50
+                          bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700
+                          shadow-xl overflow-hidden">
+                <div *ngIf="isSearchingBank && bankSuggestions.length === 0"
+                     class="flex items-center gap-2 px-4 py-3 text-sm text-slate-400">
+                  <i class="pi pi-spinner pi-spin text-xs"></i> Searching...
+                </div>
+                <button *ngFor="let b of bankSuggestions" type="button"
+                        (click)="selectBank(b)"
+                        class="w-full flex items-center gap-3 px-4 py-2.5 text-left
+                               hover:bg-primary-50 dark:hover:bg-primary-900/20
+                               border-b border-slate-100 dark:border-slate-800 last:border-0 transition-colors">
+                  <div class="w-7 h-7 rounded-lg bg-gradient-to-br from-primary-500 to-indigo-600
+                              text-white text-[10px] font-bold flex items-center justify-center shrink-0">
+                    {{ b.name?.slice(0,2)?.toUpperCase() }}
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">{{ b.name }}</p>
+                    <p class="text-[10px] text-slate-400 font-mono">{{ b.ifscPrefix }}</p>
+                  </div>
+                  <span *ngIf="b.isActive"   class="badge badge-green text-[9px]">Active</span>
+                  <span *ngIf="!b.isActive"  class="badge badge-gray text-[9px]">Inactive</span>
+                </button>
+                <div *ngIf="!isSearchingBank && bankSuggestions.length === 0"
+                     class="px-4 py-3 text-sm text-slate-400 text-center">No banks found.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Branch field -->
+          <div class="form-group branch-autocomplete">
+            <label>
+              Branch
+              <span *ngIf="!isBranchLocked" class="text-slate-400 font-normal text-[10px] ml-1">
+                (Optional — leave empty for bank-level)
+              </span>
+              <span *ngIf="isBranchLocked" class="text-[10px] font-bold text-primary-600 ml-1">
+                <i class="pi pi-lock text-[9px]"></i> Auto-filled
+              </span>
+            </label>
+
+            <div class="relative">
+              <div class="input-icon-wrap">
+                <i class="pi"
+                   [class.pi-sitemap]="!resolvedBranch"
+                   [class.pi-check-circle]="!!resolvedBranch"
+                   [class.text-emerald-500]="!!resolvedBranch"></i>
+                <input type="text"
+                       [(ngModel)]="branchQuery"
+                       [ngModelOptions]="{ standalone: true }"
+                       (ngModelChange)="!isBranchLocked && onBranchQueryChange($event)"
+                       [readonly]="isBranchLocked || !resolvedBank"
+                       placeholder="{{ resolvedBank ? 'Search branch...' : 'Select bank first' }}"
+                       autocomplete="off"
+                       [class.border-emerald-400]="!!resolvedBranch"
+                       [class.bg-emerald-50]="!!resolvedBranch"
+                       [class.dark:bg-emerald-900\/20]="!!resolvedBranch"
+                       [class.cursor-not-allowed]="isBranchLocked || !resolvedBank"
+                       [class.opacity-60]="!resolvedBank && !isBranchLocked" />
+                <i *ngIf="isSearchingBranch"
+                   class="pi pi-spinner pi-spin text-xs text-slate-400 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none"></i>
+              </div>
+
+              <button *ngIf="!isBranchLocked && resolvedBranch"
+                      type="button" (click)="clearBranch()"
+                      class="absolute -right-8 top-1/2 -translate-y-1/2 text-red-400 hover:text-red-600 focus:outline-none">
+                <i class="pi pi-times-circle text-sm"></i>
+              </button>
+
+              <!-- Branch suggestions dropdown -->
+              <div *ngIf="!isBranchLocked && showBranchDropdown && (branchSuggestions.length > 0 || isSearchingBranch)"
+                   class="absolute top-full left-0 right-0 mt-1 z-50
+                          bg-white dark:bg-slate-900 rounded-xl border border-slate-200 dark:border-slate-700
+                          shadow-xl overflow-hidden">
+                <div *ngIf="isSearchingBranch && branchSuggestions.length === 0"
+                     class="flex items-center gap-2 px-4 py-3 text-sm text-slate-400">
+                  <i class="pi pi-spinner pi-spin text-xs"></i> Searching...
+                </div>
+                <button *ngFor="let br of branchSuggestions" type="button"
+                        (click)="selectBranch(br)"
+                        class="w-full flex items-center gap-3 px-4 py-2.5 text-left
+                               hover:bg-primary-50 dark:hover:bg-primary-900/20
+                               border-b border-slate-100 dark:border-slate-800 last:border-0 transition-colors">
+                  <div class="w-7 h-7 rounded-lg bg-indigo-50 dark:bg-indigo-900/30
+                              text-indigo-600 text-xs flex items-center justify-center shrink-0">
+                    <i class="pi pi-sitemap text-[10px]"></i>
+                  </div>
+                  <div class="flex-1 min-w-0">
+                    <p class="text-sm font-semibold text-slate-900 dark:text-slate-100 truncate">{{ br.name }}</p>
+                    <p class="text-[10px] text-slate-400 font-mono">{{ br.ifsc }}</p>
+                  </div>
+                </button>
+                <div *ngIf="!isSearchingBranch && branchSuggestions.length === 0"
+                     class="px-4 py-3 text-sm text-slate-400 text-center">No branches found.</div>
+              </div>
+            </div>
+          </div>
+
         </div>
 
-        <div class="group">
-          <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
-            {{ 'COMMON.FORM.MIDDLE_NAME' | translate }} <span class="text-gray-400 font-normal italic text-[10px]">{{ 'COMMON.FORM.OPTIONAL' | translate }}</span>
-          </label>
-          <input pInputText formControlName="middleName" class="w-full px-3 py-2.5 text-sm rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none transition-all border-gray-300 dark:border-gray-600 focus:ring-blue-500/20" />
-        </div>
-
-        <div class="group">
-          <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
-            {{ 'COMMON.FORM.LAST_NAME' | translate }} <span class="text-red-500">*</span>
-          </label>
-          <input pInputText formControlName="lastName" class="w-full px-3 py-2.5 text-sm rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none transition-all" [ngClass]="isFieldInvalid(userForm, 'lastName') ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500/20'" />
-          <small *ngIf="isFieldInvalid(userForm, 'lastName')" class="block text-red-500 text-[10px] font-semibold mt-1">
-            {{ 'COMMON.FORM.REQUIRED' | translate }}
-          </small>
+        <!-- Scope summary badge -->
+        <div class="flex items-center gap-2 flex-wrap">
+          <span class="text-[11px] text-slate-500 dark:text-slate-400 font-medium">Scope:</span>
+          <span *ngIf="!resolvedBank && !isBankLocked"   class="badge badge-gray text-[10px]"><i class="pi pi-globe text-[9px] mr-1"></i>Platform-level (no bank/branch)</span>
+          <span *ngIf="resolvedBank && !resolvedBranch"   class="badge badge-blue text-[10px]"><i class="pi pi-building-columns text-[9px] mr-1"></i>{{ resolvedBank.name }} (bank-level)</span>
+          <span *ngIf="resolvedBank && resolvedBranch"    class="badge badge-purple text-[10px]"><i class="pi pi-sitemap text-[9px] mr-1"></i>{{ resolvedBranch.name }}, {{ resolvedBank.name }}</span>
         </div>
       </div>
 
-      <div class="group">
-        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
-          {{ 'COMMON.FORM.EMAIL' | translate }} <span class="text-gray-400 font-normal text-[10px]">{{ 'COMMON.FORM.OPTIONAL' | translate }}</span>
-        </label>
-        <div class="relative">
-          <i class="pi pi-envelope absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i>
-          <input pInputText formControlName="email" [placeholder]="'AUTH.LOGIN.IDENTIFIER_PLACEHOLDER' | translate" class="w-full pl-9 pr-3 py-2.5 text-sm rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none transition-all" [ngClass]="isFieldInvalid(userForm, 'email') ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500/20'" />
+      <!-- ── PERSONAL DETAILS ────────────────────────────────────────── -->
+      <div class="grid grid-cols-3 gap-3">
+        <div class="form-group">
+          <label>{{ 'COMMON.FORM.FIRST_NAME' | translate }} <span class="text-red-500">*</span></label>
+          <input type="text" formControlName="firstName" placeholder="Rajesh"
+                 [class.border-red-400]="isInvalid('firstName')" />
+          <p *ngIf="isInvalid('firstName')" class="text-xs text-red-500 mt-1 flex items-center gap-1">
+            <i class="pi pi-exclamation-circle text-[10px]"></i>{{ errorMsg('firstName') }}
+          </p>
         </div>
-        <small *ngIf="isFieldInvalid(userForm, 'email')" class="block text-red-500 text-[10px] font-semibold mt-1">
-          {{ 'USER_ONBOARD_MODAL.VALIDATION.EMAIL' | translate }}
-        </small>
+        <div class="form-group">
+          <label>{{ 'COMMON.FORM.MIDDLE_NAME' | translate }} <span class="text-slate-400 font-normal text-[10px] ml-1">(Opt)</span></label>
+          <input type="text" formControlName="middleName" placeholder="Kumar" />
+        </div>
+        <div class="form-group">
+          <label>{{ 'COMMON.FORM.LAST_NAME' | translate }} <span class="text-red-500">*</span></label>
+          <input type="text" formControlName="lastName" placeholder="Sharma"
+                 [class.border-red-400]="isInvalid('lastName')" />
+          <p *ngIf="isInvalid('lastName')" class="text-xs text-red-500 mt-1 flex items-center gap-1">
+            <i class="pi pi-exclamation-circle text-[10px]"></i>{{ errorMsg('lastName') }}
+          </p>
+        </div>
       </div>
 
-      <div class="group">
-        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">
-          {{ 'COMMON.FORM.PHONE' | translate }} <span class="text-red-500">*</span>
-        </label>
-        <div class="flex gap-2 relative">
-          <select formControlName="phoneCode" class="w-28 pl-2 pr-6 py-2.5 text-sm rounded-xl border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white outline-none appearance-none cursor-pointer">
-            <option *ngFor="let code of countryCodes" [value]="code.value">
-              {{ code.label }}
-            </option>
+      <!-- Email -->
+      <div class="form-group">
+        <label>{{ 'COMMON.FORM.EMAIL' | translate }} <span class="text-slate-400 font-normal text-[10px] ml-1">(Optional)</span></label>
+        <div class="input-icon-wrap">
+          <i class="pi pi-envelope"></i>
+          <input type="email" formControlName="email" placeholder="rajesh.sharma@bank.com"
+                 [class.border-red-400]="isInvalid('email')" />
+        </div>
+        <p *ngIf="isInvalid('email')" class="text-xs text-red-500 mt-1 flex items-center gap-1">
+          <i class="pi pi-exclamation-circle text-[10px]"></i>{{ errorMsg('email') }}
+        </p>
+      </div>
+
+      <!-- Phone -->
+      <div class="form-group">
+        <label>{{ 'COMMON.FORM.PHONE' | translate }} <span class="text-red-500">*</span></label>
+        <div class="flex gap-2">
+          <select formControlName="phoneCode"
+                  class="w-32 flex-shrink-0 rounded-xl border border-slate-200 dark:border-slate-700
+                         bg-slate-50 dark:bg-slate-800/60 text-sm px-2 py-2.5 outline-none
+                         focus:border-primary-500 focus:ring-2 focus:ring-primary-500/20 text-slate-800 dark:text-slate-100">
+            <option *ngFor="let c of countryCodes" [value]="c.value">{{ c.label }}</option>
           </select>
-          <input pInputText formControlName="phone" placeholder="9876543210" class="flex-1 px-3 py-2.5 text-sm font-mono rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid(userForm, 'phone') ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 dark:border-gray-600'" />
+          <input type="tel" formControlName="phone" placeholder="9876543210" maxlength="10"
+                 [class.border-red-400]="isInvalid('phone')" />
         </div>
-        <small *ngIf="isFieldInvalid(userForm, 'phone')" class="block text-red-500 text-[10px] font-semibold mt-1">
-          {{ 'USER_ONBOARD_MODAL.VALIDATION.PHONE' | translate }}
-        </small>
+        <p *ngIf="isInvalid('phone')" class="text-xs text-red-500 mt-1 flex items-center gap-1">
+          <i class="pi pi-exclamation-circle text-[10px]"></i>{{ errorMsg('phone') }}
+        </p>
       </div>
 
-      <div class="group">
-        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1 flex justify-between">
+      <!-- Security Role — searchable PrimeNG dropdown -->
+      <div class="form-group">
+        <label class="flex items-center justify-between">
           <span>{{ 'USER_ONBOARD_MODAL.ROLE_SELECT_LABEL' | translate }} <span class="text-red-500">*</span></span>
-          <i *ngIf="isLoadingRoles" class="pi pi-spinner pi-spin text-blue-500"></i>
+          <span *ngIf="isLoadingRoles" class="flex items-center gap-1 text-[11px] text-slate-400">
+            <i class="pi pi-spinner pi-spin text-[10px]"></i> Loading roles...
+          </span>
+          <span *ngIf="!resolvedBank && !isBankLocked && availableRoles.length === 0 && !isLoadingRoles"
+                class="text-[11px] text-amber-500">Select a bank first to see its roles</span>
         </label>
-        <div class="relative">
-          <select formControlName="role" class="w-full pl-3 pr-8 py-2.5 text-sm rounded-xl border bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white outline-none appearance-none cursor-pointer" [ngClass]="isFieldInvalid(userForm, 'role') ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 dark:border-gray-600 focus:ring-blue-500/20'">
-            <option value="" disabled selected>{{ 'USER_ONBOARD_MODAL.ROLE_SELECT_PLACEHOLDER' | translate }}</option>
-            <option *ngFor="let role of availableRoles" [value]="role.role">
-              {{ role.name }}
-            </option>
-          </select>
-          <i class="pi pi-chevron-down absolute right-3 top-1/2 -translate-y-1/2 text-[10px] text-gray-500 pointer-events-none"></i>
-        </div>
-        <small *ngIf="isFieldInvalid(userForm, 'role')" class="block text-red-500 text-[10px] font-semibold mt-1">
-          {{ 'COMMON.FORM.REQUIRED' | translate }}
-        </small>
+
+        <p-dropdown
+          formControlName="roleId"
+          [options]="availableRoles"
+          optionLabel="name"
+          optionValue="id"
+          [filter]="true"
+          filterBy="name,role"
+          filterPlaceholder="Search roles..."
+          placeholder="Select a role..."
+          [disabled]="isLoadingRoles"
+          appendTo="body"
+          styleClass="w-full"
+          [class.ng-invalid]="isInvalid('roleId')"
+          [class.ng-dirty]="isInvalid('roleId')">
+
+          <ng-template pTemplate="selectedItem" let-role>
+            <div *ngIf="role" class="flex items-center gap-2">
+              <span class="text-[10px] font-bold px-1.5 py-0.5 rounded"
+                    [class.bg-blue-100]="role.isSystemRole" [class.text-blue-700]="role.isSystemRole"
+                    [class.bg-purple-100]="!role.isSystemRole" [class.text-purple-700]="!role.isSystemRole">
+                {{ role.isSystemRole ? 'System' : 'Custom' }}
+              </span>
+              <span class="text-sm font-semibold text-slate-900 dark:text-slate-100">{{ role.name }}</span>
+              <span class="text-[11px] text-slate-400 font-mono ml-auto">{{ role.role }}</span>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="item" let-role>
+            <div class="flex items-center gap-3 py-1">
+              <div class="w-8 h-8 rounded-lg flex items-center justify-center shrink-0"
+                   [class.bg-blue-50]="role.isSystemRole" [class.bg-purple-50]="!role.isSystemRole">
+                <i class="pi text-sm"
+                   [class.pi-shield]="role.isSystemRole"    [class.text-blue-600]="role.isSystemRole"
+                   [class.pi-lock-open]="!role.isSystemRole" [class.text-purple-600]="!role.isSystemRole"></i>
+              </div>
+              <div class="flex-1 min-w-0">
+                <p class="text-sm font-semibold text-slate-800 dark:text-slate-200 truncate">{{ role.name }}</p>
+                <p class="text-[10px] text-slate-400 font-mono">{{ role.role }}</p>
+              </div>
+              <span class="text-[10px] font-bold px-2 py-0.5 rounded-full"
+                    [class.bg-blue-100]="role.isSystemRole" [class.text-blue-600]="role.isSystemRole"
+                    [class.bg-purple-100]="!role.isSystemRole" [class.text-purple-600]="!role.isSystemRole">
+                {{ role.isSystemRole ? 'System' : 'Custom' }}
+              </span>
+            </div>
+          </ng-template>
+
+          <ng-template pTemplate="empty">
+            <div class="flex flex-col items-center py-5 text-slate-400">
+              <i class="pi pi-shield text-2xl mb-1"></i>
+              <span class="text-xs">{{ resolvedBank ? 'No roles found' : 'Select a bank first' }}</span>
+            </div>
+          </ng-template>
+
+        </p-dropdown>
+
+        <p *ngIf="isInvalid('roleId')" class="text-xs text-red-500 mt-1 flex items-center gap-1">
+          <i class="pi pi-exclamation-circle text-[10px]"></i>Please select a security role.
+        </p>
       </div>
 
-      <div class="group bg-blue-50/50 dark:bg-blue-900/10 p-4 rounded-xl border border-blue-100 dark:border-blue-900/30">
-        <div class="flex justify-between items-center mb-2">
-          <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300">
+      <!-- Temporary Password -->
+      <div class="bg-slate-50 dark:bg-slate-800/40 p-4 rounded-2xl border border-slate-200 dark:border-slate-700">
+        <div class="flex items-center justify-between mb-3">
+          <label class="text-xs font-semibold text-slate-700 dark:text-slate-300 mb-0">
             {{ 'USER_ONBOARD_MODAL.PASSWORD_LABEL' | translate }} <span class="text-red-500">*</span>
           </label>
-          <button type="button" (click)="generatePassword()" class="text-[10px] font-bold text-blue-600 flex items-center gap-1 hover:underline focus:outline-none">
-            <i class="pi pi-bolt text-yellow-500"></i> {{ 'USER_ONBOARD_MODAL.PASSWORD_GENERATE' | translate }}
+          <button type="button" (click)="generatePassword()"
+                  class="flex items-center gap-1.5 text-[11px] font-bold text-amber-600
+                         dark:text-amber-400 hover:text-amber-700 dark:hover:text-amber-300
+                         transition-colors bg-transparent border-none cursor-pointer focus:outline-none">
+            <i class="pi pi-bolt text-xs"></i>
+            {{ 'USER_ONBOARD_MODAL.PASSWORD_GENERATE' | translate }}
           </button>
         </div>
         <div class="relative">
-          <input type="text" pInputText formControlName="password" class="w-full pl-3 pr-10 py-2.5 text-sm font-mono rounded-xl border bg-white dark:bg-gray-900 text-gray-900 dark:text-white outline-none transition-all focus:ring-2 focus:ring-blue-500/20" [ngClass]="isFieldInvalid(userForm, 'password') ? 'border-red-500 focus:ring-red-500' : 'border-gray-300 dark:border-gray-600'" />
-          <button type="button" (click)="copyPassword()" class="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 transition-colors focus:outline-none">
-            <i class="pi pi-copy"></i>
-          </button>
+          <input [type]="showPassword ? 'text' : 'password'"
+                 formControlName="password"
+                 placeholder="Min 8 chars · Aa1@..."
+                 class="w-full pr-20 font-mono"
+                 [class.border-red-400]="isInvalid('password')" />
+          <div class="absolute right-2 top-1/2 -translate-y-1/2 flex items-center gap-1">
+            <button type="button" (click)="showPassword = !showPassword"
+                    class="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200
+                           rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-all focus:outline-none">
+              <i class="pi text-sm" [class.pi-eye]="!showPassword" [class.pi-eye-slash]="showPassword"></i>
+            </button>
+            <button type="button" (click)="copyPassword()"
+                    class="p-1.5 text-slate-400 hover:text-slate-700 dark:hover:text-slate-200
+                           rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700 transition-all focus:outline-none">
+              <i class="pi pi-copy text-sm"></i>
+            </button>
+          </div>
         </div>
-        <small *ngIf="isFieldInvalid(userForm, 'password')" class="block text-red-500 text-[10px] font-semibold mt-1.5">
-          {{ 'USER_ONBOARD_MODAL.VALIDATION.PASSWORD_COMPLEXITY' | translate }}
-        </small>
+        <p *ngIf="isInvalid('password')" class="text-xs text-red-500 mt-1.5 flex items-center gap-1">
+          <i class="pi pi-exclamation-circle text-[10px]"></i>{{ errorMsg('password') }}
+        </p>
+        <p class="text-[11px] text-slate-400 dark:text-slate-500 mt-2">
+          <i class="pi pi-info-circle text-[10px] mr-1"></i>
+          Share this securely. The user should change it on first login.
+        </p>
       </div>
 
-      <div class="pt-3 border-t border-gray-100 dark:border-gray-700 mt-4 flex justify-end gap-3">
-        <app-button variant="secondary" [label]="'COMMON.ACTIONS.CANCEL' | translate" (onClick)="closeModal()"></app-button>
-        <app-button type="button" variant="primary" [label]="'USER_ONBOARD_MODAL.BUTTON_SUBMIT' | translate" icon="pi-check" [loading]="isSubmitting" (onClick)="submitUser()"></app-button>
-      </div>
     </form>
-    
+
+    <!-- Footer -->
+    <div class="px-6 py-4 border-t border-slate-100 dark:border-slate-800
+                bg-slate-50/50 dark:bg-slate-800/30 flex justify-end gap-3">
+      <button type="button" (click)="closeModal()" class="btn-secondary px-4 py-2 text-sm">
+        {{ 'COMMON.ACTIONS.CANCEL' | translate }}
+      </button>
+      <button type="button" (click)="submitUser()"
+              [disabled]="isSubmitting"
+              class="btn-primary px-5 py-2 text-sm gap-2">
+        <i *ngIf="isSubmitting" class="pi pi-spin pi-spinner text-xs"></i>
+        <i *ngIf="!isSubmitting" class="pi pi-check text-xs"></i>
+        {{ 'USER_ONBOARD_MODAL.BUTTON_SUBMIT' | translate }}
+      </button>
+    </div>
+
   </div>
 </p-dialog>

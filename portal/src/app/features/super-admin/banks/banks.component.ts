@@ -2,16 +2,17 @@
 
 import { Component, OnInit, OnDestroy, inject, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms'; // 🚀 Added FormsModule
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
-import { Router } from '@angular/router'; 
+import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { Subject, EMPTY } from 'rxjs';
 import { takeUntil, finalize, catchError } from 'rxjs/operators';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-// 🚀 Core Validators
 import { AppValidators } from '../../../core/utils/validators.util';
+import { GeographyService } from '../../../shared/services/geography.service';
+import { State, Town, Village } from '../../../shared/models/geography.model';
 
 // PrimeNG Modules
 import { TableModule } from 'primeng/table';
@@ -36,7 +37,6 @@ import { HasPermissionDirective } from '../../../shared/directives/has-permissio
     TranslateModule,
     HasPermissionDirective // 🚀 Added to imports array
   ],
-  providers: [MessageService],
   templateUrl: './banks.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
@@ -46,10 +46,11 @@ export class BanksComponent implements OnInit, OnDestroy {
    * ========================================================================= */
   private fb = inject(FormBuilder);
   private http = inject(HttpClient);
-  private router = inject(Router); 
+  private router = inject(Router);
   private messageService = inject(MessageService);
   private cdr = inject(ChangeDetectorRef);
   private translate = inject(TranslateService);
+  private geoService = inject(GeographyService);
   private destroy$ = new Subject<void>();
 
   /* =========================================================================
@@ -69,6 +70,27 @@ export class BanksComponent implements OnInit, OnDestroy {
   public onboardForm!: FormGroup;
   private stepGroups = ['identity', 'contact', 'plan'];
 
+  public readonly steps = [
+    'BANKS.STEPS.IDENTITY',
+    'BANKS.STEPS.CONTACT',
+    'BANKS.STEPS.PLAN',
+    'BANKS.STEPS.REVIEW',
+  ];
+
+  public get reviewRows(): { label: string; value: string }[] {
+    const v = this.onboardForm.getRawValue();
+    const selectedCountry = this.countries.find(c => c.code === v.contact.countryCode);
+    const selectedState   = this.states.find(s => s.id === v.contact.stateId);
+    const selectedCity    = this.filteredCities.find(t => t.id === v.contact.city);
+    return [
+      { label: 'BANKS.REVIEW.BANK',     value: v.identity.name },
+      { label: 'BANKS.REVIEW.IFSC',     value: v.identity.ifscPrefix?.toUpperCase() },
+      { label: 'BANKS.REVIEW.TAX_ID',   value: v.identity.taxIdentifier?.toUpperCase() },
+      { label: 'BANKS.REVIEW.EMAIL',    value: v.contact.hqEmail },
+      { label: 'BANKS.REVIEW.LOCATION', value: [selectedCity?.name, selectedState?.name, selectedCountry?.name].filter(Boolean).join(', ') },
+    ];
+  }
+
   public countryCodes = [
     { label: 'IN (+91)', value: '+91' },
     { label: 'US (+1)', value: '+1' },
@@ -76,15 +98,15 @@ export class BanksComponent implements OnInit, OnDestroy {
     { label: 'UAE (+971)', value: '+971' }
   ];
 
-  public states = [
-    { code: 'KA', name: 'BANKS.STATES.KA' },
-    { code: 'MH', name: 'BANKS.STATES.MH' },
-    { code: 'DL', name: 'BANKS.STATES.DL' },
-    { code: 'TN', name: 'BANKS.STATES.TN' },
-    { code: 'TS', name: 'BANKS.STATES.TS' }
-  ];
-
-  public filteredCities: string[] = [];
+  // Geography dropdowns — all loaded from API, full cascade
+  public countries: any[] = [];
+  public states: State[] = [];
+  public filteredCities: Town[] = [];
+  public filteredVillages: Village[] = [];
+  public isLoadingCountries = false;
+  public isLoadingStates = false;
+  public isLoadingCities = false;
+  public isLoadingVillages = false;
 
   public availablePlans = [
     { code: 'SILVER', name: 'Silver', branches: 5, users: 50, sessions: 1 },
@@ -97,7 +119,8 @@ export class BanksComponent implements OnInit, OnDestroy {
    * ========================================================================= */
   ngOnInit() {
     this.initForm();
-    this.fetchBanks(); 
+    this.fetchBanks();
+    this.loadCountries();
   }
 
   ngOnDestroy() {
@@ -119,14 +142,16 @@ export class BanksComponent implements OnInit, OnDestroy {
         website: ['', [Validators.pattern(AppValidators.URL_REGEX)]]
       }),
       contact: this.fb.group({
-        hqEmail: ['', [Validators.required, Validators.pattern(AppValidators.EMAIL_REGEX)]],
-        phoneCode: ['+91', Validators.required], 
-        hqPhone: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]], 
+        hqEmail:      ['', [Validators.required, Validators.pattern(AppValidators.EMAIL_REGEX)]],
+        phoneCode:    ['+91', Validators.required],
+        hqPhone:      ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
         addressLine1: ['', [Validators.required, Validators.maxLength(150)]],
-        state: ['', Validators.required], 
-        city: [{ value: '', disabled: true }, Validators.required], 
-        postalCode: ['', [Validators.required, Validators.pattern(AppValidators.POSTAL_CODE_REGEX)]],
-        country: [{ value: 'India', disabled: true }, Validators.required] 
+        addressLine2: ['', Validators.maxLength(150)],
+        countryCode:  ['', Validators.required],             // 2-char ISO code e.g. IN
+        stateId:      [{ value: '', disabled: true }, Validators.required],
+        city:         [{ value: '', disabled: true }, Validators.required],
+        village:      [{ value: '', disabled: true }],
+        postalCode:   ['', [Validators.required, Validators.pattern(AppValidators.POSTAL_CODE_REGEX)]],
       }),
       plan: this.fb.group({
         planCode: ['SILVER', Validators.required]
@@ -135,19 +160,58 @@ export class BanksComponent implements OnInit, OnDestroy {
   }
 
   /* =========================================================================
-   * 5. LOGIC FOR DROPDOWNS & NAVIGATION
+   * 5. GEOGRAPHY CASCADE  (Country → State → City → Village)
    * ========================================================================= */
-  public onStateChange(stateCode: string) {
-    const cityControl = this.onboardForm.get('contact.city');
-    if (stateCode) {
-      const allCities: any = this.translate.instant('BANKS.CITIES');
-      this.filteredCities = allCities[stateCode] || [];
-      cityControl?.enable();
-    } else {
-      this.filteredCities = [];
-      cityControl?.disable();
-    }
-    cityControl?.setValue('');
+  private loadCountries() {
+    this.isLoadingCountries = true;
+    this.geoService.getCountries(true)
+      .pipe(takeUntil(this.destroy$), finalize(() => { this.isLoadingCountries = false; this.cdr.markForCheck(); }))
+      .subscribe({ next: (c) => { this.countries = c; this.cdr.markForCheck(); } });
+  }
+
+  public onCountryChange(countryCode: string) {
+    const stateCtrl   = this.onboardForm.get('contact.stateId');
+    const cityCtrl    = this.onboardForm.get('contact.city');
+    const villageCtrl = this.onboardForm.get('contact.village');
+
+    this.states = []; this.filteredCities = []; this.filteredVillages = [];
+    stateCtrl?.setValue('');   stateCtrl?.disable();
+    cityCtrl?.setValue('');    cityCtrl?.disable();
+    villageCtrl?.setValue(''); villageCtrl?.disable();
+
+    if (!countryCode) return;
+    this.isLoadingStates = true;
+    this.geoService.getStates(countryCode, true)
+      .pipe(takeUntil(this.destroy$), finalize(() => { this.isLoadingStates = false; this.cdr.markForCheck(); }))
+      .subscribe({ next: (s) => { this.states = s; if (s.length) stateCtrl?.enable(); this.cdr.markForCheck(); } });
+  }
+
+  public onStateChange(stateId: string) {
+    const cityCtrl    = this.onboardForm.get('contact.city');
+    const villageCtrl = this.onboardForm.get('contact.village');
+
+    this.filteredCities = []; this.filteredVillages = [];
+    cityCtrl?.setValue('');    cityCtrl?.disable();
+    villageCtrl?.setValue(''); villageCtrl?.disable();
+
+    if (!stateId) return;
+    this.isLoadingCities = true;
+    this.geoService.getTowns(stateId, true)
+      .pipe(takeUntil(this.destroy$), finalize(() => { this.isLoadingCities = false; this.cdr.markForCheck(); }))
+      .subscribe({ next: (t) => { this.filteredCities = t; if (t.length) cityCtrl?.enable(); this.cdr.markForCheck(); } });
+  }
+
+  public onCityChange(townId: string) {
+    const villageCtrl = this.onboardForm.get('contact.village');
+
+    this.filteredVillages = [];
+    villageCtrl?.setValue(''); villageCtrl?.disable();
+
+    if (!townId) return;
+    this.isLoadingVillages = true;
+    this.geoService.getVillages(townId, true)
+      .pipe(takeUntil(this.destroy$), finalize(() => { this.isLoadingVillages = false; this.cdr.markForCheck(); }))
+      .subscribe({ next: (v) => { this.filteredVillages = v; if (v.length) villageCtrl?.enable(); this.cdr.markForCheck(); } });
   }
 
   public navigateToBank(bankId: string) {
@@ -232,24 +296,29 @@ export class BanksComponent implements OnInit, OnDestroy {
     this.isSubmitting = true;
     const formVals = this.onboardForm.getRawValue();
 
+    // Resolve human-readable names from UUID/code references
+    const selectedCountry = this.countries.find(c => c.code === formVals.contact.countryCode);
+    const selectedState   = this.states.find(s => s.id === formVals.contact.stateId);
+    const selectedCity    = this.filteredCities.find(t => t.id === formVals.contact.city);
+
     const payload = {
-      name: formVals.identity.name.trim(),
-      ifscPrefix: formVals.identity.ifscPrefix.toUpperCase(),
-      taxIdentifier: formVals.identity.taxIdentifier.toUpperCase(),
+      name:               formVals.identity.name.trim(),
+      ifscPrefix:         formVals.identity.ifscPrefix.toUpperCase(),
+      taxIdentifier:      formVals.identity.taxIdentifier.toUpperCase(),
       registrationNumber: formVals.identity.registrationNumber.toUpperCase(),
-      logoUrl: null, 
-      addressLine1: formVals.contact.addressLine1.trim(),
-      city: formVals.contact.city,
-      state: this.translate.instant(this.states.find(s => s.code === formVals.contact.state)?.name || ''),
-      postalCode: formVals.contact.postalCode.trim(),
-      country: formVals.contact.country,
-      hqEmail: formVals.contact.hqEmail.trim(),
-      hqPhone: `${formVals.contact.phoneCode}${formVals.contact.hqPhone.trim()}`, 
-      metadata: {
-        category: formVals.identity.category,
-        website: formVals.identity.website?.trim() || null
-      },
-      subscriptionPlan: formVals.plan.planCode
+      website:            formVals.identity.website?.trim() || null,
+      logoUrl:            null,
+      addressLine1:       formVals.contact.addressLine1.trim(),
+      addressLine2:       formVals.contact.addressLine2?.trim() || null,
+      country:            selectedCountry?.name ?? formVals.contact.countryCode,
+      state:              selectedState?.name   ?? '',
+      city:               selectedCity?.name    ?? formVals.contact.city,
+      village:            this.filteredVillages.find(v => v.id === formVals.contact.village)?.name ?? null,
+      postalCode:         formVals.contact.postalCode.trim(),
+      hqEmail:            formVals.contact.hqEmail.trim(),
+      hqPhone:            `${formVals.contact.phoneCode}${formVals.contact.hqPhone.trim()}`,
+      metadata:           { category: formVals.identity.category },
+      subscriptionPlan:   formVals.plan.planCode
     };
 
     this.http.post('/banks/onboard', payload)
@@ -275,14 +344,15 @@ export class BanksComponent implements OnInit, OnDestroy {
           this.currentStepIndex = 0;
           this.filteredCities = []; // Prevent state leak!
           
-          this.onboardForm.reset({ 
-            plan: { planCode: 'SILVER' }, 
-            identity: { category: 'Private Sector' }, 
-            contact: { country: 'India', phoneCode: '+91' } 
+          this.onboardForm.reset({
+            plan:     { planCode: 'SILVER' },
+            identity: { category: 'Private Sector' },
+            contact:  { phoneCode: '+91' }
           });
-          
-          // Force city back to disabled state
-          this.onboardForm.get('contact.city')?.disable(); 
+          this.states = []; this.filteredCities = []; this.filteredVillages = [];
+          this.onboardForm.get('contact.stateId')?.disable();
+          this.onboardForm.get('contact.city')?.disable();
+          this.onboardForm.get('contact.village')?.disable(); 
           
           this.fetchBanks(false); 
         }

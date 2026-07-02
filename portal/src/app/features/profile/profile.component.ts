@@ -39,7 +39,6 @@ type ProfileTab = 'profile' | 'security' | 'logs' | 'sessions' | 'about' | 'help
   selector: 'app-profile', 
   standalone: true,
   imports: [CommonModule, FormsModule, TranslateModule, ToastModule],
-  providers: [MessageService],
   templateUrl: './profile.component.html',
   // 🚀 PERFORMANCE: OnPush prevents UI lag when scrolling through hundreds of access logs
   changeDetection: ChangeDetectionStrategy.OnPush 

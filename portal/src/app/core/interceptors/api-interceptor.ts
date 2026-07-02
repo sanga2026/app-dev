@@ -1,71 +1,75 @@
-import { HttpInterceptorFn, HttpErrorResponse } from '@angular/common/http';
+import { HttpInterceptorFn, HttpErrorResponse, HttpRequest, HttpHandlerFn } from '@angular/common/http';
 import { inject } from '@angular/core';
-import { catchError, throwError } from 'rxjs';
-import { Router } from '@angular/router'; 
+import { catchError, switchMap, throwError } from 'rxjs';
+import { Router } from '@angular/router';
 import { environment } from '../../../environments/environment';
 import { AuthService } from '../../features/auth/auth.service';
-import { NetworkService } from '../services/network.service'; 
+import { NetworkService } from '../services/network.service';
 
 export const apiInterceptor: HttpInterceptorFn = (req, next) => {
   const authService = inject(AuthService);
-  const router = inject(Router); 
+  const router = inject(Router);
   const networkService = inject(NetworkService);
 
-  // 🚀 1. ALLOW LOCAL ASSETS FIRST (Translations, Images, Fonts)
-  // This MUST be at the very top so cached assets can load even when offline!
+  // Allow local assets through without modification
   if (req.url.includes('/i18n/') || req.url.includes('/assets/')) {
     return next(req);
   }
 
-  // 🚀 2. THE OFFLINE GATEKEEPER
-  // If the user has no internet, block outgoing external API calls immediately
+  // Block outgoing calls when offline
   if (!networkService.isOnline) {
-    console.warn('API Interceptor: Request blocked due to offline status.');
-    // Throwing an empty error prevents the browser from hanging and timing out
-    return throwError(() => new Error('Offline')); 
+    return throwError(() => new Error('Offline'));
   }
 
+  // Prepend base API URL for relative paths
   let modifiedReq = req;
-
-  // 🚀 3. Prepend Base API URL
   if (!req.url.startsWith('http://') && !req.url.startsWith('https://')) {
-    modifiedReq = req.clone({
-      url: `${environment.apiUrl}${req.url}`
-    });
+    modifiedReq = req.clone({ url: `${environment.apiUrl}${req.url}` });
   }
 
-  // 🚀 4. Attach Security Headers
+  // Attach Bearer token
   const token = authService.getToken();
-  
   if (token) {
-    modifiedReq = modifiedReq.clone({
-      setHeaders: {
-        Authorization: `Bearer ${token}`
-      }
-    });
+    modifiedReq = modifiedReq.clone({ setHeaders: { Authorization: `Bearer ${token}` } });
   }
 
-  // 🚀 5. Global Error Handling
   return next(modifiedReq).pipe(
     catchError((error: HttpErrorResponse) => {
-      
-      // 🛑 401 UNAUTHORIZED: Token is dead or invalid. Kick them out.
       if (error.status === 401) {
-        const isAuthRequest = req.url.includes('/login') || req.url.includes('/users/super-admin');
-        
-        if (!isAuthRequest) {
-          authService.logout(); 
+        const isAuthEndpoint = req.url.includes('/auth/login')
+          || req.url.includes('/auth/refresh')
+          || req.url.includes('/users/super-admin');
+
+        if (!isAuthEndpoint) {
+          // Attempt silent token refresh
+          const refreshToken = authService.getRefreshToken();
+          if (refreshToken && !authService.isRefreshing()) {
+            return authService.refreshToken().pipe(
+              switchMap(() => {
+                // Retry original request with new token
+                const newToken = authService.getToken();
+                const retried = modifiedReq.clone({
+                  setHeaders: { Authorization: `Bearer ${newToken}` },
+                });
+                return next(retried);
+              }),
+              catchError(() => {
+                // Refresh failed — session is truly expired
+                authService.logout();
+                return throwError(() => error);
+              }),
+            );
+          } else {
+            authService.logout();
+          }
         }
-      } 
-      // 🛑 403 FORBIDDEN: User is logged in, but tried to do something they aren't allowed to.
-      else if (error.status === 403) {
-        // Do NOT log the user out. 
-        // Just log it for debugging and let the error pass down to the component!
-        console.warn('403 Forbidden: Blocked by backend security guard.');
+      } else if (error.status === 403) {
+        console.warn('403 Forbidden: insufficient permissions.');
+      } else if (error.status === 429) {
+        console.warn('429 Too Many Requests: rate limit hit.');
       }
-      
-      // Pass the error down to the component so PrimeNG can show the Toast message
+
       return throwError(() => error);
-    })
+    }),
   );
 };

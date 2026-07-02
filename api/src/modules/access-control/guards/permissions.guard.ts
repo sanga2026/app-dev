@@ -1,5 +1,3 @@
-// src/modules/access-control/guards/permissions.guard.ts
-
 import {
   CanActivate,
   ExecutionContext,
@@ -9,7 +7,9 @@ import {
   UnauthorizedException,
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { UserRole } from '../enums/user-role.enum'; // 🛡️ Source of truth
+import { REQUIRE_PERMISSIONS_KEY } from '../../../common/decorators/require-permissions.decorator';
+import { UserRole } from '../enums/user-role.enum';
+import { PermissionAction } from '../entities/role.entity';
 
 @Injectable()
 export class PermissionsGuard implements CanActivate {
@@ -21,84 +21,92 @@ export class PermissionsGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const user = request.user;
 
-    // 1. 🛑 IDENTITY CHECK: Ensure the JwtAuthGuard has attached a user
     if (!user) {
-      this.logger.error(`Security Alert: Attempted access to ${request.url} without authentication.`);
       throw new UnauthorizedException('Authentication required to verify permissions.');
     }
 
-    // 2. 🛡️ JWT & NESTED ROLE EXTRACTION
-    const roleSlug = user.roleType || user.role?.slug;
+    const roleSlug = user.roleType || user.role?.role;
 
-    // 3. 🛡️ THE SUPER_ADMIN BYPASS
-    // Platform Owners ignore granular checks to prevent accidental system lockout.
-    // if (roleSlug === UserRole.SUPER_ADMIN) {
-    //   return true;
-    // }
-
-    // 🛑 PERMISSIONS CHECK: Ensure the user actually has a hydrated permissions object
     if (!user.role || !user.role.permissions) {
       this.logger.warn(`Permission Denied: User ${user.email} lacks a populated permissions object.`);
       throw new ForbiddenException('Access Denied: Your account profile is missing assigned permissions.');
     }
 
-    // 4. 🎯 IDENTIFY THE RESOURCE (Smart URL Extraction)
-    const pathSegments = request.url.split('?')[0].split('/').filter(Boolean);
-    let resource = '';
+    // Extract resource from decorator metadata (takes priority over URL extraction)
+    const decoratorMeta = this.reflector.getAllAndOverride<{ resource: string; action: PermissionAction } | null>(
+      REQUIRE_PERMISSIONS_KEY,
+      [context.getHandler(), context.getClass()],
+    );
 
-    // Safely skip global prefixes to find the actual module (e.g., 'users', 'banks')
-    if (pathSegments[0] === 'api' && pathSegments[1] === 'v1') {
-      resource = pathSegments[2]; 
-    } else if (pathSegments[0] === 'v1' || pathSegments[0] === 'api') {
-      resource = pathSegments[1]; 
+    let resource: string;
+    let requiredAction: PermissionAction | null = decoratorMeta?.action ?? null;
+
+    if (decoratorMeta?.resource) {
+      resource = decoratorMeta.resource;
     } else {
-      resource = pathSegments[0]; 
+      // Smart URL extraction: skip /api/v1 prefix
+      const pathSegments = request.url.split('?')[0].split('/').filter(Boolean);
+      if (pathSegments[0] === 'api' && pathSegments[1] === 'v1') {
+        resource = pathSegments[2];
+      } else if (pathSegments[0] === 'v1' || pathSegments[0] === 'api') {
+        resource = pathSegments[1];
+      } else {
+        resource = pathSegments[0];
+      }
     }
 
-    // If the role doesn't have a defined permission block for this specific resource, fail safe.
     const resourcePerms = user.role.permissions[resource];
-    
+
     if (!resourcePerms) {
-      this.logger.warn(`[SECURITY] ${user.email} attempted to access restricted/undefined resource: ${resource}`);
+      this.logger.warn(`[SECURITY] ${user.email} attempted to access restricted resource: ${resource}`);
       throw new ForbiddenException(`Access Violation: Your role does not grant access to the '${resource}' module.`);
     }
 
-    // 5. 🛡️ DYNAMIC PERMISSION MAPPING (Action -> JSON Flag)
-    const method = request.method;
-
-    switch (method) {
-      case 'GET':
-        if (!resourcePerms.read) {
-          throw new ForbiddenException(`Access Violation: You do not have permission to view ${resource}.`);
-        }
-        break;
-
-      case 'POST':
-        if (!resourcePerms.create) {
-          throw new ForbiddenException(`Operation Blocked: Your role cannot create new ${resource}.`);
-        }
-        break;
-
-      case 'PATCH':
-      case 'PUT':
-        if (!resourcePerms.update) {
-          throw new ForbiddenException(`Update Denied: Insufficient privileges to modify ${resource}.`);
-        }
-        break;
-
-      case 'DELETE':
-        if (!resourcePerms.delete) {
-          throw new ForbiddenException(`Critical Violation: Your role is not authorized to delete ${resource}.`);
-        }
-        break;
-
-      default:
-        // Safe default: Allow safe pre-flight requests like OPTIONS to pass
-        return true;
+    // If decorator specifies a custom action (e.g. approve, disburse), check it directly
+    if (requiredAction) {
+      if (!resourcePerms[requiredAction]) {
+        throw new ForbiddenException(
+          `Operation Blocked: Your role cannot perform '${requiredAction}' on ${resource}.`,
+        );
+      }
+      this.logger.verbose(`Permission Granted: ${user.email} (${roleSlug}) -> ${requiredAction} /${resource}`);
+      return true;
     }
 
-    // 6. 🟢 LOG SUCCESSFUL AUTH
+    // Default HTTP method → action mapping
+    const method = request.method;
+    const action = this.mapMethodToAction(method);
+
+    if (action && resourcePerms[action] === false) {
+      throw new ForbiddenException(this.buildDenialMessage(action, resource));
+    }
+
     this.logger.verbose(`Permission Granted: ${user.email} (${roleSlug}) -> ${method} /${resource}`);
     return true;
+  }
+
+  private mapMethodToAction(method: string): PermissionAction | null {
+    switch (method) {
+      case 'GET':    return 'read';
+      case 'POST':   return 'create';
+      case 'PATCH':
+      case 'PUT':    return 'update';
+      case 'DELETE': return 'delete';
+      default:       return null;
+    }
+  }
+
+  private buildDenialMessage(action: PermissionAction, resource: string): string {
+    const messages: Record<string, string> = {
+      read:     `Access Violation: You do not have permission to view ${resource}.`,
+      create:   `Operation Blocked: Your role cannot create new ${resource}.`,
+      update:   `Update Denied: Insufficient privileges to modify ${resource}.`,
+      delete:   `Critical Violation: Your role is not authorized to delete ${resource}.`,
+      approve:  `Approval Blocked: Your role cannot approve ${resource}.`,
+      disburse: `Disbursement Blocked: Your role cannot disburse ${resource}.`,
+      reject:   `Rejection Blocked: Your role cannot reject ${resource}.`,
+      export:   `Export Blocked: Your role cannot export ${resource}.`,
+    };
+    return messages[action] ?? `Permission denied for '${action}' on ${resource}.`;
   }
 }

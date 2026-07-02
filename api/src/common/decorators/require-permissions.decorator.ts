@@ -1,8 +1,7 @@
-// src/common/decorators/require-permissions.decorator.ts
-
 import { SetMetadata } from '@nestjs/common';
+import { PermissionAction } from '../../modules/access-control/entities/role.entity';
 
-export const PERMISSIONS_KEY = 'permissions';
+export const REQUIRE_PERMISSIONS_KEY = 'require_permissions';
 
-export const RequirePermissions = (resource: string, action: 'read' | 'create' | 'update' | 'delete') => 
-  SetMetadata(PERMISSIONS_KEY, { resource, action });
+export const RequirePermissions = (resource: string, action: PermissionAction) =>
+  SetMetadata(REQUIRE_PERMISSIONS_KEY, { resource, action });

@@ -138,6 +138,9 @@ export class CustomerEntity extends BaseBankingEntity {
   @Column({ type: 'varchar', length: 100, nullable: true })
   state: string;
 
+  @Column({ type: 'varchar', length: 100, nullable: true })
+  country: string;
+
   @Column({ type: 'varchar', length: 20, nullable: true, comment: 'PIN Code' })
   pinCode: string;
 

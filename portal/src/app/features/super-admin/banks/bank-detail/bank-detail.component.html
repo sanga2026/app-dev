@@ -1,136 +1,151 @@
-<p-toast position="top-right"></p-toast>
 
-<div *ngIf="isLoading" class="min-h-[70vh] flex flex-col items-center justify-center space-y-4">
-  <i class="pi pi-spin pi-spinner text-4xl text-blue-600"></i>
-  <p class="text-gray-500 font-medium text-sm animate-pulse tracking-wide">
+<div *ngIf="isLoading" class="min-h-[70vh] flex flex-col items-center justify-center gap-3">
+  <div class="w-12 h-12 rounded-2xl bg-primary-50 dark:bg-primary-900/30 flex items-center justify-center">
+    <i class="pi pi-spin pi-spinner text-xl text-primary-600"></i>
+  </div>
+  <p class="text-sm text-slate-500 dark:text-slate-400 font-medium animate-pulse tracking-wide">
     {{ 'COMMON.MISC.LOADING' | translate }}
   </p>
 </div>
 
-<div
-  *ngIf="!isLoading && bank"
-  class="mx-auto animate-fade-in-up transition-all duration-500 ease-out"
-  [ngClass]="
-    currentLayout === 'compact' ? 'max-w-[1600px] p-1 space-y-4' : 'max-w-[1600px] p-1 space-y-6'
-  "
->
-  <div
-    class="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 flex flex-col md:flex-row justify-between items-center gap-6 transition-all duration-300 hover:shadow-md"
-    [ngClass]="currentLayout === 'compact' ? 'p-4 rounded-xl' : 'p-6 rounded-2xl'"
-  >
-    <div class="flex items-center gap-4 w-full md:w-auto">
-      <div
-        class="bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center text-white font-bold shadow-md uppercase shrink-0 transition-transform duration-300 hover:scale-105"
-        [ngClass]="
-          currentLayout === 'compact'
-            ? 'h-10 w-10 rounded-lg text-lg'
-            : 'h-14 w-14 rounded-xl text-xl'
-        "
-      >
-        {{ bank.name | slice: 0 : 2 }}
-      </div>
-      <div class="flex-1">
-        <h1
-          class="font-bold text-gray-900 dark:text-white tracking-tight transition-all"
-          [ngClass]="currentLayout === 'compact' ? 'text-lg' : 'text-xl'"
-        >
-          {{ bank.name }}
-        </h1>
-        <div class="flex items-center gap-2 mt-1">
-          <span class="text-xs font-medium text-gray-500 dark:text-gray-400">{{ 'BANK_DETAIL.HEADER.TENANT_ID' | translate }}:</span>
-          <span
-            class="font-mono text-xs text-gray-700 dark:text-gray-300 bg-gray-100 dark:bg-gray-700 px-1.5 py-0.5 rounded select-all"
-            >{{ bank.id }}</span
-          >
+<div *ngIf="!isLoading && bank"
+     class="mx-auto animate-fade-in-up"
+     [ngClass]="currentLayout === 'compact' ? 'max-w-[1600px] p-1 space-y-4' : 'max-w-[1600px] p-1 space-y-6'">
+
+  <!-- Bank Header Card -->
+  <div class="card" [ngClass]="currentLayout === 'compact' ? 'p-4' : 'p-5'">
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+
+      <!-- Left: avatar + name + meta -->
+      <div class="flex items-center gap-4">
+        <div class="bg-gradient-to-br from-blue-600 to-indigo-600 flex items-center justify-center
+                    text-white font-bold shadow-md uppercase shrink-0 transition-transform duration-300 hover:scale-105"
+             [ngClass]="currentLayout === 'compact' ? 'h-11 w-11 rounded-xl text-base' : 'h-14 w-14 rounded-2xl text-xl'">
+          {{ bank.name | slice:0:2 }}
+        </div>
+        <div>
+          <div class="flex items-center gap-2 flex-wrap">
+            <h1 class="font-bold text-slate-900 dark:text-white tracking-tight"
+                [ngClass]="currentLayout === 'compact' ? 'text-lg' : 'text-xl'">
+              {{ bank.name }}
+            </h1>
+            <span *ngIf="bank.metadata?.category"
+                  class="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-400">
+              {{ bank.metadata.category }}
+            </span>
+            <span class="badge" [class.badge-green]="bank.isActive" [class.badge-red]="!bank.isActive">
+              {{ (bank.isActive ? 'COMMON.STATUS.OPERATIONAL' : 'COMMON.STATUS.SUSPENDED') | translate }}
+            </span>
+          </div>
+          <div class="flex items-center gap-3 mt-1.5 flex-wrap">
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">
+                {{ 'BANK_DETAIL.HEADER.TENANT_ID' | translate }}
+              </span>
+              <span class="font-mono text-xs text-slate-700 dark:text-slate-300
+                           bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded select-all">
+                {{ bank.id }}
+              </span>
+            </div>
+            <div *ngIf="bank.ifscPrefix" class="flex items-center gap-1.5">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">IFSC</span>
+              <span class="font-mono text-xs text-slate-700 dark:text-slate-300
+                           bg-slate-100 dark:bg-slate-800 px-1.5 py-0.5 rounded">
+                {{ bank.ifscPrefix }}XXXX
+              </span>
+            </div>
+            <div *ngIf="bank.hqEmail" class="flex items-center gap-1">
+              <i class="pi pi-envelope text-[10px] text-slate-400"></i>
+              <span class="text-xs text-slate-500 dark:text-slate-400">{{ bank.hqEmail }}</span>
+            </div>
+          </div>
         </div>
       </div>
-    </div>
-    <div class="flex items-center gap-3 w-full md:w-auto justify-end">
-      <span
-        [ngClass]="
-          bank.isActive
-            ? 'bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-400 dark:border-green-800'
-            : 'bg-red-50 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-400 dark:border-red-800'
-        "
-        class="font-semibold uppercase tracking-wider border rounded-md transition-all shadow-sm px-3 py-1.5 text-xs"
-      >
-        {{ (bank.isActive ? 'COMMON.STATUS.OPERATIONAL' : 'COMMON.STATUS.SUSPENDED') | translate }}
-      </span>
+
     </div>
   </div>
 
-  <div class="border-b border-gray-200 dark:border-gray-700 mt-2">
-    <nav
-      class="flex items-center overflow-x-auto no-scrollbar bg-transparent px-1 gap-2 transition-all"
-    >
-      <button
-        *ngFor="let tab of visibleTabs"
-        (click)="setTab(tab.id)"
-        type="button"
-        class="relative whitespace-nowrap font-semibold transition-all duration-300 flex items-center gap-2 border-b-[3px] -mb-[2px] outline-none group py-3 px-4 text-sm"
-        [ngClass]="
-          activeTab === tab.id
-            ? 'text-blue-600 dark:text-blue-400 border-blue-600'
-            : 'text-gray-500 dark:text-gray-400 border-transparent hover:text-gray-700 dark:hover:text-gray-200 hover:border-gray-300 dark:hover:border-gray-600'
-        "
-      >
-        <i class="pi {{ tab.icon }} transition-transform duration-300 group-hover:scale-110"></i>
+  <!-- Tab navigation -->
+  <div class="border-b border-slate-200 dark:border-slate-800">
+    <nav class="flex items-center overflow-x-auto no-scrollbar gap-1 px-1">
+      <button *ngFor="let tab of visibleTabs"
+              (click)="setTab(tab.id)"
+              type="button"
+              class="relative whitespace-nowrap font-semibold transition-all duration-200
+                     flex items-center gap-2 border-b-[2px] -mb-[1px] outline-none group
+                     py-3 px-4 text-sm"
+              [class.text-primary-600]="activeTab === tab.id"
+              [class.dark:text-primary-400]="activeTab === tab.id"
+              [class.border-primary-600]="activeTab === tab.id"
+              [class.text-slate-500]="activeTab !== tab.id"
+              [class.dark:text-slate-400]="activeTab !== tab.id"
+              [class.border-transparent]="activeTab !== tab.id"
+              [class.hover:text-slate-700]="activeTab !== tab.id"
+              [class.dark:hover:text-slate-200]="activeTab !== tab.id">
+        <i class="pi {{ tab.icon }} text-sm transition-transform group-hover:scale-110"></i>
         <span>{{ tab.label | translate }}</span>
       </button>
     </nav>
   </div>
 
-  <div
-    class="bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700 transition-all duration-500"
-    [ngClass]="
-      currentLayout === 'compact' ? 'min-h-[500px] rounded-xl p-5' : 'min-h-[600px] rounded-2xl p-8'
-    "
-  >
-    
+  <!-- Tab content -->
+  <div class="card" [ngClass]="currentLayout === 'compact' ? 'min-h-[500px] p-5' : 'min-h-[600px] p-6'">
+
     <ng-container *ngIf="activeTab === 'general'">
-      <app-bank-general
-        [bank]="bank"
-        [currentLayout]="currentLayout"
-        (refreshData)="fetchBankDetails()"
-      >
+      <app-bank-general [bank]="bank" [currentLayout]="currentLayout" (refreshData)="fetchBankDetails()">
       </app-bank-general>
     </ng-container>
 
     <ng-container *ngIf="activeTab === 'admins'">
       <ng-container *appHasPermission="['users', 'read']">
-        <app-bank-admins
-          [bankId]="bank.id"
-          [currentLayout]="currentLayout"
-        >
-        </app-bank-admins>
+        <app-bank-admins [bankId]="bank.id" [currentLayout]="currentLayout"></app-bank-admins>
       </ng-container>
     </ng-container>
 
     <ng-container *ngIf="activeTab === 'branches'">
       <ng-container *appHasPermission="['branches', 'read']">
-        <app-bank-branches
-          [bankId]="bank.id"
-          [currentLayout]="currentLayout"
-        >
-        </app-bank-branches>
+        <app-bank-branches [bankId]="bank.id" [currentLayout]="currentLayout"></app-bank-branches>
       </ng-container>
     </ng-container>
 
     <ng-container *ngIf="activeTab === 'loansproducts'">
-      <ng-container *appHasPermission="['products', 'read']">
-        <app-bank-loans
-          [bankId]="bank.id"
-          [currentLayout]="currentLayout"
-        ></app-bank-loans>
+      <ng-container *appHasPermission="['loan-products', 'read']">
+        <app-bank-loans [bankId]="bank.id" [currentLayout]="currentLayout"></app-bank-loans>
       </ng-container>
     </ng-container>
 
     <ng-container *ngIf="activeTab === 'roles'">
       <ng-container *appHasPermission="['roles', 'read']">
-        <app-bank-roles
-          [bankId]="bankId"
-          [currentLayout]="currentLayout">
-        </app-bank-roles>
+        <app-bank-roles [bankId]="bankId" [currentLayout]="currentLayout"></app-bank-roles>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="activeTab === 'numberranges'">
+      <ng-container *appHasPermission="['master-data', 'read']">
+        <app-bank-number-ranges [bankId]="bankId"></app-bank-number-ranges>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="activeTab === 'accountproducts'">
+      <ng-container *appHasPermission="['banks', 'read']">
+        <app-bank-account-products [bankId]="bankId"></app-bank-account-products>
+      </ng-container>
+    </ng-container>
+
+    <ng-container *ngIf="activeTab === 'transactions'">
+      <ng-container *appHasPermission="['accounting', 'read']">
+        <!-- Transactions coming soon placeholder -->
+        <div class="flex flex-col items-center justify-center py-20 gap-4 text-center">
+          <div class="w-16 h-16 rounded-2xl bg-slate-100 dark:bg-slate-800 flex items-center justify-center">
+            <i class="pi pi-sync text-2xl text-slate-400"></i>
+          </div>
+          <div>
+            <p class="font-bold text-slate-700 dark:text-slate-300 text-base">Transaction Ledger</p>
+            <p class="text-sm text-slate-400 mt-1 max-w-sm">
+              Consolidated transaction history across all accounts and branches at this bank will appear here.
+            </p>
+          </div>
+        </div>
       </ng-container>
     </ng-container>
 

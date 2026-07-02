@@ -392,4 +392,12 @@ export class DocumentTypeService implements OnModuleInit {
       throw new InternalServerErrorException(`Could not retrieve details for '${id}'.`);
     }
   }
+
+  async remove(id: string, _user: UserEntity) {
+    const docId = id.toUpperCase().trim();
+    const doc = await this.docRepo.findOne({ where: { id: docId } });
+    if (!doc) throw new NotFoundException(`Document Type '${docId}' not found.`);
+    await this.docRepo.remove(doc);
+    return { success: true, message: `Document Type '${docId}' deleted.` };
+  }
 }

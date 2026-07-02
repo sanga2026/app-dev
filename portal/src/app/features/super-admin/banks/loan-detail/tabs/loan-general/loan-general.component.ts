@@ -127,7 +127,7 @@ export class LoanGeneralComponent implements OnInit, OnChanges {
           this.refreshData.emit();
           this.isEditing = false;
         },
-        error: (err) => this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error?.message })
+        error: (err) => this.messageService.add({ severity: 'error', summary: 'Error', detail: err?.error?.message || 'Operation failed. Please try again.' })
       });
   }
 
@@ -145,7 +145,7 @@ export class LoanGeneralComponent implements OnInit, OnChanges {
           this.showDeleteModal = false;
           setTimeout(() => this.router.navigate(['/banks', this.bankId], { queryParams: { tab: 'loans' } }), 1000);
         },
-        error: (err) => this.messageService.add({ severity: 'error', summary: 'Error', detail: err.error?.message })
+        error: (err) => this.messageService.add({ severity: 'error', summary: 'Error', detail: err?.error?.message || 'Operation failed. Please try again.' })
       });
   }
 
